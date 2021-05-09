@@ -1,0 +1,13 @@
+scaletta tesi:
+    - Metodo di discesa del gradiente con passo fisso
+    - Confrontare discesa del gradiente euclidea con quella riemanniana
+    - Metodi di ottimizzazione su R^n e su varieta differenziabili
+    - Introduzione al disco di poincare e Iperboloide quantita utili: geodediche, esponenziale, logaritmo, prodotto scalare (su TxM)
+    - Diffeomorfismo tra H e D (far vedere che la funzione distanza rimane invariata, far vedere che è isometria (?) e che mantiene gli angoli)
+    - Problema del baricentro e funzione media di freché, esistenza del baricentro.
+    - Esperimenti:
+        1 Confronto tra discesa di gradiente euclideo e riemanniano
+        2 usare il metodo bini-iannazzo per scegliere theta
+        3 usare Barzilai-Borwein riemanniano
+        4 usare L-BFGS euclideo e riemanniano
+    - Applicazioni
