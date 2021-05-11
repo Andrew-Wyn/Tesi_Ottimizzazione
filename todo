@@ -11,3 +11,10 @@ scaletta tesi:
         3 usare Barzilai-Borwein riemanniano
         4 usare L-BFGS euclideo e riemanniano
     - Applicazioni
+
+Metodi:
+- parte da un punto a_i e si va nella direzione del secondo seguendo la geodedica
+    e ci si ferma ad 1/2 poi si va verso il terzo punto e si prosegue per 1/3
+    poi si va verso il quarto putno e si prosegue per 1/4 e cosi via.
+    x_k+1 = exp(log(x_k, a_(k%p)), 1/k); p = # punti
+    converge al baricentro
