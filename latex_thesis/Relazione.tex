@@ -4,6 +4,9 @@
 \usepackage[fontsize=13pt]{scrextend} %dimensione font 
 \usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry} %impaginazione e margini documento
 \usepackage{graphicx, wrapfig} %gestione immagini e grafiche
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{prop}{Proposition}
 
 \begin{document}
 
@@ -19,7 +22,7 @@
 	\vspace{20mm}
     {\LARGE{TESI DI LAUREA}}\\
 	\vspace{10mm}
-	{\huge{\bf Metodi Di Ottimizzazione Non Lineare su Varietà ed Applicazioni}}\\
+	{\huge{\bf Metodi di ottimizzazione su varietà per la media di Fréchet su disco di Poincaré}}\\
 \end{center}
 \end{Large}
 
@@ -46,12 +49,160 @@
 
 \end{titlepage}
 
+\renewcommand{\contentsname}{Contenuti}
 \tableofcontents
+
 \newpage
 
-\section{Obiettivo}
+\section{Introduzione}
+Nella seguente trattazione verra presentato il problema del minimo della funzione media di frechet sulla varietà disco di poincare, verra proposta una metodologia risolutiva che consiste nel trasportare il problema su una varieta conforme definita iperboloide, nella quale alcune formule per dimensione arbitraria sono computazionalmente meno onerose (e numericamente piu stabili ?)
 
-\subsection{Esempio di figura}
+\section{Metodi di ottimizzazione su $R^n$ e Varieta differenziabili}
+In tale sezione andremo ad esplicitare le metodologie generali per trovare un minimo non vincolato di una funzione costo $f$ definita su una varieta differenziabile $M$ (notiamo che $R^n$ è un caso particolare di varietà differenziabile) con valori reali.
 
+
+\subsection{Condizioni di ottimalità}
+Sia $f:R^n \to R$ non vincolata.
+
+\subsubsection{Ottimo locale ed ottimo globale}
+Un vettore $x^\ast$ è un minimo locale non vincolato per $f$ se (informalmente) ha un valore in $f$ non più grande di un suo intorno, più formalmente se esiste $\epsilon > 0$ tale che\\\\
+$f(x^\ast) \leq f \quad \forall x \quad \parallel x - x^\ast \parallel < \epsilon$\\\\
+Un vettore $x^\ast$ è un minimo globale non vincolato rispetto ad $f$ se ha un valore in $f$ non più grande di ogni altro vettore, più formalmente è tale che\\\\
+$f(x^\ast) \leq f \quad \forall x \in R^n$\\\\
+
+\subsubsection{Condizioni necessarie per l'ottimalità}
+Se la funzione di costo $f$ è differenziabile, possiamo utilizzare il gradiente e l'espansione in serie di Taylor per comparare il costo di un vettore con il costo di un suo intorno.
+Ci aspettiamo perciò che se $x^\ast$ è un minimo non vincolato allora la variazione della funzione al primo ordine per una piccola variazione $\Delta x$ è non negativa\\\\
+$\nabla f ( x^\ast )' \Delta x \geq 0$\\\\
+perciò dovendo valere per $\Delta x$ sia positivi che negativi abbiamo la seguente condizione necessaria\\\\
+$\nabla f ( x^\ast )' = 0$\\\\
+Ci aspettiamo inoltre che anche la variazione della funzione al secondo ordine per una piccola variazione $\Delta x$ è non negativa\\\\
+$\nabla f ( x^\ast )' \Delta x + (1/2) \Delta x' \nabla ^2 f (x^\ast) \Delta x\geq 0$\\\\
+dato che la precedente osservazione ha imposto $\nabla f (x^\ast)' \Delta x = 0$ otteniamo che\\\\
+$\Delta x' \nabla ^2 f (x^\ast) \Delta x\geq 0$\\\\
+e che perciò\\\\
+$\nabla ^2 f (x^\ast)$: semidefinita  positiva
+\begin{prop}[Condizioni necessarie di ottimalità]
+Sia $x^\ast$ un minimo locale non vincolato di $f:R^n \to R$, assumiamo $f$ differenziabile con continuità in un insieme aperto $S$ contenente $x^\ast$. Allora\\
+$\nabla f(x^\ast) = 0$\\
+Se $f$ è due volte differenziabile con continuità in $S$, allora\\
+$\nabla^2 f(x^\ast)$: semi-definita positiva
+\end{prop}
+\subsubsection{Il caso della convessità}
+Se la funzione $f$ è convessa non ci sono distinzioni tra un minimo locale ed un minimo globale, tutti i punti di minimo locale sono punti di minimo globale. Perciò un fatto importante è che la condizione $\nabla f(x^\ast) = 0$ è sufficiente per l'ottimalità, la dimostrazione è basata sulle proprietà di base della convessità della funzione $f$.
+\begin{prop}[Funzioni Convesse] Sia $f:R^n \to R$ una funzione convessa su un insieme convesso $X$.
+\begin{itemize}
+  \item Un minimo locale di $f$ su $X$ è anche un minimo globale su $X$. Se inoltre $f$ è strettamente convessa, allora esiste al più un minimo per $f$.
+  \item Se $f$ è convess e l'insieme $X$ è aperto, allora $\nabla f(x^\ast) = 0$ è una condizione necessaria e sufficiente per il vettore $x^\ast \in X$ per essere minimo globale di $f$ su $X$.
+\end{itemize}
+\end{prop}
+
+\subsubsection{Condizioni Sufficienti per L'ottimalità}
+Non è difficile trovare esempi in cui le condizione di ottimalita necessarie definite nelle sezione precedente
+[$\nabla f(x^\ast) = 0 \quad \& \quad \nabla^2 f(x^\ast) \geq 0$]
+portino ad identificare punti non di minimo locale come ad esempio punti di sella o punti di massimo.\\
+Supponiamo di avere un vettore $x^\ast$ che soddisfa le seguenti condizioni\\\\
+- $\nabla f(x^\ast) = 0$\\
+- $\nabla^2 f(x^\ast)$: definita positiva\\\\
+Allora abbiamo che per ogni $\Delta x \neq 0$\\\\
+$\Delta x' \nabla^2f(x^\ast) \Delta x > 0$\\\\
+Ciò implica che in $x^\ast$ la variazione di $f$ al secondo ordine data da un piccolo spostamento $\Delta x$ è positiva, perciò $f$ tende ad incrementare nell'intorno di $x^\ast$ e ciò implica che le due condizioni di cui sopra sono necessarie e sufficienti per l'ottimalità locale di $x^\ast$.
+\begin{prop}[Condizioni di ottimalità sufficienti del secondo ordine] Sia $f:R^n \to R$ doppiamente differenziabile con continuità in un insieme aperto $S$. Si supponga esistere $x^\ast \in S$ che soddisfi le condizioni\\
+$\nabla f(x^\ast) \quad \nabla^2 f(x^\ast)$: definita positiva\\
+allora, $x^\ast$ è un minimo locale non vincolato di $f$. In particolare esistono $\gamma > 0$ e $\epsilon > 0$ tali che\\
+$f(x) \geq f(x^\ast) + \gamma/2\parallel x - x^\ast \parallel^2, \quad \forall x \quad con \parallel x - x^\ast \parallel < \epsilon$
+\end{prop}
+\subsection{Discesa del gradiente in $R^n$}
+Andiamo ora a definire nel dettaglio le principali metodologie computazionali di ottimizzazione non lineare su $R^n$. Tali metodologie sarannno trattate con un occhio alle possibili applicazioni.\\
+Consideriamo il problema di trovare il minimo non vincolato di una funzione $f:R^n \to R$ la risoluzione analitica è infattibile, per problemi pratici, perciò l'approccio adottato è quello di applicare un algoritmo iterativo chiamato \textit{iterative descent} che opera come segue: prendiamo un vettore iniziale $x0$ e successivamente si genera una sequenza $x1, x2, ...$ tali che $f$ decresce ad ogni iterazione $f(x^{k+1}) < f(x^k)$ e sperabilmente raggiungere un punto di minimo.\\
+I principali algoritmi di discesa sono Metodi del Gradiente poichè basano le decisioni in base al gradiente della funzione $f$.
+\subsubsection{Selezionare la direzione di discesa}
+Sia $v \in R^n-0$, $v^\perp$ è un iperpiano che divide lo spazio in due componenti connesse:
+\begin{itemize}
+  \item $v'd > 0$ (semipiano)
+  \item $v'd < 0$ (semipiano)
+  \item $v'd = 0$ (iperpiano)
+\end{itemize}
+se $v = \nabla f(x)$ ogni d tale che $v'd > 0$ è una direzione di decrescita.
+\begin{theorem}
+Sia $f \in C^1(\Omega), \Omega$ aperto di $R^n$ e sia $x \in \Omega$ e $\nabla f(x) \neq 0$ $\forall d \in R^n$ tale che $\nabla f(x)'d < 0$  $\exists \alpha 0 > 0$ tale che $f(x + \alpha d) < f(x)$ con $\alpha \in (0, \alpha0]$
+\end{theorem}
+Detto cio possiamo esplitare una formula che definisce una classe di algoritmi\\
+$x^{k+1} = x^k + \alpha^k d^k \quad k=0, 1, ...$\\
+Dove se $\nabla f(x^k) \neq 0$ la direzione $d^k$ è scelto in modo tale che\\
+$\nabla f(x^k)'d^k < 0$\\
+Ci sono varie possibilita nella scelta di $d^k$ e di $\alpha^k$. Molti metodi di gradiente sono definiti nella forma 
+$x^{k+1} = x^k - \alpha^k D^k \nabla f(x^k)$,
+dove $D^k$ è una matrice definita positiva e con $d^k = -D^k\nabla f(x^k)$ allora è diretto che $\nabla f(x^k)'d^k < 0$.\\
+A seconda della scelta di $D^k$ abbiamo differenti metodologie applicabili.\\\\
+\textbf{Steepest Descent}:\\
+$D^k = I, \quad k = 0, 1, ...$\\\\
+\textbf{Metodi di Newton}:\\
+$D^k = (\nabla^2 f(x^k))^{-1}, \quad k = 0, 1, ...$\\
+$\nabla^2 f(x^k)$ deve essere definita positiva, proprietà sempre verificata se $f$ è convessa.\\\\
+\textbf{Steepest Descent Riscalata}:\\
+$D^k$ matrice diagonale.\\\\
+\textbf{Metodi di Schamsky}:\\
+$D^k = (\nabla^2 f(x^0))^{-1}$\\\\
+\textbf{Metodi di quasi Newton}:\\
+$D^k = H(x^k) \approx \nabla^2 f(x^k)$\\\\
+Nella pratica $h^k = (\nabla^2 f(x^k))^{-1} d^k$, per trovare $h^k$ riscriviamo $(\nabla^2 f(x^k))h^k = d^k$, risolvibile in tempo polinimiale tramite metodi di Krylov.
+\subsubsection{Selezione del passo}
+Ci sono numerose metodologie per la scelta del passo $a^k$ nei metodi del gradiente, ne listiamo alcune.\\\\
+\textbf{Ricerca lineare esatta}:\\
+scegliamo $\alpha^k$ tale che minimizza la funzione costo $f$ lungo la direzione $d^k$, percio\\
+$f(x^k + \alpha^k d^k) = \min_{\alpha \geq 0} f(x^k + \alpha d^k)$.\\\\
+\textbf{Ricerca lineare esatta limitata}:\\
+Questa è una versione modifica della metodologia precedente più semplice da implementare in vari casi. definito un scalare $s > 0$ $\alpha^k$ è scelto in modo tale che minimizza il costo di $f$ nell'intervallo $[0, s]$\\
+$f(x^k + \alpha^k d^k) = \min_{\alpha \in [0, s]} f(x^k + \alpha d^k)$.\\\\
+Le due metodologie appena presentate sono solitamente implementate con l'aiuto delle tecniche risolutive dell'ottimizzazione in una variabile, che è un problema certamente più facile da risolvere in modo analitico.\\\\
+\textbf{Metodo di armijo}:\\
+scegliere $\alpha^k$ in modo che garantisca una decrescita sufficiente a garantire la convergenza del metodo sotto opportune ipotesi. Il metodo di armijo è stato definito come segue. Siano fissi $s, \beta$ e $\sigma$ con $0 < \beta < 1$, e $0 < \sigma < 1$ e sia $\alpha^k = \beta^{m_k} s$, dove $m_k$ è il primo intero non negativo per cui vale\\
+$f(x^k) - f(x^k + \beta^m s d^k) \geq -\sigma \beta^m s \nabla f(^k)'d^k$.\\
+Solitamente si scelgono i valori come segue, $\sigma \in [10^{-5}, 10^{-1}]$, il fattore di riduzione $\beta \in [1/10, 1/2]$, possiamo scegliere $s = 1$ e moltiplicare la direzione $d^k$ per uno scalare.\\
+Per questa metodologia diamo anche il seguente teorema che rappresenta un risultato importante.
+\begin{definition}
+Una sequenza di direzioni $\{x^k\}_k$ è detta limitata se vale la seguente $\limsup\limits_{k \in K} \nabla f(x)'d^k < 0$
+\end{definition}
+\begin{definition}
+Una successione di direzioni $\{x^k\}_k, \quad \{d^k\}_k$ è detta \textbf{gradient related} se per ogni sotto-successione di $\{x^k\}_k$ che converge ad un punto non stazionario $\{d^k\}_k$ è limitata. Perciò non sarà mai ortogonale al gradiente (sennò sarebbe stazionario)
+\end{definition}
+\begin{theorem}
+Sia $\{x^k\}_k$ una sequenza infinita (non definitivamente uguale al suo limite) generata dal metodo $x^{k+1} = x^k + \alpha^k d^k$, dove $\alpha^k$ è generato con la regola di armijo e $d^k$ è \textbf{gradient related}. Allora il limite è un punto stazionario.
+\end{theorem}
+\textbf{Metodo a passo costante}:\\
+Si definisce un passo costante $s > 0$ e si fissa $\alpha^k = s, \quad k = 0,1, ...$\\
+Il passo costante è una metodologia veramente semplice da implementare ma si deve fare attenzione nella scelta del passo, se si sceglie un valore di $s$ troppo grande allora il metodo divergerà, contrariamente se il passo $s$ venisse scelto troppo piccolo l'ordine di convergenza risulterebbe troppo lento.\\\\
+\textbf{Metodo di diminuzione del passo}:\\
+Scegliamo il passo in modo tale che $\alpha^k \rightarrow 0$. Una problematica legata a questa metodologia è che il passo può diventare troppo piccolo per cui non può essere garantita la convergenza, per questa ragione viene richiesto che $\sum_{n=1}^{\infty} \alpha^k = \infty$
+
+\subsection{Discesa del gradiente su varieta}
+
+\section{Disco di poincare e Iperboloide}
+
+\subsection{subsection}
+
+\section{Metodi utilizzati con pseudocodice}
+
+\subsection{subsection}
+
+\section{Esperimenti (e Applicazioni)}
+
+\subsection{subsection}
+
+\section{Appendice}
+
+- positivita
+- convessita
+- insieme chiuso
+- derivate parziali
+- derivata di fréchet
+- teorema di rappresentazione di ritz
+- teorema di schwartz
+- teorema di weiestrass
+- gradiente 
+- taylor
+- elementi base di topologia (?)
+- varieta differenziabili
 
 \end{document}
