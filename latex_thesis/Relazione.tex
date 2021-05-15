@@ -176,7 +176,21 @@ Il passo costante è una metodologia veramente semplice da implementare ma si de
 \textbf{Metodo di diminuzione del passo}:\\
 Scegliamo il passo in modo tale che $\alpha^k \rightarrow 0$. Una problematica legata a questa metodologia è che il passo può diventare troppo piccolo per cui non può essere garantita la convergenza, per questa ragione viene richiesto che $\sum_{n=1}^{\infty} \alpha^k = \infty$
 
-\subsection{Discesa del gradiente su varieta}
+\subsection{Discesa del gradiente su varietà}
+Ora che abbiamo un contesto teorico e una consapevolezza di cosa voglia dire effetutare ottimizzazione su uno spazio euclideo n-dimensionale ($R^n$), possiamo approcciare le metodologie computazionali per trovare un minimo non vincolato di una funzione $f:M \to R$ analoghe a quella definite nella sezione precedente. Prima di andare nel vivo del discorso dobbiamo però munirci degli strumenti necessari, richiamiamo la parte dedicata alle varietà differenziabili presente nell'appendice e aggiungiamo quanto segue.
+
+\subsubsection{Retrazioni}
+Su varietà differenziabili la nozione di muoversi nella direzione del vettore tangente rimanendo nella varietà stessa è generalizzato dal concetto di \textbf{Retrazione}, concettualmente una retrazione $R$ su $x$, denominata come $R_x$, è una mappa che va da $T_xM$ (spazio tangente in $x$ rispetto a $M$) in $M$ con una condizione di rigidità locale che preserva il gradiente in $x$.
+\begin{definition}[Retrazione]
+Una retrazione in un manifold $M$ è una mappa liscia $R$ che ha come dominio l'insieme dei $T_xM \quad \forall x \in M$ in $M$ con le seguenti proprietà. Sia $R_x$ la restrizione di $R$ a $T_xM$.
+\begin{itemize}
+  \item $R_x(0_x) = x$, dove $0_x$ denota l'elemento zero (origine) di $T_xM$.
+  \item Con l'identificazione canonica $T_0 T_xM \simeq T_xM$, $R_x$ soddisfa\\
+  $DR_x(0_x) = id_{T_xM},$\\
+  dove $id_{T_xM}$ denota la mappa identità su $T_xM$.
+\end{itemize}
+
+\end{definition}
 
 \section{Disco di poincare e Iperboloide}
 
