@@ -4,9 +4,9 @@
 \usepackage[fontsize=13pt]{scrextend} %dimensione font 
 \usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry} %impaginazione e margini documento
 \usepackage{graphicx, wrapfig} %gestione immagini e grafiche
-\newtheorem{theorem}{Theorem}
-\newtheorem{definition}{Definition}
-\newtheorem{prop}{Proposition}
+\newtheorem{theorem}{Teorema}
+\newtheorem{definition}{Definizione}
+\newtheorem{prop}{Proposizione}
 
 \begin{document}
 
@@ -189,7 +189,24 @@ Una retrazione in un manifold $M$ è una mappa liscia $R$ che ha come dominio l'
   $DR_x(0_x) = id_{T_xM},$\\
   dove $id_{T_xM}$ denota la mappa identità su $T_xM$.
 \end{itemize}
-
+\end{definition}
+Ci riferiamo alla condizione $DR_x(0_x) = id_{T_xM}$ come condizione di \emph{rigidità locale}. Equivalentemente, per ogni vettore tangente $\xi$ in $T_xM$, la curva $\gamma_{\xi}:t \mapsto R_x(t\xi)$ soddisfa $\gamma_{\xi}(0)' = \xi$.\\
+Oltre a trasformare elementi di $T_xM$ in elementi di $M$, un secondo importate scopo della retrazione $R_x$ è quello di trasformare una funzione costo ($f:M \to R$) definita in un intorno di $x \in M$ in una funzione costo definita sullo spazio vettoriale $T_xM$. Nello specifico, data una funzione reale $f$ su una varietà $M$ su cui è definita una retrazione $R$, abbiamo che $\hat{f} = f \circ R$ denota il $\emph{pullback}$ di $f$ attraverso $R$. Per $x \in M$, abbiamo che\\
+$\hat{f_x} = f \circ R_x$\\
+denota la restrizione di $\hat{f}$ su $T_xM$. Si noti che $\hat{f_x}$ è una funzione reale su uno spazio vettoriale. Dalla condizione di rigidità locale abbiamo che $D\hat{f_x}(0_x) = Df(x)$. Se $M$ è dotato di una metrica Riemanniana abbiamo\\
+$grad \hat{f_x}(0_x) =$grad $f(x)$.\\
+\subsubsection{Metodi \emph{line-search}}
+I metodi di ricerca in linea (definiti \emph{line-search}) su varietà si basano sulla formula di aggiornamento\\
+$x^{k+1} = R_{x^k}(t^k \eta^k)$,\\
+dove $\eta^k$ è in $T_xM$ e $t^k$ è uno scalare. Una volta scelta la retrazione $R$ ci rimane da decidere la direzione $\eta^k$ e la lunghezza del passo $t^k$. Per ottenere la convergenza del metodo delle restrizioni sulla scelta di questi due parametri devono essere fatte.\\
+\begin{definition}[sequenza gradient related su varietà]
+Data una funzione di costo $f$ su una varietà riemanniana $M$, una sequenza $\{\eta^k \}$, $\eta^k \in T_xM$ è \textbf{gradient related} se, per ogni sotto-sequenza $\{x^k\}_{k \in K}$ di $\{x^k\}$ che converge ad un punto non stazionario di $f$, la corrispondente sotto-sequenza $\{\eta^k\}_{k \in K}$ è limitata e soddisfa\\
+$\limsup\limits_{k \to \infty, k \in K} \langle$grad $f(x^k), \eta^k \rangle < 0$
+\end{definition}
+\begin{definition}[Punto di Armijo su varietà]
+Data una funzione $f$ su una varietà riemanniana $M$ dotata di una retrazione $R$, un punto $x \in M$, un vettore tangente $\eta \in T_xM$, e degli scalari $\bar{\alpha} > 0, \beta, \sigma \in (0, 1)$, un \textbf{punot di Armijo su varietà} è $\eta^A = t^{A}\eta = \beta^{m}\bar{\alpha}\eta$, dove $m$ è il più piccolo intero non negativo tale che\\
+$f(x) - f(R_x(\beta^{m}\bar{\alpha}\eta)) \geq -\sigma \langle$grad $f(x), \beta^m\bar{\alpha}\eta \rangle_x$.\\
+Il valore reale $t^A$ è il \textbf{Passo di Armijo}.
 \end{definition}
 
 \section{Disco di poincare e Iperboloide}
