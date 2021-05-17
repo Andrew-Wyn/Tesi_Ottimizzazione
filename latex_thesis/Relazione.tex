@@ -4,9 +4,13 @@
 \usepackage[fontsize=13pt]{scrextend} %dimensione font 
 \usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry} %impaginazione e margini documento
 \usepackage{graphicx, wrapfig} %gestione immagini e grafiche
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{amsmath}
+
 \newtheorem{theorem}{Teorema}
 \newtheorem{definition}{Definizione}
 \newtheorem{prop}{Proposizione}
+\newtheorem{corollary}{Corollario}
 
 \begin{document}
 
@@ -208,6 +212,35 @@ Data una funzione $f$ su una varietà riemanniana $M$ dotata di una retrazione $
 $f(x) - f(R_x(\beta^{m}\bar{\alpha}\eta)) \geq -\sigma \langle$grad $f(x), \beta^m\bar{\alpha}\eta \rangle_x$.\\
 Il valore reale $t^A$ è il \textbf{Passo di Armijo}.
 \end{definition}
+Andiamo ora a definire un algoritmo generico per la discesa di gradiente su varietà (\textbf{Accelerated Line Search}), tale algoritmo rappresenta una generalità di metodologie di ottimizzazione delineando però, nel contempo, delle restrizioni fondamentali che garantiscono la convergenza della sequenza di punti generati.
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{Manifold $M$; funzione costo $f$ differenziabile definita su $M$; retraction $R$; scalari $\bar{\alpha} > 0$, $c, \beta, \sigma \in (0,1)$; initial iterate $x^0 \in M$}
+\KwOut{Sequenza $\{x^k\}$}
+\For{$k=0, 1, 2, ...$}{
+    Prendere $\eta^k \in T_xM$ tale per cui la sequenza $\{\eta^i\}_{i=0,1,...}$ sia \emph{gradient related}.\\
+    Selezionare $x^{k+1}$ tale che
+    \begin{equation}
+    \label{ctr-als}
+    \hspace{10mm}f(x^k)-f(x^{k+1}) \geq c(f(x^k)-f(R_{x^k}(t^{k^A}\eta^k)))
+    \end{equation}
+    Dove $t^{k^A}$ è il passo definito dalla regola di Armijo su varietà definita poco sopra.
+}
+\caption{Accelerated Line Search (ALS)}
+\end{algorithm}
+
+Dallo pseudocodice appena esplicitato è chiaro che tale algoritmo puo essere visto come una generalizzazione della scelta del passo di Armijo descritto nella sotto-sezione 2.2, difatti scegliere $x^{k+1} = R_{x^k}(t^{k^A}\eta^k)$ soddisfa \eqref{ctr-als}. Inoltre la condizione rilassata \eqref{ctr-als} ci permette un ampio spazio di manovra nella scelta di $x^{k+1}$ grantendoci, la convergenza ad un punto stazionario, come enunceremo formalmente, e ciò puo portare alla definizione di algoritmi altamente efficienti.
+
+\subsubsection{Convergenza}
+Il concetto di convergenza puo essere ridefinito e generalizzato su varietà. Una sequenza infinita $\{x^k\}_{k=0,1,...}$ di punti su una varietà $M$ è detta essere convergente se esiste una carta $(U, \psi)$ di $M$, un punto $x^\ast \in M$ e $K > 0$ tali che $x^k$ è in $U$ per ogni $k \geq K$ e tale che la sequenza $\{\psi(x^k)\}_{x=K, K+1, ...}$ converge a $\psi(x^\ast)$ (in tal caso applichiamo il concetto di convergenza di $R^n$, avendo $\psi$ come codominio uno spazio euclideo). Il punto $\psi^{-1}(\lim_{k \to \infty} \psi(x^k))$ è chiamato il \emph{limite} della sequenza $\{x^k\}_{k=0,1,...}$. Tutte le sequenze convergenti di una vairetà di \emph{Hausdorff} hanno uno ed un solo punto limite.\\
+Diamo ora un importante risultato rispetto alla convergenza dell'algoritmo \emph{ALS}, tale enunciato deriva direttamente dal risultato di convergenza definito nella sezione 2.2 rispetto al passo di Armijo in $R^n$, in tal caso però viene data una generalizzazione di quest'ultimo essendo, come già detto, ALS una generalizzazione del passo di Armijo e lavorando non più su $R^n$ ma su varietà differenziabili.
+\begin{theorem}
+Sia $\{x^k\}$ una sequenza infinita di iterate generate da ALS. Allora ogni punto di accumulazione  di $\{x^k\}$ è un punto stazionario della funzione costo $f$
+\end{theorem}
+Inoltre assumendo compattezza della varietà $M$ possiamo enunciare il seguente
+\begin{corollary}
+Sia $\{x^k\}$ una sequenza finita di iterate generata da ALS. Assumiamo che l'insieme di livello $L = \{x \in M : f(x) \leq f(x^0)\}$ è compatto allora\\ $\lim_{k \to \infty} \parallel $grad $f(x^k) \parallel = 0$.
+\end{corollary}
 
 \section{Disco di poincare e Iperboloide}
 
@@ -222,7 +255,6 @@ Il valore reale $t^A$ è il \textbf{Passo di Armijo}.
 \subsection{subsection}
 
 \section{Appendice}
-
 - positivita
 - convessita
 - insieme chiuso
@@ -235,5 +267,6 @@ Il valore reale $t^A$ è il \textbf{Passo di Armijo}.
 - taylor
 - elementi base di topologia (?)
 - varieta differenziabili
-
+- spazio di hausdorff
+- punto di accumulazione
 \end{document}
