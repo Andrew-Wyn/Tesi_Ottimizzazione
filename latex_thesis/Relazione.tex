@@ -26,7 +26,7 @@
 	\vspace{20mm}
     {\LARGE{TESI DI LAUREA}}\\
 	\vspace{10mm}
-	{\huge{\bf Metodi di ottimizzazione su varietà per la media di Fréchet su disco di Poincaré}}\\
+	{\huge{\bf Metodi di ottimizzazione su varietà differenziabili per la media di Fréchet su disco di Poincaré}}\\
 \end{center}
 \end{Large}
 
@@ -186,10 +186,10 @@ Ora che abbiamo un contesto teorico e una consapevolezza di cosa voglia dire eff
 \subsubsection{Retrazioni}
 Su varietà differenziabili la nozione di muoversi nella direzione del vettore tangente rimanendo nella varietà stessa è generalizzato dal concetto di \textbf{Retrazione}, concettualmente una retrazione $R$ su $x$, denominata come $R_x$, è una mappa che va da $T_xM$ (spazio tangente in $x$ rispetto a $M$) in $M$ con una condizione di rigidità locale che preserva il gradiente in $x$.
 \begin{definition}[Retrazione]
-Una retrazione in un manifold $M$ è una mappa liscia $R$ che ha come dominio l'insieme dei $T_xM \quad \forall x \in M$ in $M$ con le seguenti proprietà. Sia $R_x$ la restrizione di $R$ a $T_xM$.
+Una retrazione in una varietà $M$ è una mappa liscia $R$ che ha come dominio l'insieme dei $T_xM \quad \forall x \in M$ in $M$ con le seguenti proprietà. Sia $R_x$ la restrizione di $R$ a $T_xM$.
 \begin{itemize}
   \item $R_x(0_x) = x$, dove $0_x$ denota l'elemento zero (origine) di $T_xM$.
-  \item Con l'identificazione canonica $T_0 T_xM \simeq T_xM$, $R_x$ soddisfa\\
+  \item Con l'identificazione canonica $T_{0_x} T_xM \simeq T_xM$, $R_x$ soddisfa\\
   $DR_x(0_x) = id_{T_xM},$\\
   dove $id_{T_xM}$ denota la mappa identità su $T_xM$.
 \end{itemize}
@@ -198,17 +198,17 @@ Ci riferiamo alla condizione $DR_x(0_x) = id_{T_xM}$ come condizione di \emph{ri
 Oltre a trasformare elementi di $T_xM$ in elementi di $M$, un secondo importate scopo della retrazione $R_x$ è quello di trasformare una funzione costo ($f:M \to R$) definita in un intorno di $x \in M$ in una funzione costo definita sullo spazio vettoriale $T_xM$. Nello specifico, data una funzione reale $f$ su una varietà $M$ su cui è definita una retrazione $R$, abbiamo che $\hat{f} = f \circ R$ denota il $\emph{pullback}$ di $f$ attraverso $R$. Per $x \in M$, abbiamo che\\
 $\hat{f_x} = f \circ R_x$\\
 denota la restrizione di $\hat{f}$ su $T_xM$. Si noti che $\hat{f_x}$ è una funzione reale su uno spazio vettoriale. Dalla condizione di rigidità locale abbiamo che $D\hat{f_x}(0_x) = Df(x)$. Se $M$ è dotato di una metrica Riemanniana abbiamo\\
-$grad \hat{f_x}(0_x) =$grad $f(x)$.\\
+grad $\hat{f_x}(0_x) =$grad $f(x)$.\\
 \subsubsection{Metodi \emph{line-search}}
 I metodi di ricerca in linea (definiti \emph{line-search}) su varietà si basano sulla formula di aggiornamento\\
 $x^{k+1} = R_{x^k}(t^k \eta^k)$,\\
 dove $\eta^k$ è in $T_xM$ e $t^k$ è uno scalare. Una volta scelta la retrazione $R$ ci rimane da decidere la direzione $\eta^k$ e la lunghezza del passo $t^k$. Per ottenere la convergenza del metodo delle restrizioni sulla scelta di questi due parametri devono essere fatte.\\
 \begin{definition}[sequenza gradient related su varietà]
-Data una funzione di costo $f$ su una varietà riemanniana $M$, una sequenza $\{\eta^k \}$, $\eta^k \in T_xM$ è \textbf{gradient related} se, per ogni sotto-sequenza $\{x^k\}_{k \in K}$ di $\{x^k\}$ che converge ad un punto non stazionario di $f$, la corrispondente sotto-sequenza $\{\eta^k\}_{k \in K}$ è limitata e soddisfa\\
+Data una funzione di costo $f$ su una varietà riemanniana $M$, una sequenza $\{\eta^k \}$, $\eta^k \in T_xM$ è \textbf{gradient related} se per ogni sotto-sequenza $\{x^k\}_{k \in K}$ di $\{x^k\}$ che converge ad un punto non stazionario di $f$, la corrispondente sotto-sequenza $\{\eta^k\}_{k \in K}$ è limitata e soddisfa\\
 $\limsup\limits_{k \to \infty, k \in K} \langle$grad $f(x^k), \eta^k \rangle < 0$
 \end{definition}
 \begin{definition}[Punto di Armijo su varietà]
-Data una funzione $f$ su una varietà riemanniana $M$ dotata di una retrazione $R$, un punto $x \in M$, un vettore tangente $\eta \in T_xM$, e degli scalari $\bar{\alpha} > 0, \beta, \sigma \in (0, 1)$, un \textbf{punot di Armijo su varietà} è $\eta^A = t^{A}\eta = \beta^{m}\bar{\alpha}\eta$, dove $m$ è il più piccolo intero non negativo tale che\\
+Data una funzione $f$ su una varietà riemanniana $M$ dotata di una retrazione $R$, un punto $x \in M$, un vettore tangente $\eta \in T_xM$, e degli scalari $\bar{\alpha} > 0, \beta, \sigma \in (0, 1)$, un \textbf{punto di Armijo su varietà} è $\eta^A = t^{A}\eta = \beta^{m}\bar{\alpha}\eta$, dove $m$ è il più piccolo intero non negativo tale che\\
 $f(x) - f(R_x(\beta^{m}\bar{\alpha}\eta)) \geq -\sigma \langle$grad $f(x), \beta^m\bar{\alpha}\eta \rangle_x$.\\
 Il valore reale $t^A$ è il \textbf{Passo di Armijo}.
 \end{definition}
@@ -229,7 +229,7 @@ Andiamo ora a definire un algoritmo generico per la discesa di gradiente su vari
 \caption{Accelerated Line Search (ALS)}
 \end{algorithm}
 
-Dallo pseudocodice appena esplicitato è chiaro che tale algoritmo puo essere visto come una generalizzazione della scelta del passo di Armijo descritto nella sotto-sezione 2.2, difatti scegliere $x^{k+1} = R_{x^k}(t^{k^A}\eta^k)$ soddisfa \eqref{ctr-als}. Inoltre la condizione rilassata \eqref{ctr-als} ci permette un ampio spazio di manovra nella scelta di $x^{k+1}$ grantendoci, la convergenza ad un punto stazionario, come enunceremo formalmente, e ciò puo portare alla definizione di algoritmi altamente efficienti.
+Dallo pseudocodice appena esplicitato è chiaro che tale algoritmo puo essere visto come una generalizzazione della scelta del passo di Armijo descritto nella sotto-sezione 2.2, difatti scegliere $x^{k+1} = R_{x^k}(t^{k^A}\eta^k)$ soddisfa \eqref{ctr-als}. Inoltre la condizione rilassata \eqref{ctr-als} ci permette un ampio spazio di manovra nella scelta di $x^{k+1}$ grantendoci la convergenza ad un punto stazionario, come enunceremo formalmente, e ciò puo portare alla definizione di algoritmi altamente efficienti.
 
 \subsubsection{Convergenza}
 Il concetto di convergenza puo essere ridefinito e generalizzato su varietà. Una sequenza infinita $\{x^k\}_{k=0,1,...}$ di punti su una varietà $M$ è detta essere convergente se esiste una carta $(U, \psi)$ di $M$, un punto $x^\ast \in M$ e $K > 0$ tali che $x^k$ è in $U$ per ogni $k \geq K$ e tale che la sequenza $\{\psi(x^k)\}_{x=K, K+1, ...}$ converge a $\psi(x^\ast)$ (in tal caso applichiamo il concetto di convergenza di $R^n$, avendo $\psi$ come codominio uno spazio euclideo). Il punto $\psi^{-1}(\lim_{k \to \infty} \psi(x^k))$ è chiamato il \emph{limite} della sequenza $\{x^k\}_{k=0,1,...}$. Tutte le sequenze convergenti di una vairetà di \emph{Hausdorff} hanno uno ed un solo punto limite.\\
