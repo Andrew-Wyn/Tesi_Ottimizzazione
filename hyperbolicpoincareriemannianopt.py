@@ -217,10 +217,40 @@ def plot_seq(psi_seq, f_seq, g_seq, limit, dimm):
   g_norm = [LA.norm(g) for g in g_seq]
   ax4.semilogy((g_norm))
 
-"""# Cariamento dei dati"""
+"""# Verifica Sperimentale Mappa Conforme"""
 
-#x_set = [poincare_points_factory() for _ in range(4)]
-x_set = np.array([[-0.5, 0], [0.3, 0], [0.6, 0]], dtype=np.float64)
+x = np.array([2.9759471, 16.07711731, 16.38078027])#inv_rho(poincare_points_factory())
+
+print(x)
+
+a_set_1 = [inv_rho(poincare_points_factory()), inv_rho(poincare_points_factory())]
+a_set_2 = [inv_rho(poincare_points_factory()), inv_rho(poincare_points_factory())]
+v = hyperboloid_gradient(x, a_set_1)
+w = hyperboloid_gradient(x, a_set_2)
+
+print(v)
+print(w)
+
+
+def differential_map(x, v):
+  n = x.shape[0]-1
+  delta_f_v = np.zeros(n)
+  for i in range(n):
+    delta_f_v[i] = (v[i] - (x[i]*v[-1])/(x[-1] + 1))
+  return delta_f_v
+
+  
+delta_f_v = differential_map(x, v)
+print(delta_f_v)
+delta_f_w = differential_map(x, w)
+print(delta_f_w)
+r = lambda_x(x)**2 * np.dot(delta_f_v, delta_f_w)
+
+s = minkowski_dot(v, w)
+
+print((s/r))
+
+"""# Cariamento dei dati"""
 
 def generate_starting_point(x_set):
     psi_0 = np.zeros(x_set.shape[1]) # poincare_points_factory() # calcolare come media dei punti x_set
@@ -247,12 +277,10 @@ x_set_s = generate_sets_from_file()
 
 print(x_set_s)
 
-dim, x_set, limit = x_set_s[2]
-psi_0 = generate_starting_point(x_set)
+dim, x_set, limit = x_set_s[3]
 
 print(dim)
 print(x_set)
-print(psi_0)
 print(limit)
 
 """# Metodo iterativo
@@ -284,6 +312,15 @@ print(limit_iter)
 
 limit_iter = rho(iterative_method_hyperboloid([inv_rho(x) for x in x_set], 100000))
 print(limit_iter)
+
+"""# Scelta del punto iniziale"""
+
+# scelta del passo inizale come iterata i-esima dell'algoritmo iterativo che sappiamo convergere, perciò aumentando i avremo psi_0 sempre più vicino al nostro punto limite
+psi_0 = iterative_method_poincare(x_set, 10)
+print(psi_0)
+
+#
+#psi_0 = generate_starting_point(x_set)
 
 """# Optimisations Algorithms
 
@@ -382,11 +419,12 @@ def plot_psi_seq(psi_seq, limit, dim):
 
 print(limit)
 
-x_set_complex = r2_to_complex_array(x_set)
-seq = poincare_barycenter_iannazzo(x_set_complex, 0.1, 1000)
-seq = complex_to_r2_array(seq)
-print("Limit sequence poincare: ", seq[-1])
-plot_psi_seq(seq, limit, dim)
+if dim == 2:
+  x_set_complex = r2_to_complex_array(x_set)
+  seq = poincare_barycenter_iannazzo(x_set_complex, 0.1, 1000)
+  seq = complex_to_r2_array(seq)
+  print("Limit sequence poincare: ", seq[-1])
+  plot_psi_seq(seq, limit, dim)
 
 """## Fixed Length step size"""
 
@@ -457,7 +495,7 @@ def optimisation_fl_hyperboloid(psi_0, learning_rate, x_set, max_steps=10):
     g_seq.append(g_h)
   return psi_seq, f_seq, g_seq
 
-psi_seq, f_seq, g_seq = optimisation_fl_poincare(psi_0, 0.01, x_set, 100)
+psi_seq, f_seq, g_seq = optimisation_fl_poincare(psi_0, 0.005, x_set, 100)
 print("Limit sequence poincare: ", psi_seq[-1])
 print(psi_seq)
 plot_seq(psi_seq, f_seq, g_seq, limit, dim)
@@ -466,7 +504,7 @@ psi_seq, f_seq, g_seq = optimisation_fl_poincare_euclidean(psi_0, 0.0001, x_set,
 print("Limit sequence poincare euclideo: ", psi_seq[-1])
 plot_seq(psi_seq, f_seq, g_seq, limit, dim)
 
-psi_seq, f_seq, g_seq = optimisation_fl_hyperboloid(psi_0, 0.4, x_set, 100)
+psi_seq, f_seq, g_seq = optimisation_fl_hyperboloid(psi_0, 0.5, x_set, 100)
 print("Limit sequence iperboloide: ", psi_seq[-1])
 plot_seq(psi_seq, f_seq, g_seq, limit, dim)
 
@@ -671,7 +709,9 @@ psi_seq, f_seq, g_seq = BB_poincare(psi_0, x_set, 0.0001, 0.01, 100)
 print("Limit sequence poincare euclidean: ", psi_seq[-1])
 plot_seq(psi_seq, f_seq, g_seq, limit, dim)
 
-psi_seq, f_seq, g_seq = RBB_poincare(psi_0, x_set, 0.0001, 0.9, 100)
+print(limit)
+
+psi_seq, f_seq, g_seq = RBB_poincare(psi_0, x_set, 0.0001, 0.001, 100)
 print("Limit sequence poincare: ", psi_seq[-1])
 plot_seq(psi_seq, f_seq, g_seq, limit, dim)
 
@@ -679,3 +719,37 @@ plot_seq(psi_seq, f_seq, g_seq, limit, dim)
 psi_seq, f_seq, g_seq = RBB_hyperboloid(psi_0, x_set, 0.001, 0.9, 100)
 print("Limit sequence iperboloide: ", psi_seq[-1])
 plot_seq(psi_seq, f_seq, g_seq, limit, dim)
+
+"""# Confronto tra le due metodologie
+
+per ogni tipologia di algoritmo confrontiamo al variare dei parametri come variano e si comporta l'implementazione su iperboloide rispetto a quella su disco di Poincaré
+"""
+
+fixed_lenght_poincare = []
+fixed_lenght_hyper = []
+
+def differences(seq):
+  differences = []
+  for s in seq:
+    differences.append(math.sqrt(np.dot(s, s)) < epsilon)
+  return differences
+
+epsilon = 10e-14
+iter_ = 1000
+for i in range(1, iter_):
+  _ , _, poincare_seq = optimisation_fl_poincare(psi_0, (i/iter_), x_set, 100)
+  min_poincare = np.argmax(differences(poincare_seq))
+  if min_poincare == 0:
+    min_poincare = 100+1
+  fixed_lenght_poincare.append(min_poincare)
+  _, _, hyper_seq = optimisation_fl_hyperboloid(psi_0, (i/iter_), x_set, 100)
+  min_hyper = np.argmax(differences(hyper_seq))
+  if min_hyper == 0:
+    min_hyper = 100+1
+  fixed_lenght_hyper.append(min_hyper)
+
+print(min(fixed_lenght_poincare))
+plt.plot([i/iter_ for i in range(1, iter_)], fixed_lenght_poincare)
+
+print(min(fixed_lenght_hyper))
+plt.plot([i/iter_ for i in range(1, iter_)], fixed_lenght_hyper)

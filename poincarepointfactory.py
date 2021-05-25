@@ -98,15 +98,14 @@ def optimisation_fl_poincare(psi_0, learning_rate, x_set, max_steps=10):
     psi = psi_seq[-1]
     g = frechet_mean_poincare_grad(psi, x_set)
     new_psi=poincare_exp(psi, -learning_rate*g)
-    
     psi_seq.append(new_psi)
   return psi_seq
 
 x_set_s = [
            np.array([[-0.5, 0], [0.3, 0], [0.6, 0]], dtype=np.float64),
+           np.array([[-0.1, 0.1], [-0.3, 0.2], [0.5, -0.3], [0.1, -0.1], [0.3, 0.1], [-0.6, 0.2], [0.1, -0.3]], dtype=np.float64),
            np.array([[-0.5, 0.2, 0.1], [0.3, 0.2, 0.4], [0.6, 0.3, 0.2]], dtype=np.float64),
-           np.array([[-0.5, 0.2, 0.1], [0.3, 0.2, 0.4], [-0.6, 0.3, 0.2], [0.2, 0, -0.4]], dtype=np.float64),
-           np.array([[-0.5, 0.2, 0.1, 0.4], [0.3, 0.2, 0.4, 0.1], [0.6, 0.3, 0.2, 0.3]], dtype=np.float64)
+           np.array([[-0.5, 0.2, 0.1], [0.3, 0.2, 0.4], [-0.6, 0.3, 0.2], [0.2, 0, -0.4]], dtype=np.float64)
           ]
 
 def squeeze(x_set):
@@ -132,7 +131,7 @@ def generate_to_save_data(x_set_s):
   for x_set in x_set_s:
     psi_0 = generate_starting_point(x_set)
     
-    psi_seq = optimisation_fl_poincare(psi_0, 0.005, x_set, 100)
+    psi_seq = optimisation_fl_poincare(psi_0, 0.0001, x_set, 1000)
     limit = psi_seq[-1]
 
     to_save.append(format_data_to_save(x_set, limit))
