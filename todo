@@ -18,3 +18,7 @@ Metodi:
     poi si va verso il quarto putno e si prosegue per 1/4 e cosi via.
     x_k+1 = exp(log(x_k, a_(k%p)), 1/k); p = # punti
     converge al baricentro
+
+TODO:
+- controllare manopt implementazione disco poincare ed iperboloide, confrontando le formule utilizzate
+- comparare metodologie tramite algoritmi di non a passo fisso
