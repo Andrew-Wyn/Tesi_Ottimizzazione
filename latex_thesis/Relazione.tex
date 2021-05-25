@@ -244,7 +244,13 @@ Sia $\{x^k\}$ una sequenza finita di iterate generata da ALS. Assumiamo che l'in
 
 \section{Disco di poincare e Iperboloide}
 
-\subsection{subsection}
+\subsection{Iperboloide}
+
+\subsection{Disco di Poincaré}
+
+\subsection{Iperboloide come modello conforme}
+
+\subsection{Media di Fréchet e problema del centroide}
 
 \section{Metodi utilizzati con pseudocodice}
 
@@ -255,6 +261,40 @@ Sia $\{x^k\}$ una sequenza finita di iterate generata da ALS. Assumiamo che l'in
 \subsection{subsection}
 
 \section{Appendice}
+
+\subsection{Varietà}
+Sia $M$ un insieme. Una bigiezione $\phi$ di un sottoinsime $U$ di $M$ in un sottoinsieme aperto di $R^d$ è chiamata mappa d-dimensionale dell'insieme $U$. Data una carta $(U, \psi)$ e $x \in U$ gli elementi di $\psi(x) \in R^d$ sono le coordinate di $x$ nella carta $(U, \psi)$. Un $Atlas$ $(A)$ di $M$ in $R^d$ è un insieme di carte $(U_a, \psi_a)$ dell'insieme $M$ tali che:
+\begin{itemize}
+    \item $\bigcup_a U_a = M$
+    \item Per ogni coppia $\alpha, \beta$ con $U_{\alpha} \bigcap U_{\beta} \neq \emptyset$ gli insiemi $\psi_{\alpha}(U_{\alpha} \bigcap U_{\beta})$ e $\psi_{\beta}(U_{\alpha} \bigcap U_{\beta})$ sono sottoinsiemi aperti di $R^d$ ed il cambio di coordinate $\psi_{\alpha} \circ \psi_{\beta}^{-1}:$ $R^d \to R^d$ è $smooth$.
+\end{itemize}
+Dato un'atlas $A$, sia $A^+$ l'insieme delle carte $(U, \psi)$ tali che $A \bigcup \{(U, \psi)\}$ è ancora un'atlas. $A^+$ è un'atlas massimale generato da $A$. Un'atlas massimale dell'insieme $M$ è chiamato struttra differenziabile su $M$.
+\begin{definition}
+Una varietà d-dimensionale è una coppia $(M, A^+)$, dove $M$ è un insieme e $A^+$ è un atlas massimale su $M$ in $R^d$, tale che la topologia indotta da $A^+$ è di hausdorff.
+\end{definition}
+Data una carta $\psi$ su $M$, l'inverso $\psi^{-1}$ è chiamata parametrizzazione locale di $M$.
+\subsubsection{Vettori Tangenti}
+\subsubsection{Metriche distanze e e gradienti Riemanniani}
+\subsection{Definizioni Utili}
+\begin{definition}[Positività]
+\end{definition}
+\begin{definition}[Convessità]
+\end{definition}
+\begin{definition}[Derivate Parziali]
+\end{definition}
+\begin{definition}[Spazio di Hausdorff]
+\end{definition}
+\begin{definition}[Punto di accumulazione]
+\end{definition}
+\begin{definition}[Taylor a più variabili]
+\end{definition}
+\begin{definition}[Gradiente]
+\end{definition}
+\begin{definition}[Derivata di Fréchet]
+\end{definition}
+\begin{definition}[Spazio topologico]
+\end{definition}
+
 - positivita
 - convessita
 - insieme chiuso
