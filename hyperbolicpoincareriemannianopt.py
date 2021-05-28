@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 from numpy import linalg as LA
 import numpy.linalg as la
 from mpmath import mp, mpf, acosh
-!pip install pymanopt
+!pip install git+https://github.com/pymanopt/pymanopt
 import pymanopt
 from pymanopt.manifolds.manifold import Manifold
 mp.dps = 32
@@ -34,24 +34,7 @@ print(inspect.getsource(Manifold))
 
 class PoincareBall(Manifold):
   def __init__(self, dimension):
-    # super().__init__("PoincareBall", dimension) # la versione nel pypi è una versione vecchia della superclasse Manifold
-    self._name = f"PoincareBall over R^{dimension}"
-    self._dimension = dimension
-
-  # ----------
-  def __str__(self):
-    """
-    Name of the manifold
-    """
-    return self._name
-
-  @property
-  def dim(self):
-    """
-    Dimension of the manifold
-    """
-    return self._dimension
-  # ----------
+    super().__init__(f"PoincareBall over R^{dimension}", dimension) # la versione nel pypi è una versione vecchia della superclasse Manifold
 
   def conformal_factor(self, x):
     return 2/(1 - np.dot(x, x))
@@ -134,24 +117,7 @@ class PoincareBall(Manifold):
 
 class Hyperboloid(Manifold):
   def __init__(self, dimension):
-    # super().__init__(self, "Hyperboloid", dimension)
-    self._name = f"Hyperboloid over R^{dimension+1}"
-    self._dimension = dimension
-
-  # ----------
-  def __str__(self):
-    """
-    Name of the manifold
-    """
-    return self._name
-
-  @property
-  def dim(self):
-    """
-    Dimension of the manifold
-    """
-    return self._dimension
-  # ----------
+    super().__init__(self, "Hyperboloid", dimension)
 
   def _minkowski_dot(self, X, Y):
     return np.dot(X[:-1], Y[:-1]) - X[-1]*Y[-1]
@@ -172,7 +138,7 @@ class Hyperboloid(Manifold):
   def rand(self):
     ret = np.zeros(self.dim+1)
     x0 = np.random.normal(self.dim)
-    x1 = sqrt(1 + np.dot(x0))
+    x1 = math.sqrt(1 + np.dot(x0))
     ret[:-1] = x0
     ret[-1] = x1
     return ret
@@ -185,12 +151,12 @@ class Hyperboloid(Manifold):
     return np.zeros(X.shape)
 
   def dist(self, X, Y):
-    alpha = max(1, -minkowski_dot(X, Y))
+    alpha = max(1, -self._minkowski_dot(X, Y))
     return np.arccosh(alpha)
 
   def egrad2rgrad(self, X, G):
     G[-1] = -G[-1]
-    return projection(X, G)
+    return self.proj(X, G)
 
   def ehess2rhess(self, X, G, H, U):
     G[-1] = -G[-1]
@@ -199,7 +165,7 @@ class Hyperboloid(Manifold):
     return self.proj(X, U*inners + H);
 
   def retr(self, X, U):
-    self.exp(X, U)
+    return self.exp(X, U)
 
   def exp(self, X, U):
     mink_norm_u = self.norm(X, U)
@@ -236,13 +202,12 @@ def poincare_dist_grad(x, y):
 def frechet_mean_poincare_grad(psi, x_set):
   res = 0
   for x_i in x_set:
-    res += poincare_dist(psi, x_i)*grad_poincare_dist(psi, x_i)
+    res += poincare_dist(psi, x_i)*poincare_dist_grad(psi, x_i)
   return res*2*(len(x_set))
 
 def frechet_mean_poincare_rgrad(psi, x_set):
   egrad = frechet_mean_poincare_grad(psi, x_set)
-  factor_q = lambda_x(psi)**2
-  return egrad/factor_q
+  return PoincareManifold.egrad2rgrad(psi, egrad)
 
 # --- Hyperboloid Gradient
 def frechet_mean_hyperboloid_grad(theta, x_set):
@@ -256,8 +221,7 @@ def frechet_mean_hyperboloid_grad(theta, x_set):
 
 def frechet_mean_hyperboloid_rgrad(theta, x_set):
   egrad = frechet_mean_hyperboloid_grad(theta, x_set)
-  egrad[-1] = -egrad[-1]
-  return hyperboloic_projection(theta, egrad)
+  return HyperboloidManifold.egrad2rgrad(theta, egrad)
 
 def frechet_mean(theta, x_set, distance):
   sum_ = 0
@@ -331,14 +295,14 @@ def plot_seq(psi_seq, f_seq, g_seq, limit, dimm):
 
 """# Verifica Sperimentale Mappa Conforme"""
 
-x = np.array([2.9759471, 16.07711731, 16.38078027])#inv_rho(poincare_points_factory())
+x = np.array([2.9759471, 16.07711731, 16.38078027]) #inv_rho(poincare_points_factory())
 
 print(x)
 
 a_set_1 = [inv_rho(poincare_points_factory()), inv_rho(poincare_points_factory())]
 a_set_2 = [inv_rho(poincare_points_factory()), inv_rho(poincare_points_factory())]
-v = hyperboloid_gradient(x, a_set_1)
-w = hyperboloid_gradient(x, a_set_2)
+v = frechet_mean_hyperboloid_rgrad(x, a_set_1)
+w = frechet_mean_hyperboloid_rgrad(x, a_set_2)
 
 print(v)
 print(w)
@@ -614,7 +578,7 @@ psi_seq, f_seq, g_seq = optimisation_fl_poincare(psi_0, frechet_mean_poincare_gr
 print("Limit sequence poincare euclideo: ", psi_seq[-1])
 plot_seq(psi_seq, f_seq, g_seq, limit, dim)
 
-psi_seq, f_seq, g_seq = optimisation_fl_hyperboloid(psi_0, frechet_mean_hyperboloid_rgrad, 0.45, x_set, 100)
+psi_seq, f_seq, g_seq = optimisation_fl_hyperboloid(psi_0, frechet_mean_hyperboloid_rgrad, 0.45, x_set, 300)
 print("Limit sequence iperboloide: ", psi_seq[-1])
 plot_seq(psi_seq, f_seq, g_seq, limit, dim)
 
@@ -766,7 +730,7 @@ print("Limit sequence poincare: ", psi_seq[-1])
 plot_seq(psi_seq, f_seq, g_seq, limit, dim)
 
 # supporta un learnign rate piu alto convergendo in modo piu veloce
-psi_seq, f_seq, g_seq = RBB_hyperboloid(psi_0, frechet_mean_hyperboloid_rgrad, x_set, 0.001, 0.9, 100)
+psi_seq, f_seq, g_seq = RBB_hyperboloid(psi_0, frechet_mean_hyperboloid_rgrad, x_set, 0.0001, 0.9, 100)
 print("Limit sequence iperboloide: ", psi_seq[-1])
 plot_seq(psi_seq, f_seq, g_seq, limit, dim)
 
@@ -785,12 +749,11 @@ def differences(seq):
     differences.append(math.sqrt(np.dot(s, s)) < epsilon)
   return differences
 
-epsilon = 10e-15
+epsilon = 10e-8
 iter_ = 1000
 for i in range(1, iter_):
   poincare_seq, _, _= optimisation_fl_poincare(psi_0, frechet_mean_poincare_rgrad, (i/iter_), x_set, 100)
   min_poincare = np.argmax(differences(poincare_seq))
-  print(differences(poincare_seq))
   if min_poincare == 0:
     min_poincare = 100+1
   fixed_lenght_poincare.append(min_poincare)
