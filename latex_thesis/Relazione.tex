@@ -149,8 +149,10 @@ $D^k$ matrice diagonale.\\\\
 \textbf{Metodi di Schamsky}:\\
 $D^k = (\nabla^2 f(x^0))^{-1}$\\\\
 \textbf{Metodi di quasi Newton}:\\
-$D^k = H(x^k) \approx \nabla^2 f(x^k)$\\\\
-Nella pratica $h^k = (\nabla^2 f(x^k))^{-1} d^k$, per trovare $h^k$ riscriviamo $(\nabla^2 f(x^k))h^k = d^k$, risolvibile in tempo polinimiale tramite metodi di Krylov.
+$D^k = H(x^k) \approx \nabla^2 f(x^k)$\\
+I metodi di quasi newton sono utilizzati nella pratica dal momento in cui il calcolo della matrice hessiana è computazionalmente oneroso, in tal caso la matrice $D^k$ è scelta in modo tale che la direzione $d^k = -D^k\nabla f(z^k)$ tenda ad approssimare la direzione del metodo di Newton. L'idea fondamentale riguardo questa metodologia è che tramite due iterate successive $k$, $k+1$ ed i valori $x^k$, $x^{k+1}$, $\nabla f(x^k)$, $\nabla f(x^{k+1})$ noi possiamo avere accesso a delle informazioni riguardo la matrice essiana, in particolare abbiamo che\\
+$(\nabla f(x^{k+1}) - \nabla f(x^k) \approx H(x^{k+1})(x^{k+1} - x^k)$ che sappiamo essere un uguaglianza nel caso di $f$ quadratica. Definiti $p^k = x^{k+1} - x^k$ e $q^k = \nabla f(x^{k+1}) - \nabla f(x^k)$ allora $D^{k+1}$ deve soddisfare l'uguaglianza $D^{k+1} p^k = q^k$, questo prende il nome di metodo delle secanti (equazione delle secanti).
+
 \subsubsection{Selezione del passo}
 Ci sono numerose metodologie per la scelta del passo $a^k$ nei metodi del gradiente, ne listiamo alcune.\\\\
 \textbf{Ricerca lineare esatta}:\\
@@ -243,23 +245,81 @@ Sia $\{x^k\}$ una sequenza finita di iterate generata da ALS. Assumiamo che l'in
 \end{corollary}
 
 \section{Disco di poincare e Iperboloide}
-
+Lo spazio iperbolico può essere definito in vari modi equivalenti, nessuno dei quali è prevalente in letteratura. Ciascuno di questi è un modello dello spazio iperbolico, noi descriveremo l'iperboloide ed il disco di poincare
 \subsection{Iperboloide}
-
+Possiamo definire $H^n$ come il luogo dei punti di norma -1 in $R^{n:1}$, dotato dell'usuale prodotto di minkowski $(\langle u, v \rangle_{n:1} = \sum_{i=1}^{n} u_iv_i - u_{n+1}v_{n+1}; \quad u,v \in R^{n+1})$, questo luogo di punti ha in realta due componenti connesse, noi ne scegliamo una.
+\begin{definition}[Iperboloide]
+Il modello dell'iperboloide è definito nel modo seguente.\\
+$H^n = \{x \in R^{n+1} | \langle x, x \rangle_{n:1} = -1; \quad x_{n+1} > 0 \}$
+\end{definition}
+Lo spazio tangente in un punto $p \in H^n$ è $T_pH^n = \{x \in R^{n:1} | \langle p,x \rangle_{n:1} = 0\}$.\\
+Possiamo asserire che l'iperboloide è una varietà riemanniana. Andiamo ora ad esplicitare gli strumenti necessari per effettuare ottimizzazione su questa varietà.
+\subsubsection{Metrica}
+La metrica, definita nel $Tangent Bundle$ dell'iperboloide, è la metrica indotta dal prodotto di Minkowski già esplicitata.
+\subsubsection{Distanza}
+La distanza tra due punti dell'iperboloide rappresenta la lunghezza della geodedica che unisce i due punti, è definita come segue.\\
+$d_{H^n} (u,v) = arccosh(-\langle u, v \rangle_{n:1}); \quad u,v \in H^n$
+\subsubsection{Mappa Esponenziale}
+La mappa esponenziale definita su $p \in H^n$ e $v \in T_pH^n$, che ha proprietà di retrazione, e che rappresenta la geodedica originaria in $p$ con derivata in questo punto pari a $v$. E' definita come segue.\\
+$Exp_p(v) = cosh(\parallel v \parallel_{n:1})p + sinh(\parallel v \parallel_{n:1}) v / \parallel v \parallel_{n:1}$
+\subsubsection{Gradiente della funzione distanza}
+La deifinize dell'iperboloide e dello spazio di minkowski nel quale è costruito ci aiuta nel calcolo del gradiente della funzione distanza.\\
+Data una funzione costo $E$ qualsiasi possiamo calcolarne il gradiente in un punto $p \in H^n$, anch'esso arbitrario, passando dapprima per il gradiente definito nell'ambiente, in tal caso lo spazio di minkowski, ricordiamo che quest'ultimo è cosi definito.\\
+$\nabla_{p}^{R^{n:1}} E = (\frac{\partial E}{\partial x_1}|_p, ..., \frac{\partial E}{\partial x_n}|_p, -\frac{\partial E}{\partial x_{n+1}}|_p)$\\
+Una volta calcolato il gradiente nell'ambiente procediamo a proiettarlo nello spazio tangente del punto $p \in H^n$ come segue.\\
+$\nabla_{p}^{H^n} E = \nabla_{p}^{R^{n:1}} E + \langle p, \nabla_{p}^{R^{n:1}} E \rangle_{n:1} p$.\\
+Relativamente al problema della media di fréchet che andremo ad esplicitare definiamo la seguente formula rappresentante il gradiente su spazio di minkowski della funzione distanza.\\
+$\nabla_u^{R^{n:1}} d_{H^n}(u,v) = - (\langle u,v \rangle_{n:1}^2 - 1)^{-1/2} v$
 \subsection{Disco di Poincaré}
-
+Andiamo ora a definire l'altro modello dello spazio iperbolico, rappresentato come tutti i punti di norma strettamente minore di 1 in $R^n$.
+\begin{definition}[Disco di Poincaré]
+Il modello del disco di poincare è definito nel modo seguente\\
+$D^n = \{x \in R^n | \parallel x \parallel < 1\}$
+\end{definition}
+Essendo $D^n$ un sottoinsieme di $R^n$ lo spazio tangente in ogni punto di $D^n$ è $R^n$. Come fatto per l'iperboloide andiamo ad esplicitare i vari strumenti necessari per effettuare ottimizzazione.
+\subsubsection{Metrica}
+La metrica, definita nello spazio tangente del disco di poincaré $T_pD^n$ rispetto ad un punto $p \in D^n$, è la seguente.\\
+$g^D = \lambda_p^2 g^E$; con $\lambda_p = \frac{2}{1- \parallel p \parallel^2}$ e con $g^E$ la metrica euclidea.
+\subsubsection{Distanza}
+La distanza tra due punti del disco di Poincaré rappresenta la lunghezza della geodedica che unisce i due punti, è definita come segue.\\
+$d_{D^n}(u, v) = arccosh(1 + \frac{\parallel u - v\parallel^2}{(1-\parallel u \parallel^2)(1-\parallel v \parallel^2)})$
+\subsubsection{Mappa Esponenziale}
+La mappa esponenziale definita su $p \in D^n$ e $v \in T_pD^n$, che ha proprietà di retrazione, e che rappresenta la geodedica originaria in $p$ con derivata in questo punto pari a $v$. E' definita come segue.\\
+$Exp_p(v) = \frac{\lambda_p (cosh(\lambda_p \parallel v \parallel) + \langle p,\frac{v}{\parallel v \parallel} \rangle sinh(\lambda_p \parallel v \parallel))p}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)} + \frac{\frac{1}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel) v}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)}$
+\subsubsection{Gradiente della funzione distanza}
+Dati $u,v \in D^n$ la formula del gradiente riemanniano della funzione distanza è dato da.\\
+$\nabla_u^{D^n} d(u,v) = \frac{4}{b \sqrt{c^2 - 1}} (\frac{(\parallel v \parallel^2 - 2\langle u,v \rangle + 1)v}{a^2} - \frac{v}{a})$ con $a = 1 - \parallel u \parallel^2$, $b = 1 - \parallel v \parallel^2$, $c = 1 + \frac{2}{ab} \parallel u - v \parallel^2$
 \subsection{Iperboloide come modello conforme}
-
+Come inizialmente accennato le due varietà trattate fin'ora sono due modelli conformi ovvero, esiste un diffeomorfismo invertibile conforme (mantiene gli angoli ma non le lunghezze) che porta da una varietà all'altra. Il diffeomorfismo in questione è la proieizone stereografica $\rho$ definita come segue.\\\\
+$\rho : H^n \to D^n$\\
+$\rho(x) = \frac{1}{x_{n+1} + 1}(x_1, ..., x_n)$; con $x \in H^n$\\\\
+$\rho^{-1} : D^n \to H^n$\\
+$\rho^{-1}(y) = \frac{2}{1 - r}(y_1, ..., \frac{1+r}{2})$; con $r = \parallel y \parallel^2$ e $y \in D^n$\\\\
+A questo punto facciamo vedere che vale la seguente uguaglianza per $n=2$, ci sarà utile nella sezione successiva.\\\\
+$d_{D^n}(a, b) = d_{H^n}(\rho^{-1}(a), \rho^{-1}(b))$\\
+Siano $a, b \in D^n$\\
+$a = (a_1, a_2)$\\
+$b = (b_1, b_2)$\\
+$\rho^{-1}(a) = \frac{2}{1-r_a}(a_1, a_2, \frac{1 + r_a}{2})$\\
+$\rho^{-1}(b) = \frac{2}{1-r_b}(b_1, b_2, \frac{1 + r_b}{2})$\\
+con $r_a = (a_1^2 + a_2^2)$ e $r_b = (b_1^2 + b_2^2)$\\\\
+$d_{H^n}(\rho^{-1}(a), \rho^{-1}(b)) = arccosh(-\langle (\frac{2a_1}{1-r_a}, \frac{2a_1}{1-r_a}, \frac{1+r_a}{1-r_a}), (\frac{2b_1}{1-r_b}, \frac{2b_1}{1-r_b}, \frac{1+r_b}{1-r_b}) \rangle_{2:1} = arccosh(- (\frac{4a_1b_1}{(1-r_a)(1-r_b)} + \frac{4a_2b_2}{(1-r_a)(1-r_b)} - \frac{(1+r_a)(1+r_b)}{(1-r_a)(1-r_b)} = arccosh(\frac{(1+r_a)(1+r_b) - 4a_1b_1 - 4a_2b_2}{(1-r_a)(1-r_b)}) = arccosh(\frac{1 + r_a +r_b + r_ar_b - 4a_1b_1 - 4a_2b_2}{1 - r_a - r_b + r_ar_b}) = arccosh(\frac{1 -r_a -r_b + 2r_a + 2r_b + r_ar_b - 4a_1b_1 - 4a_2b_2}{1 - r_a - r_b + r_ar_b}) = arccosh(1 + \frac{2r_a + 2r_b - 4a_1b_1 - 4a_2b_2}{(1-r_a)(1-r_b)} = arccosh(1 + 2 \frac{r_a + r_b - 2a_1b_1 - 2a_2b_2}{(1-r_a)(1-r_b)} = arccosh(1 + 2\frac{\parallel a - b \parallel^2}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)} = d_{D^n}(a, b)$
 \subsection{Media di Fréchet e problema del centroide}
-
-\section{Metodi utilizzati con pseudocodice}
-
-\subsection{subsection}
-
-\section{Esperimenti (e Applicazioni)}
-
-\subsection{subsection}
-
+\begin{definition}[Media di Fréchet]
+La funzione media di Fréchet di p-punti è cosi definita.\\
+$f(\Theta) = \frac{1}{p}\sum_{i=1}^p d^2(\Theta, x^{(i)})$
+\end{definition}
+Il problema di trovare il centroide di p-punti consiste nel trovare il punto che minimizza la funzione media di Fréchet definita a partire dai punti in questione, il cui minimo esiste ed è unico. Tale problema può essere risolto direttamente in uno spazio euclideo il cui minimo è dato dalla media aritmetica dei p-punti. Mentre in uno spazio iperbolico, come nel nostro caso, la soluzione non è diretta e perciò si applicano le metodologie di ottimizzazione su varietà differenziabili viste precedentemente.\\
+Diamo ora una congettura che possiamo affermare essere corretta in funzione dell'uguaglianza $d_{D^n}(a, b) = d_{H^n}(\rho^{-1}(a), \rho^{-1}(b))$ che abbiamo verificato nella sezione precedente.\\
+Dati $a^{(i)}, \Theta \in D^n$; con $i = 1...p$ dall'uguaglianza precedente è facile notare che $\frac{1}{p}\sum_{i=1}^p d_{D^n}^2(\Theta, a^{(i)}) = \frac{1}{p}\sum_{i=1}^p d_{H^n}^2(\rho^{-1}(\Theta), \rho^{-1}(a^{(i)}))$, perciò essendo $\rho$ un diffeomorfismo se $\exists \Theta \in D^n$ per cui $\frac{1}{p}\sum_{i=1}^p d_{D^n}^2(\Theta, a^{(i)})$ è minima allora esiste $\exists \Psi \in H^n$ per cui è minima $\frac{1}{p}\sum_{i=1}^p d_{H^n}^2(\Psi, \rho^{-1}(a^{(i)}))$. Essendo inoltre $f(x) = \hat{f} = f(\rho^{-1}(x))$ allora cercare il minimo di $f$ equivale a cercare il minimo di $\hat{f} \circ \rho^{-1}$.\\
+In funzione di tale congettura possiamo trasportare il problema definito su disco di Poincaré nella varieta Iperboloide e viceversa, notiamo che le formule necessarie ad effettuare ottimizzazione sulla varietà iperboloide sono computazionalmente meno complesse rispetto a quelle definite per il disco di Poincaré.
+\section{Metodi utilizzati con pseudocodice ed esperimenti}
+In questa sezione andremo a definire lo pseudocodice degli algoritmi di ottimizzazione che abbiamo utilizzato per confrontare il calcolo del minimo della media di Fréchet sui modelli dello spazio iperbolico descritti nel capitolo precedente.
+\subsection{Algoritmi e Pseudocodice}
+\subsubsection{Passo fisso}
+\subsubsection{Armijo}
+\subsubsection{Barzilai-Borwein}
+\subsection{Esperimenti}
 \section{Appendice}
 
 \subsection{Varietà}
