@@ -288,7 +288,8 @@ La mappa esponenziale definita su $p \in D^n$ e $v \in T_pD^n$, che ha propriet�
 $Exp_p(v) = \frac{\lambda_p (cosh(\lambda_p \parallel v \parallel) + \langle p,\frac{v}{\parallel v \parallel} \rangle sinh(\lambda_p \parallel v \parallel))p}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)} + \frac{\frac{1}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel) v}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)}$
 \subsubsection{Gradiente della funzione distanza}
 Dati $u,v \in D^n$ la formula del gradiente riemanniano della funzione distanza è dato da.\\
-$\nabla_u^{D^n} d(u,v) = \frac{4}{b \sqrt{c^2 - 1}} (\frac{(\parallel v \parallel^2 - 2\langle u,v \rangle + 1)v}{a^2} - \frac{v}{a})$ con $a = 1 - \parallel u \parallel^2$, $b = 1 - \parallel v \parallel^2$, $c = 1 + \frac{2}{ab} \parallel u - v \parallel^2$
+$\nabla_u^{E} d(u,v) = \frac{4}{b \sqrt{c^2 - 1}} (\frac{(\parallel v \parallel^2 - 2\langle u,v \rangle + 1)v}{a^2} - \frac{v}{a})$ con $a = 1 - \parallel u \parallel^2$, $b = 1 - \parallel v \parallel^2$, $c = 1 + \frac{2}{ab} \parallel u - v \parallel^2$.\\
+Sappiamo che per per ricavare il gradiente riemanniano dal gradiente euclideo è sufficiente riscalare $\nabla^E$ per l'inverso della metrica riemanniana, perciò: $\nabla_u^{D^n} d(u,v) = \frac{\nabla_u^{E} d(u,v)}{\lambda_u^2}$
 \subsection{Iperboloide come modello conforme}
 Come inizialmente accennato le due varietà trattate fin'ora sono due modelli conformi ovvero, esiste un diffeomorfismo invertibile conforme (mantiene gli angoli ma non le lunghezze) che porta da una varietà all'altra. Il diffeomorfismo in questione è la proieizone stereografica $\rho$ definita come segue.\\\\
 $\rho : H^n \to D^n$\\
