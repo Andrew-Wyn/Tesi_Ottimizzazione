@@ -334,39 +334,63 @@ Una varietà d-dimensionale è una coppia $(M, A^+)$, dove $M$ è un insieme e $
 \end{definition}
 Data una carta $\psi$ su $M$, l'inverso $\psi^{-1}$ è chiamata parametrizzazione locale di $M$.
 \subsubsection{Vettori Tangenti}
+Riprendendo il concetto di derivata direzionale possiamo generalizzarla per un funzione $f$ definita su un manifold, sustituendo $t \mapsto (x + t\eta)$ con una curva su $M$ attraverso $x \in M$ (punto di derivazione) $(\gamma (0) = x)$ questo porta ad una derivata direzionale ben definita $\frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$. Formalmente, sia $M$ una varietà e $\gamma$ una mappa differenziabile $\gamma : R \to M | t \mapsto \gamma (t)$ detta curva in $M$, data, una funzione $f$ a valori reali definita su $M$, la funzione $f \circ \gamma : t \mapsto f(\gamma (t))$ è una funzione differenziabile da $R$ in $R$ con una ben definita deerivata.\\
+Sia $x \in M$; $\gamma (0) = x$ allora $F_{x}(M)$ è l'insieme delle funzioni reali differenziabili definite in un intorno di $x$. Il mapping $\dot{\gamma} (0)$ da $F_x(M)$ in $R$ è definito come: $\dot{\gamma} (0) f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$ con $f \in F_x(M)$; é chiamato vettore tangente alla curva $\gamma$ in $t=0$.
+\begin{definition}[Vettore Tangente]
+Un vettore tangente $\epsilon_x$ ad una varietà $M$ in un punto $x \in M$ è una mappa da $F_x(M)$ in $R$ tale ceh esiste una curva $\gamma$ a valori in $M$ con $\gamma (0) = x$ e che soddisfa:\\
+$\epsilon_xf = \dot{\gamma (0)} f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0} \quad \forall f \in F_x(M)$.\\
+Tale curva $\gamma$ è detta realizzare il vettore tangente $\epsilon_x$
+\end{definition}
+\begin{definition}[Spazio Tangente]
+Uno spazio tangente ad $M$ in $x$ denominato come $T_xM$ è l'insieme di tutti i vettori tangenti ad $M$ in $x$. Questo insieme ammette una struttura di spazio vettoriale come segue: date $\dot{\gamma}_1 (0)$ e $\dot{\gamma}_2 (0)$ in $T_xM$ e $a, b$ in $R$ allora $(a \dot{\gamma}_1 (0) + b \dot{\gamma}_2 (0)) f = a (\dot{\gamma}_1 (0) f) + b (\dot{\gamma}_2 (0) f)$
+\end{definition}
+Lo spazio tangente $T_xM$ mette a disposizione un'approssimazione locale di spazio vettoriale della varietà. Perciò tramite le Retrazioni possiamo effettuare ottimizzazione sullo spazio vettoriale $T_xM$.
+\begin{definition}[Tangent Bundle]
+Data una varietà $M$, sia $TM$ l'insieme di tutti i vettori tangenti ad $M$.\\
+$TM = \bigcup_{x \in M} T_xM$.
+\end{definition}
+Sia $P:M \to N$ una mappa liscia tra due varietà $M$ ed $N$. sia $\epsilon_x$ un vettore tangente in un punto $x$ di $M$, si può far vedere che la mappa $DP(x)[\epsilon_x]$ da $F_{P(x)}(N)$ in $R$ è definita da:\\
+$(DP(x)[\epsilon_x])f = \epsilon_x(f \circ P)$\\
+è un vettore tangente ad $N$ in $P(x)$.\\
+La mappa $DP(X) : T_xM \to T_{P(x)}N | \epsilon_x \mapsto DP(x)[\epsilon_x]$ è una mappa lineare chiamata \emph{differenziale} di P in x.
 \subsubsection{Metriche distanze e e gradienti Riemanniani}
+I vettori tangenti ad una varietà generalizzano la nozione di derivata direzionale. Questo può essere fatto munendo lo spazio tangente $T_xM$ con un prodotto interno $\langle \cdot, \cdot \rangle_x$ bilineare, definito positivo e simmetrico. Il prodotto interno induce una norma $\parallel \epsilon_x \parallel_x = \sqrt{\langle \epsilon_x, \epsilon_x \rangle_x}$ sun $T_xM$. Una varietà il cui spazio tangente è munito di un prodotto interno prende il nome di varietà riemanniana $(M, g)$ con $g$ metrica riemanniana.\\
+La lunghezza di una curva $\gamma:[a,b] \to M$ in una varietà riemanniana $(M, g)$ è definita da: $L(\gamma) = \int_a^b \sqrt{g(\dot{\gamma (t)}, g(\dot{\gamma (t)}))}$\\
+La distanza riemanniana in una varietà riemanniana connessa $(M,g)$ è $dist: MxM \to R | dist(x,y) \mapsto inf_{\gamma \in \Gamma}(L(\gamma))$, dove $\Gamma$ è l'insieme di tutte le curve in $M$ che connettono $x$ ed $y$.\\
+Sia $f$ la solita funzione liscia definita su $(M,g)$, il gradiente di $f$ in $x$ è definito come l'elemento di $T_xM$ che soddisfa: $\langle f(x), \epsilon \rangle_x = Df(x)[\epsilon]$.\\
+Sia $M$ una sottovarietà immersa di una varietà riemanniana $\hat{M}$ siccome ogni spazio tangente $T_xM$ può essere trattato come sottospazio di $T_x\hat{M}$ la metrica $\hat{g}$ di $\hat{M}$ induce una metrica $g$ su $M$, $g_x(\epsilon, c) = \hat{g}_x(\epsilon, c)$ con $\epsilon, c \in T_xM$, perciò $M$ è una sotto varietà riemanniana.
+\subsection{Topologia}
+Una topologia su un insieme $X$ è una collezione $T$ di sottoinsiemi di $X$ chiamati insiemi aperti, tali che:
+\begin{itemize}
+    \item $X$ e $\emptyset$ appartengono a $T$
+    \item L'unione di elementi di qualsiasi sottoinsieme di $T$ è in $T$
+    \item L'intersezione di elementi di qualsiasi sotto collezione di $T$ è in $T$
+\end{itemize}
+Uno spazio topologico è una coppia $(X,T)$ dove $X$ è un insieme e $T$ è una topologia su $X$.
+\begin{definition}[Hausdorff]
+Un insieme $X$ è $T_2$ o di Hausdorff se ogni coppia di punti distinti di $X$ hanno un intorno distinto.
+\end{definition}
+Se $X$ è di Hausdorff allora ogni sequenza di punti di $X$ converge ad al più un punto di $X$.
 \subsection{Definizioni Utili}
 \begin{definition}[Positività]
+Sia $A \in R^{n*n}$ è definita positiva se è simmetrica e se $v'Av > 0$ se $v$ è un vettore $\in R^n - {0}$, con $v = 0$ è diretto che $v'Av = 0$.
 \end{definition}
 \begin{definition}[Convessità]
+Una funzione $f:\Omega \to R$ con $\Omega \leq V$, $V$ (spazio vettoriale) allora è definita convessa se: $(f((\lambda)v + (1 - \lambda)w) \leq \lambda f(v) + (1 - \lambda)f(w)$, per $\lambda \in [0;1]$ e $v, w \in \Omega$.
 \end{definition}
 \begin{definition}[Derivate Parziali]
-\end{definition}
-\begin{definition}[Spazio di Hausdorff]
+Data una funzione $f:V \to R$, $V$ (spazio vettoriale), allora una derivata parziale su $x \in V$ è definita come:\\
+$\frac{\partial f(x)}{\partial x_i}$ = $\lim_{h \to 0} \frac{f(x + h e_i) - f(x)}{h}$; con $x_i$ componente i-esima di $x$ ed $e_i$ i-esimo vettore della base canonica.\\
+Se una funzione è differenziabile in $x$ allora tutte le derivate parziali esistono in $x$.
 \end{definition}
 \begin{definition}[Punto di accumulazione]
-\end{definition}
-\begin{definition}[Taylor a più variabili]
+Diciamo che $x_0 \in R$ è un punto di accumulazione per un insieme $E \subset R$ se comunque scelto un intorno $B(x_0, \epsilon)$, risulta che $B(x_0, \epsilon)$ contiene almeno un punto di $E$ diverso da $x_0$.
 \end{definition}
 \begin{definition}[Gradiente]
+Consideriamo una funzione $f$ definita su un insieme aperto $A \subset R^n$ e sia $x \in A$ se esistono in $x$ le derivate parziali rispetto ad $\{x_i\}_{i=1...n}$ allora è possibile costruire un vettore che ha per componenti le derivate perziali, perciò il gradiente è definito come: $\nabla f = [\frac{\partial f(x)}{\partial x_1}, ..., \frac{\partial f(x)}{\partial x_n}]$, inoltre per il teorema della formula del gradiente sappiamo che, dato un versore $v$ esiste la derivata direzionale $f_v$ in $x$ e che $f_v(x) = \nabla f(x) \cdot v$.
 \end{definition}
-\begin{definition}[Derivata di Fréchet]
-\end{definition}
-\begin{definition}[Spazio topologico]
-\end{definition}
-
-- positivita
-- convessita
-- insieme chiuso
-- derivate parziali
-- derivata di fréchet
-- teorema di rappresentazione di ritz
-- teorema di schwartz
-- teorema di weiestrass
-- gradiente 
-- taylor
-- elementi base di topologia (?)
-- varieta differenziabili
-- spazio di hausdorff
-- punto di accumulazione
+\subsubsection{Teorema di Taylor}
+Il teorema di Taylor è un teorema che fornisce una sequenza di approssimazioni di una funzione differenziabile attorno ad un dato punto mediante i polinomi di taylor, ovvero polinomi i cui coefficienti dipendono solo dalle derivate della funzione nel punto.
+Diamo un esempio pratico di approssimazione di taylor del secondo ordine di una funzione a due variabili.\\\\
+$f(x_0+h, y_0+k) = f(x_0, y_0) + f_x(x_0, y_0)h + f_y(x_0, y_0)k + \frac{1}{2}[f_{xx}(x_0, y_0)h^2 + f_{xy}(x_0, y_0)hk + f_{yy}(x_0, y_0)k^2] + R(h, k)$; con $R(h, k) \in o(\parallel (h, k) \parallel^2)$.
 \end{document}
