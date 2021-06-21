@@ -6,6 +6,7 @@
 \usepackage{graphicx, wrapfig} %gestione immagini e grafiche
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{amsmath}
+\usepackage{amsfonts}
 
 \newtheorem{theorem}{Teorema}
 \newtheorem{definition}{Definizione}
@@ -62,19 +63,14 @@
 Nella seguente trattazione verra presentato il problema del minimo della funzione media di frechet sulla varietà disco di poincare, verra proposta una metodologia risolutiva che consiste nel trasportare il problema su una varieta conforme definita iperboloide, nella quale alcune formule per dimensione arbitraria sono computazionalmente meno onerose (e numericamente piu stabili ?)
 
 \section{Metodi di ottimizzazione su $R^n$ e Varieta differenziabili}
-In tale sezione andremo ad esplicitare le metodologie generali per trovare un minimo non vincolato di una funzione costo $f$ definita su una varieta differenziabile $M$ (notiamo che $R^n$ è un caso particolare di varietà differenziabile) con valori reali.
-
-
-\subsection{Condizioni di ottimalità}
-Sia $f:R^n \to R$ non vincolata.
-
-\subsubsection{Ottimo locale ed ottimo globale}
-Un vettore $x^\ast$ è un minimo locale non vincolato per $f$ se (informalmente) ha un valore in $f$ non più grande di un suo intorno, più formalmente se esiste $\epsilon > 0$ tale che\\\\
-$f(x^\ast) \leq f \quad \forall x \quad \parallel x - x^\ast \parallel < \epsilon$\\\\
+In tale sezione andremo ad esplicitare le metodologie generali per trovare un minimo di una funzione $f$ definita su una varieta differenziabile $M$ a valori reali (notiamo che $R^n$ è un caso particolare di varietà differenziabile).\\
+Sia $f: \mathbb{R} ^n \to \mathbb{R}$ non vincolata.
+Un vettore $x^\ast$ è un minimo locale non vincolato per la funzione $f$ se (informalmente) $f$ ha un valore in $x^\ast$ non più grande di un intorno di $x^\ast$ stesso. Più formalmente $x^\ast$ è minimo locale per $f$ se esiste $\epsilon > 0$ tale che\\
+\[f(x^\ast) \leq f, \mbox{ per ogni } x \mbox{ con } \parallel x - x^\ast \parallel < \epsilon\]\\
 Un vettore $x^\ast$ è un minimo globale non vincolato rispetto ad $f$ se ha un valore in $f$ non più grande di ogni altro vettore, più formalmente è tale che\\\\
 $f(x^\ast) \leq f \quad \forall x \in R^n$\\\\
 
-\subsubsection{Condizioni necessarie per l'ottimalità}
+\subsection{Condizioni necessarie per l'ottimalità}
 Se la funzione di costo $f$ è differenziabile, possiamo utilizzare il gradiente e l'espansione in serie di Taylor per comparare il costo di un vettore con il costo di un suo intorno.
 Ci aspettiamo perciò che se $x^\ast$ è un minimo non vincolato allora la variazione della funzione al primo ordine per una piccola variazione $\Delta x$ è non negativa\\\\
 $\nabla f ( x^\ast )' \Delta x \geq 0$\\\\
@@ -92,7 +88,7 @@ $\nabla f(x^\ast) = 0$\\
 Se $f$ è due volte differenziabile con continuità in $S$, allora\\
 $\nabla^2 f(x^\ast)$: semi-definita positiva
 \end{prop}
-\subsubsection{Il caso della convessità}
+\subsection{Il caso della convessità}
 Se la funzione $f$ è convessa non ci sono distinzioni tra un minimo locale ed un minimo globale, tutti i punti di minimo locale sono punti di minimo globale. Perciò un fatto importante è che la condizione $\nabla f(x^\ast) = 0$ è sufficiente per l'ottimalità, la dimostrazione è basata sulle proprietà di base della convessità della funzione $f$.
 \begin{prop}[Funzioni Convesse] Sia $f:R^n \to R$ una funzione convessa su un insieme convesso $X$.
 \begin{itemize}
@@ -101,7 +97,7 @@ Se la funzione $f$ è convessa non ci sono distinzioni tra un minimo locale ed u
 \end{itemize}
 \end{prop}
 
-\subsubsection{Condizioni Sufficienti per L'ottimalità}
+\subsection{Condizioni Sufficienti per L'ottimalità}
 Non è difficile trovare esempi in cui le condizione di ottimalita necessarie definite nelle sezione precedente
 [$\nabla f(x^\ast) = 0 \quad \& \quad \nabla^2 f(x^\ast) \geq 0$]
 portino ad identificare punti non di minimo locale come ad esempio punti di sella o punti di massimo.\\
@@ -114,7 +110,7 @@ Ciò implica che in $x^\ast$ la variazione di $f$ al secondo ordine data da un p
 \begin{prop}[Condizioni di ottimalità sufficienti del secondo ordine] Sia $f:R^n \to R$ doppiamente differenziabile con continuità in un insieme aperto $S$. Si supponga esistere $x^\ast \in S$ che soddisfi le condizioni\\
 $\nabla f(x^\ast) \quad \nabla^2 f(x^\ast)$: definita positiva\\
 allora, $x^\ast$ è un minimo locale non vincolato di $f$. In particolare esistono $\gamma > 0$ e $\epsilon > 0$ tali che\\
-$f(x) \geq f(x^\ast) + \gamma/2\parallel x - x^\ast \parallel^2, \quad \forall x \quad con \parallel x - x^\ast \parallel < \epsilon$
+\[ f(x) \geq f(x^\ast) + \gamma/2\parallel x - x^\ast \parallel^2, \quad \forall x \quad con \parallel x - x^\ast \parallel < \epsilon  \]
 \end{prop}
 \subsection{Discesa del gradiente in $R^n$}
 Andiamo ora a definire nel dettaglio le principali metodologie computazionali di ottimizzazione non lineare su $R^n$. Tali metodologie sarannno trattate con un occhio alle possibili applicazioni.\\
@@ -201,6 +197,8 @@ Oltre a trasformare elementi di $T_xM$ in elementi di $M$, un secondo importate 
 $\hat{f_x} = f \circ R_x$\\
 denota la restrizione di $\hat{f}$ su $T_xM$. Si noti che $\hat{f_x}$ è una funzione reale su uno spazio vettoriale. Dalla condizione di rigidità locale abbiamo che $D\hat{f_x}(0_x) = Df(x)$. Se $M$ è dotato di una metrica Riemanniana abbiamo\\
 grad $\hat{f_x}(0_x) =$grad $f(x)$.\\
+In alcuni casi può essere necessario dover effettuare operazioni tra vettori appartenenti a spazi tangente diffenti, come ad esempio nel caso dei metodi di ottimizzazzione quasi Newton. Nell'ottimizzazione basata su retrazioni lo strumento standard per trasportare vettori appartenenti ad uno spazio tangente in un altro spazio tangente è il $trasporto vettoriale$. Informalmente, dati due vettori tangenti ad $x$, chiamati $v_x, w_x \in T_xM$, un trasporto vettoriale $\mathcal{T}$ associato ad una retrazione $R$, è una mappa liscia che genera un vettore appartenente ad $T_{R_x(w_x)}M$. Per semplicità utilizzeremo la notazione $\mathcal{T}_{x \to y}(v)$.\\
+Un caso speciale di trasporto vettoriale è il $trasporto$ $parallelo$ che puo essere interpretato come un trasporto vettoriale la cui retrazione associata è la mappa esponenziale.
 \subsubsection{Metodi \emph{line-search}}
 I metodi di ricerca in linea (definiti \emph{line-search}) su varietà si basano sulla formula di aggiornamento\\
 $x^{k+1} = R_{x^k}(t^k \eta^k)$,\\
@@ -245,7 +243,11 @@ Sia $\{x^k\}$ una sequenza finita di iterate generata da ALS. Assumiamo che l'in
 \end{corollary}
 
 \section{Disco di poincare e Iperboloide}
-Lo spazio iperbolico può essere definito in vari modi equivalenti, nessuno dei quali è prevalente in letteratura. Ciascuno di questi è un modello dello spazio iperbolico, noi descriveremo l'iperboloide ed il disco di poincare
+Lo spazio iperbolico può essere definito in vari modi equivalenti, noi descriveremo l'iperboloide ed il disco di poincare, ciascuno di questi è un modello dello spazio iperbolico ed inoltre nessuno dei due è prevalente in letteratura.\\
+\begin{figure}[t] %inserisce le figure
+    \centering\includegraphics[width=0.50\textwidth]{HyperboloidProjection.png}
+    \caption{Rappresentazione della proiezione stereografica tra disco e iperboloide}
+\end{figure}
 \subsection{Iperboloide}
 Possiamo definire $H^n$ come il luogo dei punti di norma -1 in $R^{n:1}$, dotato dell'usuale prodotto di minkowski $(\langle u, v \rangle_{n:1} = \sum_{i=1}^{n} u_iv_i - u_{n+1}v_{n+1}; \quad u,v \in R^{n+1})$, questo luogo di punti ha in realta due componenti connesse, noi ne scegliamo una.
 \begin{definition}[Iperboloide]
@@ -260,7 +262,7 @@ La metrica, definita nel $Tangent Bundle$ dell'iperboloide, è la metrica indott
 La distanza tra due punti dell'iperboloide rappresenta la lunghezza della geodedica che unisce i due punti, è definita come segue.\\
 $d_{H^n} (u,v) = arccosh(-\langle u, v \rangle_{n:1}); \quad u,v \in H^n$
 \subsubsection{Mappa Esponenziale}
-La mappa esponenziale definita su $p \in H^n$ e $v \in T_pH^n$, che ha proprietà di retrazione, e che rappresenta la geodedica originaria in $p$ con derivata in questo punto pari a $v$. E' definita come segue.\\
+La mappa esponenziale definita su $p \in H^n$ e $v \in T_pH^n$, che ha proprietà di retrazione. La mappa esponenziale rappresenta la curva geodedica calcolata nel punto $1$ originaria in $p$ con derivata in $0$ punto pari a $v$. E' definita come segue.\\
 $Exp_p(v) = cosh(\parallel v \parallel_{n:1})p + sinh(\parallel v \parallel_{n:1}) v / \parallel v \parallel_{n:1}$
 \subsubsection{Gradiente della funzione distanza}
 La deifinize dell'iperboloide e dello spazio di minkowski nel quale è costruito ci aiuta nel calcolo del gradiente della funzione distanza.\\
@@ -284,27 +286,57 @@ $g^D = \lambda_p^2 g^E$; con $\lambda_p = \frac{2}{1- \parallel p \parallel^2}$ 
 La distanza tra due punti del disco di Poincaré rappresenta la lunghezza della geodedica che unisce i due punti, è definita come segue.\\
 $d_{D^n}(u, v) = arccosh(1 + \frac{\parallel u - v\parallel^2}{(1-\parallel u \parallel^2)(1-\parallel v \parallel^2)})$
 \subsubsection{Mappa Esponenziale}
-La mappa esponenziale definita su $p \in D^n$ e $v \in T_pD^n$, che ha proprietà di retrazione, e che rappresenta la geodedica originaria in $p$ con derivata in questo punto pari a $v$. E' definita come segue.\\
+La mappa esponenziale definita su $p \in D^n$ e $v \in T_pD^n$. La mappa esponenziale rappresenta la curva geodedica calcolata nel punto $1$ originaria in $p$ con derivata in $0$ punto pari a $v$. E' definita come segue.\\
 $Exp_p(v) = \frac{\lambda_p (cosh(\lambda_p \parallel v \parallel) + \langle p,\frac{v}{\parallel v \parallel} \rangle sinh(\lambda_p \parallel v \parallel))p}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)} + \frac{\frac{1}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel) v}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)}$
 \subsubsection{Gradiente della funzione distanza}
 Dati $u,v \in D^n$ la formula del gradiente riemanniano della funzione distanza è dato da.\\
 $\nabla_u^{E} d(u,v) = \frac{4}{b \sqrt{c^2 - 1}} (\frac{(\parallel v \parallel^2 - 2\langle u,v \rangle + 1)v}{a^2} - \frac{v}{a})$ con $a = 1 - \parallel u \parallel^2$, $b = 1 - \parallel v \parallel^2$, $c = 1 + \frac{2}{ab} \parallel u - v \parallel^2$.\\
 Sappiamo che per per ricavare il gradiente riemanniano dal gradiente euclideo è sufficiente riscalare $\nabla^E$ per l'inverso della metrica riemanniana, perciò: $\nabla_u^{D^n} d(u,v) = \frac{\nabla_u^{E} d(u,v)}{\lambda_u^2}$
 \subsection{Iperboloide come modello conforme}
-Come inizialmente accennato le due varietà trattate fin'ora sono due modelli conformi ovvero, esiste un diffeomorfismo invertibile conforme (mantiene gli angoli ma non le lunghezze) che porta da una varietà all'altra. Il diffeomorfismo in questione è la proieizone stereografica $\rho$ definita come segue.\\\\
+Come inizialmente accennato le due varietà trattate fin'ora sono due modelli conformi dello spazio iperbolico ovvero, esiste un diffeomorfismo invertibile conforme (mantiene gli angoli ma non le lunghezze) che porta da una varietà all'altra. Il diffeomorfismo in questione è la proieizone stereografica $\rho$ definita come segue.\\\\
 $\rho : H^n \to D^n$\\
 $\rho(x) = \frac{1}{x_{n+1} + 1}(x_1, ..., x_n)$; con $x \in H^n$\\\\
 $\rho^{-1} : D^n \to H^n$\\
 $\rho^{-1}(y) = \frac{2}{1 - r}(y_1, ..., \frac{1+r}{2})$; con $r = \parallel y \parallel^2$ e $y \in D^n$\\\\
-A questo punto facciamo vedere che vale la seguente uguaglianza per $n=2$, ci sarà utile nella sezione successiva.\\\\
-$d_{D^n}(a, b) = d_{H^n}(\rho^{-1}(a), \rho^{-1}(b))$\\
-Siano $a, b \in D^n$\\
+A questo punto facciamo vedere che vale la seguente uguaglianza, ci sarà utile nella sezione successiva.\\
+$d_{D^n}(a, b) = d_{H^n}(\rho^{-1}(a), \rho^{-1}(b))$\\\\
+Daremo due risultati, dimostreremo che l'uguaglianza è valida, dando dapprima una dimostrazione per $n = 2$, e poi la generalizzeremo per $n$ qualsiasi.\\\\
+Caso $n=2$, siano $a, b \in D^2$\\
 $a = (a_1, a_2)$\\
 $b = (b_1, b_2)$\\
 $\rho^{-1}(a) = \frac{2}{1-r_a}(a_1, a_2, \frac{1 + r_a}{2})$\\
 $\rho^{-1}(b) = \frac{2}{1-r_b}(b_1, b_2, \frac{1 + r_b}{2})$\\
 con $r_a = (a_1^2 + a_2^2)$ e $r_b = (b_1^2 + b_2^2)$\\\\
-$d_{H^n}(\rho^{-1}(a), \rho^{-1}(b)) = arccosh(-\langle (\frac{2a_1}{1-r_a}, \frac{2a_1}{1-r_a}, \frac{1+r_a}{1-r_a}), (\frac{2b_1}{1-r_b}, \frac{2b_1}{1-r_b}, \frac{1+r_b}{1-r_b}) \rangle_{2:1} = arccosh(- (\frac{4a_1b_1}{(1-r_a)(1-r_b)} + \frac{4a_2b_2}{(1-r_a)(1-r_b)} - \frac{(1+r_a)(1+r_b)}{(1-r_a)(1-r_b)} = arccosh(\frac{(1+r_a)(1+r_b) - 4a_1b_1 - 4a_2b_2}{(1-r_a)(1-r_b)}) = arccosh(\frac{1 + r_a +r_b + r_ar_b - 4a_1b_1 - 4a_2b_2}{1 - r_a - r_b + r_ar_b}) = arccosh(\frac{1 -r_a -r_b + 2r_a + 2r_b + r_ar_b - 4a_1b_1 - 4a_2b_2}{1 - r_a - r_b + r_ar_b}) = arccosh(1 + \frac{2r_a + 2r_b - 4a_1b_1 - 4a_2b_2}{(1-r_a)(1-r_b)} = arccosh(1 + 2 \frac{r_a + r_b - 2a_1b_1 - 2a_2b_2}{(1-r_a)(1-r_b)} = arccosh(1 + 2\frac{\parallel a - b \parallel^2}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)} = d_{D^n}(a, b)$
+\begin{equation*}\begin{gathered}
+d_{H^n}(\rho^{-1}(a), \rho^{-1}(b)) = \\
+arccosh(-\langle (\frac{2a_1}{1-r_a}, \frac{2a_1}{1-r_a}, \frac{1+r_a}{1-r_a}), (\frac{2b_1}{1-r_b}, \frac{2b_1}{1-r_b}, \frac{1+r_b}{1-r_b}) \rangle_{2:1}) =\\
+arccosh(- (\frac{4a_1b_1}{(1-r_a)(1-r_b)} + \frac{4a_2b_2}{(1-r_a)(1-r_b)} - \frac{(1+r_a)(1+r_b)}{(1-r_a)(1-r_b)}) =\\
+arccosh(\frac{(1+r_a)(1+r_b) - 4a_1b_1 - 4a_2b_2}{(1-r_a)(1-r_b)}) =\\
+arccosh(\frac{1 + r_a +r_b + r_ar_b - 4a_1b_1 - 4a_2b_2}{1 - r_a - r_b + r_ar_b}) = \\
+arccosh(\frac{1 -r_a -r_b + 2r_a + 2r_b + r_ar_b - 4a_1b_1 - 4a_2b_2}{1 - r_a - r_b + r_ar_b}) = \\
+arccosh(1 + \frac{2r_a + 2r_b - 4a_1b_1 - 4a_2b_2}{(1-r_a)(1-r_b)}) =\\
+arccosh(1 + 2 \frac{r_a + r_b - 2a_1b_1 - 2a_2b_2}{(1-r_a)(1-r_b)}) = \\
+arccosh(1 + 2\frac{\parallel a - b \parallel^2}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)}) =\\
+d_{D^n}(a, b).
+\end{gathered}\end{equation*}
+\\\\
+Facciamo vedere ora che l'uguaglianza vale anche nel caso in cui $n$ è un valore generico, siano $a, b \in D^n$. Procediamo facendo vedere che i due termini dell'uguaglianza rappresentano la stessa quantità.\\
+\begin{equation*}\begin{gathered}
+d_{D}(a,b) = arccosh(1 + 2\frac{\parallel a + b \parallel^2}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)})
+\end{gathered}\end{equation*}
+\begin{equation*}\begin{gathered}
+d_{H}(\rho^{-1}(a),\rho^{-1}(b)) = arccosh(- \langle \rho^{-1}(a),\rho^{-1}(b) \rangle_{n:1})
+\end{gathered}\end{equation*}
+Facciamo vedere ora, che gli argomenti della funzione arccosh, nelle due equazioni riportate, rappresentano in realtà lo stesso valore.
+\begin{equation*}\begin{gathered}
+- \langle \rho^{-1}(a),\rho^{-1}(b) \rangle_{n:1} = \\
+- \langle \frac{2}{1 - \parallel a \parallel^2} \begin{bmatrix} a \\ \frac{1 + \parallel a \parallel^2}{2} \end{bmatrix}, \frac{2}{1 - \parallel b \parallel^2} \begin{bmatrix} b \\ \frac{1 + \parallel b \parallel^2}{2} \end{bmatrix} \rangle_{n:1} = \\
+\frac{4}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)} \left( a'b - \frac{(1 + \parallel a \parallel^2)(1 + \parallel b \parallel^2)}{4} \right) = \\
+\frac{-4a'b + 1 + \parallel a \parallel^2 + \parallel b \parallel^2 + \parallel a \parallel^2 \parallel b \parallel^2}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)} = \\
+\frac{-4a'b + 1 + 2\parallel a \parallel^2 + 2\parallel b \parallel^2 - \parallel a \parallel^2 - \parallel b \parallel^2 + \parallel a \parallel^2 \parallel b \parallel^2}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)} = \\
+1 + 2 \frac{\parallel a - b \parallel^2}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)}
+\end{gathered}\end{equation*}
+
 \subsection{Media di Fréchet e problema del centroide}
 \begin{definition}[Media di Fréchet]
 La funzione media di Fréchet di p-punti è cosi definita.\\
@@ -315,14 +347,49 @@ Diamo ora una congettura che possiamo affermare essere corretta in funzione dell
 Dati $a^{(i)}, \Theta \in D^n$; con $i = 1...p$ dall'uguaglianza precedente è facile notare che $\frac{1}{p}\sum_{i=1}^p d_{D^n}^2(\Theta, a^{(i)}) = \frac{1}{p}\sum_{i=1}^p d_{H^n}^2(\rho^{-1}(\Theta), \rho^{-1}(a^{(i)}))$, perciò essendo $\rho$ un diffeomorfismo se $\exists \Theta \in D^n$ per cui $\frac{1}{p}\sum_{i=1}^p d_{D^n}^2(\Theta, a^{(i)})$ è minima allora esiste $\exists \Psi \in H^n$ per cui è minima $\frac{1}{p}\sum_{i=1}^p d_{H^n}^2(\Psi, \rho^{-1}(a^{(i)}))$. Essendo inoltre $f(x) = \hat{f} = f(\rho^{-1}(x))$ allora cercare il minimo di $f$ equivale a cercare il minimo di $\hat{f} \circ \rho^{-1}$.\\
 In funzione di tale congettura possiamo trasportare il problema definito su disco di Poincaré nella varieta Iperboloide e viceversa, notiamo che le formule necessarie ad effettuare ottimizzazione sulla varietà iperboloide sono computazionalmente meno complesse rispetto a quelle definite per il disco di Poincaré.
 \section{Metodi utilizzati con pseudocodice ed esperimenti}
-In questa sezione andremo a definire lo pseudocodice degli algoritmi di ottimizzazione che abbiamo utilizzato per confrontare il calcolo del minimo della media di Fréchet sui modelli dello spazio iperbolico descritti nel capitolo precedente.
+In questa sezione andremo a definire lo pseudocodice degli algoritmi di ottimizzazione che abbiamo utilizzato per confrontare il calcolo del minimo della funzione media di Fréchet sui modelli dello spazio iperbolico descritti nel capitolo precedente, ovvero Disco di Poincare ed Iperboloide, sfrutteremo il fatto che questi due modelli sono tra di loro conformi, ovvero che esiste una mappa conforme che li lega, faremo vedere se uno dei due modelli è effettivamente conveniente da utilizzare.
 \subsection{Algoritmi e Pseudocodice}
+In tale sezione vedremo lo pseudocodice dei metodi utilizzati per i nostri esperimenti, descriveremo quattro algoritmi, di cui due sono algoritmi di prim'ordine \textbf{passo fisso} e \textbf{armijo}, ovvero che utilizzano informazioni solamente sul gradiente nel punto per decidere il passo e la direzione dell'iterazione, gli altri due \textbf{Barzilai-Borwein} ed \textbf{LBFGS - Limited memory BFGS} sono algoritmi di quasi Newton e perciò hanno accesso ad informazioni di approssimazione al secondo ordine approssimando la matrice hessiana, sfruttando l'equazione delle secanti. Tutti gli algoritmi si basano sul calcolo del gradiente della funzione da minimizzare, in tal caso la derivata della media di frechet che possiamo calcolare tramite la derivata riemanniana della funzione distanza esplicitata sia per il disco di Poincaré che per l'iperboloide nella sezione dedicata alle varietà utilizzate.
 \subsubsection{Passo fisso}
+L'algoritmo a Passo fisso è un algoritmo del primo ordine molto elementare, la direzione scelta è l'opposta della direzione del gradiente, tale algoritmo implementato su una varietà differenziabile necessita solamente del gradiente riemanniano della funzione da minimizzare, di una retrazione e di un parametro $\lambda$ che denota il passo fisso applicato ad ogni iterazione.\\\\
+TODO: PSEUDOCODICE
 \subsubsection{Armijo}
+L'algoritmo di Armijo è anche esso un algoritmo del primo ordine, la direzione scelta è l'opposta della direzione del gradiente, per la selezione del passo si basa sul calcolo del punto di armijo riemanniano, descritto nella sezione dedicata all'ottimizzazione su varietà, per poter essere eseguito necessita, anche esso, del gradiente riemanniano della funzione da minimizzare, di una retrazione e di tre parametri $\gamma \in (0,1)$ , $\beta \in (0,1)$ e $s > 0$.\\\\
+TODO: PSEUDOCODICE
 \subsubsection{Barzilai-Borwein}
+L'algoritmo di Barzilai-Borwein è un metodo quasi Newton e si basa sulla soluzione, per $k \geq 1$, del problema dei minimi quadrati, che ci permette di avere ricavare informazioni sulla matrice hessiana, quindi del secondo ordine.\\
+\[\min_{t} \parallel s_kt - y_k \parallel_2 \],\\
+con $s_k = x_{k+1} - x_k$ ed $y_k = \nabla f(x_{k+1}) - \nabla f(x_k)$, il quale, assumendo che $x_{k+1} \neq x_k$ ha un'unica soluzione $t = \frac{s_k'y_k}{s_k's_k}$. Quando $s_k'y_k > 0$ il passo viene scelto come.\\
+\[a_{k+1}^{BB} = \frac{s_k's_k}{s_k'y_k}\].\\
+Per tradurre lalgoritmo dalla sua definizione su spazio euclideo in una versione compatibile con ottimizzazione su varietà differenziabili dobbiamo andare a ridefinire $s_k$ ed $y_k$. Al passo $k+1$, l'hessiana è una mappa lineare da $T_{x_{k+1}}M$ a $T_{x_{k+1}}M$ perciò considereremo il vettore $-\alpha_kg_k \in T_{x_k}M$ e lo trasporteremo in $T_{x_{k+1}}M$, perciò\\
+\[s_k = \mathcal{T}_{x_k \to x_{k+1}}(-\alpha_kg_k)\].\\
+Per ottenere $y_k$ dobbiamo sottrarre due gradienti appartenenti a due differenti spazi tangente, perciò
+\[y_k = g_{k+1} - \mathcal{T}_{x_k \to x_{k+1}}(g_k)\].\\
+Mentre per quanto riguarda il prodotto scalare utilizzeremo quello riemanniano, quindi\\
+\[a_{k+1}^{BB} = \frac{\langle s_k,s_k \rangle_{x_{k+1}}}{\langle s_k,y_k \rangle_{x_{k+1}}}\].\\
+TODO: PSEUDOCODICE
+\subsubsection{LBFGS}
+L-BFGS è un algoritmo di quasi Newton e differisce dalla sua versione originale RBFGS nel calcolo della direzione $d_k = -H_kd_k$, la quale approssima la direzione di Newton ($H_k$ approssima l'inversa della matrice hessiana). Nella presente andremo a descrivere una delle implementazioni di L-BFGS chiamata \textbf{two loop recursion}. Definiamo dapprima l'algoritmo nella sua versione euclidea, assumiamo di avere in memoria $m$ aggiornamenti del tipo:\\
+\begin{itemize}
+    \item $s_k = x_{k+1} - x_k$.
+    \item $y_k = g_{k+1} - g_k$.
+\end{itemize}
+Definiamo $p_k = \frac{1}{y_k's_k}$, ed $H_k^0$ l'approssimazione iniziale dell'inversa della matrice hessiana sulla quale l'algoritmo all'iterata $k$-esima si basa.\\
+L'algoritmo fa fede al funzionamento di BGFGS per il calcolo di $H_{k+1}$ da $H_k$\\
+\[H_{k+1} = (I - p_ks_k'y_k)H_k(I - p_ky_ks_k') + p_ks_ks_k'\].\\
+Per un $k$ fissato definiamo una sequenza di vettori $q_{k-m}, ..., q_k$, con $q_i = (I - p_iy_is_i')q_{i+1}$ e $q_k = g_k$. Definiamo inoltre un'altra sequenza di vettori $z_{k-m}, ..., z_k$ con $z_i = H_iq_i$, definendo $z_{k-m} = H_k^0q_{k-m}$ e ricorsivamente $\beta_i = p_iy_i'z_i$ e $z_{i+1} = z_i + (p_is_i'q_{i+1} - \beta_i)s_i$ allora $z_k = H_kd_k$.
+Nella versione riemanniana faremo un forte uso del trasporto vettoriale, ridefinendo dapprima $s_k$ ed $y_k$ come fatto nella versione rieamanniana dell'algoritmo Barzilai-Borwain\\
+\[s_k = \mathcal{T}_{x_k \to x_{k+1}}(-\alpha_kg_k),\]\\
+e\\
+\[y_k = g_{k+1} - \mathcal{T}_{x_k \to x_{k+1}}(g_k),\]\\
+ridefiniamo $p_k$ come segue\\
+\[p_k = \frac{1}{\langle s_k,y_k \rangle_{x_{k+1}}},\]\\
+Infine dobbiamo applicare il trasporto vettoriale a tutti i vettori $s_i$ e $y_i$ trasportandoli alla fine di ogni iterazione da $T_{x_k}M$ ad $T_{x_{k+1}}M$.\\
+TODO: PSEUDOCODICE
 \subsection{Esperimenti}
+Gli esperimenti effettuati ci permetteranno di confrontare il problema di ottimizzazione sulle varietà disco di Poincaré e iperboloide e capire se queste due varietà sono equivalenti ed interscambiabili, non solo nella rappresentazione dello spazio iperbolico ma anche come varietà su cui effettuare ottimizzazione.\\
+Gli esperimenti effettuati si suddividono in due parti che nel seguito descriveremo. Per effettuare gli esperimenti ci siamo muniti di un dataset di circa duecento istanze del problema, prendendo perciò un numero fissato, comune a tutte le istanze, di punti randomici sul disco (sampling fatto sfruttando la funzione $rand$ del file $PoincareFactory$ della libreria manopt), per ogni istanza abbiamo calcolato il punto limite tramite l'algoritmo a passo fisso con un $\alpha$ molto piccolo e come guardia di arresto abbiamo scelto la condizione che la norma euclidea del gradiente $g_k$ scendesse sotto un valore soglia (e.g. $10^{-8}$).
 \section{Appendice}
-
 \subsection{Varietà}
 Sia $M$ un insieme. Una bigiezione $\phi$ di un sottoinsime $U$ di $M$ in un sottoinsieme aperto di $R^d$ è chiamata mappa d-dimensionale dell'insieme $U$. Data una carta $(U, \psi)$ e $x \in U$ gli elementi di $\psi(x) \in R^d$ sono le coordinate di $x$ nella carta $(U, \psi)$. Un $Atlas$ $(A)$ di $M$ in $R^d$ è un insieme di carte $(U_a, \psi_a)$ dell'insieme $M$ tali che:
 \begin{itemize}
