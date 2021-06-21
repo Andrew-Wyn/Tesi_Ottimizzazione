@@ -32,7 +32,8 @@ print(inspect.getsource(Manifold))
 
 """
 
-class PoincareBall(Manifold):
+"""
+class PoincareBallOld(Manifold):
   def __init__(self, dimension):
     super().__init__(f"PoincareBall over R^{dimension}", dimension) # la versione nel pypi è una versione vecchia della superclasse Manifold
 
@@ -46,9 +47,6 @@ class PoincareBall(Manifold):
 
     num = (1 + 2*x_dot_y + y_norm_q)*x + (1 - x_norm_q)*y
     den = 1 + 2*x_dot_y + x_norm_q*y_norm_q
-
-    if den == 0:
-      den = 10e-14
 
     return num/den
 
@@ -66,7 +64,7 @@ class PoincareBall(Manifold):
     return self.conformal_factor(X)*la.norm(G)
 
   def rand(self):
-    passisotropic = np.random.rand(self.dim)
+    isotropic = np.random.rand(self.dim)
     isotropic = isotropic / la.norm(isotropic);
     radius = random ** (1 / self.dim);
     x = isotropic * radius
@@ -112,9 +110,133 @@ class PoincareBall(Manifold):
   
   def pairmean(self, X, Y):
     return self.exp(X, self.log(X, Y) / 2);
+"""
+
+class PoincareBall(Manifold):
+    def __init__(self, n, k):
+        self.k = k
+        self.n = n
+        self.dimension = k*n
+        super().__init__(
+            "{} PoincareBall over R^{}".format(self.k, self.n), self.dimension,
+            )
+        
+    def _squeeze(self, X):
+        if self.k == 1 and len(X.shape) > 1:
+            return np.squeeze(X, axis=1)
+        else:
+            return X
+
+    def _pack(self, X):
+        if len(X.shape) == 1:
+            return np.expand_dims(X, axis=1)
+        else:
+            return X
+
+    def conformal_factor(self, X):
+        return 2/(1 - np.sum(X*X, axis=0))
+
+    def mobius_add(self, X, Y):
+        X = self._pack(X)
+        Y = self._pack(Y)
+        x_dot_y = np.sum(X*Y, axis=0)
+        x_norm_q = np.sum(X*X, axis=0)
+        y_norm_q = np.sum(Y*Y, axis=0)
+
+        num = (1 + 2*x_dot_y + y_norm_q)*X + (1 - x_norm_q)*Y
+        
+        den = 1 + 2*x_dot_y + x_norm_q*y_norm_q
+
+        return self._squeeze(num/den)
+
+    def typicaldist(self):
+        return self.dim / 8
+
+    def inner(self, X, G, H):
+        X = self._pack(X)
+        G = self._pack(G)
+        H = self._pack(H)
+        return sum(np.sum(G*H, axis=0) * self.conformal_factor(X)**2)
+
+    def proj(self, X, G):
+        # Identity map since the embedding space is the tangent space R^n
+        return self._squeeze(G)
+
+    def norm(self, X, G):
+        return math.sqrt(self.inner(X, G, G))
+
+    def rand(self):
+        isotropic = np.random.standard_normal(size=(self.n, self.k))
+        isotropic = isotropic / la.norm(isotropic)
+        radius = np.random.rand(self.k) ** (1 / self.n)
+        x = isotropic * radius
+        return self._squeeze(x)
+
+    def randvec(self, X):
+        X = self._pack(X)
+        v = np.random.rand(self.n, self.k)
+        v = v / self.norm(X, v)
+        return self._squeeze(v)
+
+    def zerovec(self, X):
+        return np.zeros(X.shape)
+
+    def dist(self, X, Y):
+        X = self._pack(X)
+        Y = self._pack(Y)
+        norms2x = np.sum(X*X, axis=0)
+        norms2y = np.sum(Y*Y, axis=0)
+        norms2diff = np.sum((X - Y)*(X - Y), axis=0)
+        a = max(
+            1,
+            1 + 2*(norms2diff / ((1-norms2x)*(1-norms2y))),
+            )
+        return math.sqrt(np.sum(np.arccosh(a)**2))
+
+    def egrad2rgrad(self, X, G):
+        X = self._pack(X)
+        G = self._pack(G)
+        factor_q = self.conformal_factor(X)**2
+        return self._squeeze(G/factor_q)
+
+    def ehess2rhess(self, X, G, H, U):
+        X = self._pack(X)
+        G = self._pack(G)
+        H = self._pack(H)
+        U = self._pack(U)
+        factor = self.conformal_factor(X)
+        return self._squeeze((U * np.sum(G*X, axis=0) - G * np.sum(U*X, axis=0)
+                - X * np.sum(U*G, axis=0) + H/factor)/factor)
+
+    def retr(self, X, U):
+        return self.exp(X, U)
+
+    def exp(self, X, U):
+        X = self._pack(X)
+        U = self._pack(U)
+        norm_u = la.norm(U)
+        factor = (1 - np.sum(X*X, axis=0))
+        # avoid division by 0
+        tmp = np.tanh(norm_u/factor) * (U/((norm_u + (norm_u == 0))))
+        return self.mobius_add(X, tmp)
+
+    def log(self, X, Y):
+        X = self._pack(X)
+        Y = self._pack(Y)
+        a = self.mobius_add(-X, Y)
+        b = la.norm(a)
+        factor = 1 - np.sum(X*X, axis=0)
+        return self._squeeze(a * factor * np.arctanh(b) / b)
+
+    def transp(self, X1, X2, G):
+        return G
+
+    def pairmean(self, X, Y):
+        return self.exp(X, self.log(X, Y) / 2)
 
 """# Hyperboloid"""
 
+"""
 class Hyperboloid(Manifold):
   def __init__(self, dimension):
     super().__init__(self, "Hyperboloid", dimension)
@@ -186,12 +308,139 @@ class Hyperboloid(Manifold):
     return self.proj(X2, G);
   
   def pairmean(self, X, Y):
-    return self.exp(X, self.log(X, Y), 1/2)
+    return self.exp(X, self.log(X, Y), 1/2) 
+"""
+class Hyperboloid(Manifold):
+    def __init__(self, n, k):
+        self.n = n
+        self.k = k
+        self.dimension = n * k
+        super().__init__(
+            "{} Hyperboloid over R^{}:1".format(k, n), self.dimension,
+            )
 
-"""### Derivate of the loss Function"""
+    def _squeeze(self, X):
+        if self.k == 1 and len(X.shape) > 1:
+            return np.squeeze(X, axis=1)
+        else:
+            return X
+
+    def _pack(self, X):
+      if len(X.shape) == 1:
+        return np.expand_dims(X, axis=1)
+      else:
+        return X
+
+    def inner_minkowski_columns(self, U, V):
+        U = self._pack(U)
+        V = self._pack(V)
+        return self._squeeze(np.array(
+              [
+                  np.dot(U[:, i][:-1], V[:, i][:-1]) - U[:, i][-1]*V[:, i][-1]
+                  for i in range(self.k)
+              ]
+              ))
+
+    def typicaldist(self):
+        return math.sqrt(self.dim)
+
+    def inner(self, X, U, V):
+        U = self._pack(U)
+        V = self._pack(V)
+        return np.sum(self.inner_minkowski_columns(U, V))
+
+    def proj(self, X, G):
+        X = self._pack(X)
+        G = self._pack(G)
+        inners = self.inner_minkowski_columns(X, G)
+        return self._squeeze(G + X*inners)
+
+    def norm(self, X, G):
+        return math.sqrt(max(0, self.inner(X, G, G)))
+
+    def rand(self):
+        ret = np.zeros((self.n+1, self.k))
+        x0 = np.random.normal(size=(self.n, self.k))
+        x1 = np.sqrt(1 + np.sum(x0 * x0, axis=0))
+        ret[:-1, :] = x0
+        ret[-1, :] = x1
+        return self._squeeze(ret)
+
+    def randvec(self, X):
+        X = self._pack(X)
+        U = self.proj(X, np.random.rand(X.shape))
+        return self._squeeze(U / self.norm(X, U))
+
+    def zerovec(self, X):
+        return np.zeros(X.shape)
+
+    def _dists(self, X, Y):
+        X = self._pack(X)
+        Y = self._pack(Y)
+        alpha = -self.inner_minkowski_columns(X, Y)
+        alpha[alpha < 1] = 1
+        return np.arccosh(alpha)
+
+    def dist(self, X, Y):
+        X = self._pack(X)
+        Y = self._pack(Y)
+        return self._squeeze(la.norm(self._dists(X, Y)))
+
+    def egrad2rgrad(self, X, G):
+        X = self._pack(X)
+        G = self._pack(G)
+        G[-1, :] = -G[-1, :]
+        return self.proj(X, G)
+
+    def ehess2rhess(self, X, G, H, U):
+        X = self._pack(X)
+        G = self._pack(G)
+        H = self._pack(H)
+        U = self._pack(U)
+        G[-1, :] = -G[-1, :]
+        H[-1, :] = -H[-1, :]
+        inners = self.inner_minkowski_columns(X, G)
+        return self.proj(X, U*inners + H)
+
+    def retr(self, X, U):
+        X = self._pack(X)
+        U = self._pack(U)
+        return self._squeeze(self.exp(X, U))
+
+    def exp(self, X, U):
+        X = self._pack(X)
+        U = self._pack(U)
+        # compute the individual minkowski norm for each individual column of U
+        mink_inners = self.inner_minkowski_columns(U, U)
+        vnormmf = np.vectorize(lambda x: math.sqrt(max(0, x)))
+        mink_norms = vnormmf(mink_inners)
+        a = np.sinh(mink_norms)/mink_norms
+        a[np.isnan(a)] = 1
+        return self._squeeze(np.cosh(mink_norms)*X + U*a)
+
+    def log(self, X, Y):
+        X = self._pack(X)
+        Y = self._pack(Y)
+        d = self._dists(X, Y)
+        a = d/np.sinh(d)
+        a[np.isnan(a)] = 1
+        return self._squeeze(self.proj(X, Y*a))
+
+    def transp(self, X1, X2, G):
+        X1 = self._pack(X1)
+        X2 = self._pack(X2)
+        G = self._pack(G)
+        return self._squeeze(self.proj(X2, G))
+
+    def pairmean(self, X, Y):
+        X = self._pack(X)
+        Y = self._pack(Y)
+        return self._squeeze(self.exp(X, self.log(X, Y), 1/2))
+
+"""# Derivate of the loss Function"""
 
 # --- Poincare Gradiend
-def poincare_dist_grad(x, y):
+def poincare_dist_grad(x, y): # TODO: capire se deve essere riscalata per avere gradiente euclideo.
   a = 1 - np.dot(x, x)
   b = 1 - np.dot(y, y)
   c = 1 + 2/(a*b)*(np.dot(x-y, x-y))
@@ -199,28 +448,29 @@ def poincare_dist_grad(x, y):
   return 4/(b*math.sqrt(c**2-1))*(((np.dot(y,y) - 2*np.dot(x, y) + 1)/a**2)*x - y/a)
 
 
-def frechet_mean_poincare_grad(psi, x_set):
+def frechet_mean_poincare_grad(psi, x_set, manifold):
   res = 0
   for x_i in x_set:
-    res += poincare_dist(psi, x_i)*poincare_dist_grad(psi, x_i)
+    res += manifold.dist(psi, x_i)*poincare_dist_grad(psi, x_i)
   return res*2*(len(x_set))
 
-def frechet_mean_poincare_rgrad(psi, x_set):
-  egrad = frechet_mean_poincare_grad(psi, x_set)
+
+def frechet_mean_poincare_rgrad(psi, x_set, manifold):
+  egrad = frechet_mean_poincare_grad(psi, x_set, manifold)
   return PoincareManifold.egrad2rgrad(psi, egrad)
 
 # --- Hyperboloid Gradient
-def frechet_mean_hyperboloid_grad(theta, x_set):
+def frechet_mean_hyperboloid_grad(theta, x_set, manifold):
   res = 0
   for x_i in x_set:
     x_i_g = x_i.copy()
-    x_i_g[-1] = -x_i_g[-1]
-    res += -(hyperboloid_dist(theta, x_i) * (minkowski_dot(theta, x_i)**2 - 1)**(-1/2)) * x_i_g
+    x_i_g[-1] = -x_i_g[-1] # gradiente euclideo di prodotto di minkowski
+    res += -(manifold.dist(theta, x_i) * (manifold.inner_minkowski_columns(theta, x_i)**2 - 1)**(-1/2)) * x_i_g
   res = res*2/(len(x_set))
   return res
 
-def frechet_mean_hyperboloid_rgrad(theta, x_set):
-  egrad = frechet_mean_hyperboloid_grad(theta, x_set)
+def frechet_mean_hyperboloid_rgrad(theta, x_set, manifold):
+  egrad = frechet_mean_hyperboloid_grad(theta, x_set, manifold)
   return HyperboloidManifold.egrad2rgrad(theta, egrad)
 
 def frechet_mean(theta, x_set, distance):
@@ -229,13 +479,6 @@ def frechet_mean(theta, x_set, distance):
   for x_i in x_set:
     sum_ += distance(theta, x_i)**2
   return sum_/s
-
-def poincare_points_factory(norm=1):
-  # non è uniforme nel disco di poincaré, ma è piu vicino al centro
-  z = random()
-  t = random()*2*math.pi
-  return np.array([z*np.cos(t), z*np.sin(t)])
-
 
 def rho(x):
   return x[:-1]/(x[-1]+1)
@@ -267,12 +510,9 @@ def poincare_dist_mpf(x, y):
 
 def convergence_seq(psi_seq, limit):
   return [poincare_dist_mpf(psi, limit) for psi in psi_seq]
-  # return [LA.norm(psi - limit) for psi in psi_seq] # euclidean norm
 
 
-# TODO: sostituire norma euclidea con variabile a seconda del metodo del calcolo
-# del gradiente
-def plot_seq(psi_seq, f_seq, g_seq, limit, dimm):
+def plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim):
   fig = plt.figure(figsize=[12.8, 12.8])
   fig.clf()
   gs = fig.add_gridspec(2, 2)
@@ -292,39 +532,6 @@ def plot_seq(psi_seq, f_seq, g_seq, limit, dimm):
   ax3.semilogy(f_seq)
   g_norm = [LA.norm(g) for g in g_seq]
   ax4.semilogy((g_norm))
-
-"""# Verifica Sperimentale Mappa Conforme"""
-
-x = np.array([2.9759471, 16.07711731, 16.38078027]) #inv_rho(poincare_points_factory())
-
-print(x)
-
-a_set_1 = [inv_rho(poincare_points_factory()), inv_rho(poincare_points_factory())]
-a_set_2 = [inv_rho(poincare_points_factory()), inv_rho(poincare_points_factory())]
-v = frechet_mean_hyperboloid_rgrad(x, a_set_1)
-w = frechet_mean_hyperboloid_rgrad(x, a_set_2)
-
-print(v)
-print(w)
-
-
-def differential_map(x, v):
-  n = x.shape[0]-1
-  delta_f_v = np.zeros(n)
-  for i in range(n):
-    delta_f_v[i] = (v[i] - (x[i]*v[-1])/(x[-1] + 1))
-  return delta_f_v
-
-  
-delta_f_v = differential_map(x, v)
-print(delta_f_v)
-delta_f_w = differential_map(x, w)
-print(delta_f_w)
-r = lambda_x(x)**2 * np.dot(delta_f_v, delta_f_w)
-
-s = minkowski_dot(v, w)
-
-print((s/r))
 
 """# Cariamento dei dati"""
 
@@ -353,14 +560,14 @@ x_set_s = generate_sets_from_file()
 
 print(x_set_s)
 
-dim, x_set, limit = x_set_s[1]
+dim, x_set, limit = x_set_s[0]
 
 print(dim)
 print(x_set)
 print(limit)
 
-PoincareManifold = PoincareBall(dim)
-HyperboloidManifold = Hyperboloid(dim)
+PoincareManifold = PoincareBall(dim, 1)
+HyperboloidManifold = Hyperboloid(dim, 1)
 
 """# Metodo iterativo
 
@@ -377,44 +584,20 @@ def iterative_method(manifold, x_set, max_steps=10):
     x_k = manifold.exp(x_k, manifold.log(x_k, a_j)/(i+1))
   return x_k
 
-def iterative_method_poincare(x_set, max_steps=10):
-  m = len(x_set)
-  x_k = x_set[0]
-  for i in range(1, max_steps):
-    j = (i)%m
-    a_j = x_set[j]
-    x_k = poincare_exp(x_k, poincare_log(x_k, a_j)/(i+1))
-  return x_k
-
-def iterative_method_hyperboloid(x_set, max_steps=10):
-  m = len(x_set)
-  x_k = x_set[0]
-  for i in range(1, max_steps):
-    j = (i)%m
-    a_j = x_set[j]
-    x_k = hyperboloid_exp(x_k, hyperboloid_log(x_k, a_j)/(i+1))
-  return x_k
-
-limit_iter = iterative_method(PoincareManifold, x_set, 100000)
+limit_iter = iterative_method(PoincareManifold, x_set, 1000)
 print(limit_iter)
 
-limit_iter = rho(iterative_method(HyperboloidManifold, [inv_rho(x) for x in x_set], 100000))
-print(limit_iter)
-
-limit_iter = iterative_method_poincare(x_set, 100000)
-print(limit_iter)
-
-limit_iter = rho(iterative_method_hyperboloid([inv_rho(x) for x in x_set], 100000))
+limit_iter = rho(iterative_method(HyperboloidManifold, [inv_rho(x) for x in x_set], 1000))
 print(limit_iter)
 
 """# Scelta del punto iniziale"""
 
 # scelta del passo inizale come iterata i-esima dell'algoritmo iterativo che sappiamo convergere, perciò aumentando i avremo psi_0 sempre più vicino al nostro punto limite
-psi_0 = iterative_method_poincare(x_set, 10)
+psi_0 = iterative_method(PoincareManifold, x_set, 10)
 print(psi_0)
 
 #
-#psi_0 = generate_starting_point(x_set)
+psi_0 = generate_starting_point(x_set)
 
 """# Optimisations Algorithms
 
@@ -522,95 +705,124 @@ if dim == 2:
 
 """## Fixed Length step size"""
 
-def optimisation_fl_poincare(psi_0, f_grad, learning_rate, x_set, max_steps=10):
+def optimisation_fl_poincare(psi_0, f_grad, x_set, learning_rate, max_steps=10, limited=True):
   psi_seq = [psi_0]
   f_seq = []
   g_seq = []
 
-  for i in range(max_steps):
+  k = 0
+
+  while True:
     psi = psi_seq[-1]
-    g = f_grad(psi, x_set)
+    g = f_grad(psi, x_set, PoincareManifold)
+
+    if LA.norm(g) < 10e-8:
+      break
+
     if np.isnan(g).any():
       psi_seq = psi_seq[:-1]
       break
-    if (g==0).any():
-      break
+
     new_psi=PoincareManifold.exp(psi, -learning_rate*g)
 
     if math.sqrt(np.dot(new_psi, new_psi)) >= 1:
       break
-    
+
     psi_seq.append(new_psi)
     f_seq.append(frechet_mean(new_psi, x_set, PoincareManifold.dist))
     g_seq.append(g)
+
+    # forced exit condition
+    k = k+1
+    if limited and k >= max_steps:
+      break
+    
   return psi_seq, f_seq, g_seq
 
 
-def optimisation_fl_hyperboloid(psi_0, f_grad, learning_rate, x_set, max_steps=10):
+def optimisation_fl_hyperboloid(psi_0, f_grad, x_set, learning_rate, max_steps=10, limited=True):
   psi_seq = [psi_0]
   f_seq = []
   g_seq = []
   x_set_h = [inv_rho(x_i) for x_i in x_set]
 
-  for i in range(max_steps):
+  k=0
+
+  while True:
     psi = psi_seq[-1]
     theta=inv_rho(psi)
-    g_h = f_grad(theta, x_set_h)
+    g_h = f_grad(theta, x_set_h, HyperboloidManifold)
+
+    if LA.norm(g_h) < 10e-8:
+      break
+    
     if np.isnan(g_h).any():
       psi_seq = psi_seq[:-1]
       break
-    if (g_h==0).any():
-      break
+    
     new_theta = HyperboloidManifold.exp(theta, -learning_rate*g_h)
     new_psi = rho(new_theta)
     
     psi_seq.append(new_psi)
     f_seq.append(frechet_mean(new_psi, x_set, PoincareManifold.dist))
     g_seq.append(g_h)
+
+    # forced exit condition
+    k = k+1
+    if limited and k >= max_steps:
+      break
+
   return psi_seq, f_seq, g_seq
 
-psi_seq, f_seq, g_seq = optimisation_fl_poincare(psi_0, frechet_mean_poincare_rgrad, 0.31, x_set, 100)
+psi_seq, f_seq, g_seq = optimisation_fl_poincare(psi_0, frechet_mean_poincare_rgrad, x_set, 0.001, 100)
 print("Limit sequence poincare: ", psi_seq[-1])
 print(psi_seq)
-plot_seq(psi_seq, f_seq, g_seq, limit, dim)
+plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
-psi_seq, f_seq, g_seq = optimisation_fl_poincare(psi_0, frechet_mean_poincare_grad, 0.002, x_set, 100)
+psi_seq, f_seq, g_seq = optimisation_fl_poincare(psi_0, frechet_mean_poincare_grad, x_set, 0.002, 100)
 print("Limit sequence poincare euclideo: ", psi_seq[-1])
-plot_seq(psi_seq, f_seq, g_seq, limit, dim)
+plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
-psi_seq, f_seq, g_seq = optimisation_fl_hyperboloid(psi_0, frechet_mean_hyperboloid_rgrad, 0.45, x_set, 300)
+psi_seq, f_seq, g_seq = optimisation_fl_hyperboloid(psi_0, frechet_mean_hyperboloid_rgrad, x_set, 0.45, 300)
 print("Limit sequence iperboloide: ", psi_seq[-1])
-plot_seq(psi_seq, f_seq, g_seq, limit, dim)
+plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
-"""### Armijo"""
+"""## Armijo"""
 
 def armijo_step_hiper_riemannian(theta, x_set_h, g_k, sigma, gamma, lambda_):
   h = 0
-  while frechet_mean(HyperboloidManifold.exp(theta, -(sigma**h)*lambda_*g_k), x_set_h, HyperboloidManifold.dist) > frechet_mean(theta, x_set_h, HyperboloidManifold.dist) - gamma*(sigma**h)*lambda_*HyperboloidManifold._minkowski_dot(g_k, g_k):
+  while frechet_mean(HyperboloidManifold.exp(theta, -(sigma**h)*lambda_*g_k), x_set_h, HyperboloidManifold.dist) > frechet_mean(theta, x_set_h, HyperboloidManifold.dist) - gamma*(sigma**h)*lambda_*HyperboloidManifold.inner_minkowski_columns(g_k, g_k):
     h += 1
   return h
 
-def armijo_opt_hiper_riemannian(psi_0, f_grad, x_set, sigma, gamma, lambda_, max_iter=10):
+def armijo_opt_hiper_riemannian(psi_0, f_grad, x_set, sigma, gamma, lambda_, max_steps=10):
   psi_seq = [psi_0]
   f_seq = []
   g_seq = []
   x_set_h = [inv_rho(x) for x in x_set]
 
-  for k in range(max_iter):
+  k = 0
+
+  while True:
     theta = inv_rho(psi_seq[-1])
-    g_k = f_grad(theta, x_set_h)
+    g_k = f_grad(theta, x_set_h, HyperboloidManifold)
     if np.isnan(g_k).any():
       psi_seq = psi_seq[:-1]
       break
-    if (g_k==0).any():
+    if LA.norm(g_k) < 10e-8:
       break
     h_k = armijo_step_hiper_riemannian(theta, x_set_h, g_k, sigma, gamma, lambda_)
     new_theta = HyperboloidManifold.exp(theta, -(sigma**h_k)*lambda_*g_k)
     new_psi = rho(new_theta)
     
     psi_seq.append(rho(new_theta))
-    f_seq.append(frechet_mean(new_psi, x_set, poincare_dist))
+    f_seq.append(frechet_mean(new_psi, x_set, PoincareManifold.dist))
     g_seq.append(g_k)
+
+    # forced exit condition
+    k = k+1
+    if k >= max_steps:
+      break
   return psi_seq, f_seq, g_seq
 
 def armijo_step_poincare_riemannian(psi, x_set, g_k, sigma, gamma, lambda_):
@@ -619,42 +831,50 @@ def armijo_step_poincare_riemannian(psi, x_set, g_k, sigma, gamma, lambda_):
     h += 1
   return h
 
-def armijo_opt_poincare_riemannian(psi_0, f_grad, x_set, sigma, gamma, lambda_, max_iter=10):
+def armijo_opt_poincare_riemannian(psi_0, f_grad, x_set, sigma, gamma, lambda_, max_steps=10):
   psi_seq = [psi_0]
   f_seq = []
   g_seq = []
 
-  for k in range(max_iter):
+  k = 0
+
+  while True:
     psi = psi_seq[-1]
-    g_k = f_grad(psi, x_set)
+    g_k = f_grad(psi, x_set, PoincareManifold)
     if np.isnan(g_k).any():
       psi_seq = psi_seq[:-1]
       break
-    if (g_k==0).any():
+    if LA.norm(g_k) < 10e-8:
       break
     h_k = armijo_step_poincare_riemannian(psi, x_set, g_k, sigma, gamma, lambda_)
     new_psi = PoincareManifold.exp(psi, -(sigma**h_k)*lambda_*g_k)
     
     psi_seq.append(new_psi)
-    f_seq.append(frechet_mean(new_psi, x_set, poincare_dist))
+    f_seq.append(frechet_mean(new_psi, x_set, PoincareManifold.dist))
     g_seq.append(g_k)
+
+    # forced exit condition
+    k = k+1
+    if k >= max_steps:
+      break
+
   return psi_seq, f_seq, g_seq
 
 psi_seq, f_seq, g_seq = armijo_opt_poincare_riemannian(psi_0, frechet_mean_poincare_grad, x_set, 0.3, 0.001, 0.9, 100)
 print("Limit sequence poincare euclidean: ", psi_seq[-1])
-plot_seq(psi_seq, f_seq, g_seq, limit, dim)
+plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
 psi_seq, f_seq, g_seq = armijo_opt_poincare_riemannian(psi_0, frechet_mean_poincare_rgrad, x_set, 0.3, 0.001, 0.9, 100)
 print("Limit sequence poincare: ", psi_seq[-1])
-plot_seq(psi_seq, f_seq, g_seq, limit, dim)
+plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
 psi_seq, f_seq, g_seq = armijo_opt_hiper_riemannian(psi_0, frechet_mean_hyperboloid_rgrad, x_set, 0.3, 0.1, 0.9, 100)
 print("Limit sequence iperboloide: ", psi_seq[-1])
-plot_seq(psi_seq, f_seq, g_seq, limit, dim)
+plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
-"""### Barzilai-Borwein"""
+"""## Barzilai-Borwein"""
 
-def RBB_hyperboloid(psi_0, f_grad, x_set, a_min, a_max, max_steps=10):
+def RBB_hyperboloid(psi_0, f_grad, x_set, a_min, a_max, max_steps=100):
   psi_seq = [psi_0]
   f_seq = []
   g_seq = []
@@ -665,32 +885,44 @@ def RBB_hyperboloid(psi_0, f_grad, x_set, a_min, a_max, max_steps=10):
   f_k_seq = []
 
   a_BB = a_min
-  for k in range(max_steps):
+
+  k = 0
+
+  while True:
     theta = inv_rho(psi_seq[-1])
-    g_k = f_grad(theta, x_set_h)
+    g_k = f_grad(theta, x_set_h, HyperboloidManifold)
+
+    if LA.norm(g_k) < 10e-8:
+      break
+
     f_k_seq.append(frechet_mean(theta, x_set_h, HyperboloidManifold.dist))
     a_k = a_BB
     new_theta = HyperboloidManifold.exp(theta, -a_k*g_k)
     new_psi = rho(new_theta)
     
     psi_seq.append(new_psi)
-    f_seq.append(frechet_mean(new_psi, x_set, poincare_dist))
+    f_seq.append(frechet_mean(new_psi, x_set, HyperboloidManifold.dist))
     g_seq.append(g_k)
 
     new_f = frechet_mean(new_theta, x_set_h, HyperboloidManifold.dist)
-    new_g = f_grad(new_theta, x_set_h)
+    new_g = f_grad(new_theta, x_set_h, HyperboloidManifold)
     s_k = -a_k*HyperboloidManifold.transp(theta, new_theta, g_k)
     y_k = new_g + s_k/a_k
 
-    if minkowski_dot(s_k, y_k) > 0:
-      new_tau = HyperboloidManifold._minkowski_dot(s_k, s_k)/HyperboloidManifold._minkowski_dot(s_k, y_k)
+    if HyperboloidManifold.inner_minkowski_columns(s_k, y_k) > 0:
+      new_tau = HyperboloidManifold.inner_minkowski_columns(s_k, s_k)/HyperboloidManifold.inner_minkowski_columns(s_k, y_k)
       a_BB = min(a_max, max(a_min, new_tau))
     else:
       a_BB = a_max
+
+    # forced exit condition
+    k = k+1
+    if k >= max_steps:
+      break
       
   return psi_seq, f_seq, g_seq
 
-def RBB_poincare(psi_0, f_grad, x_set, a_min, a_max, max_steps=10):
+def RBB_poincare(psi_0, f_grad, x_set, a_min, a_max, max_steps=100):
   psi_seq = [psi_0]
   f_seq = []
   g_seq = []
@@ -698,9 +930,16 @@ def RBB_poincare(psi_0, f_grad, x_set, a_min, a_max, max_steps=10):
   f_k_seq = []
 
   a_BB = a_min
-  for k in range(max_steps):
+
+  k = 0
+
+  while True:
     psi = psi_seq[-1]
-    g_k = f_grad(psi, x_set)
+    g_k = f_grad(psi, x_set, PoincareManifold)
+
+    if LA.norm(g_k) < 10e-8:
+      break
+
     f_k_seq.append(frechet_mean(psi, x_set, PoincareManifold.dist))
     a_k = a_BB
     new_psi = PoincareManifold.exp(psi, -a_k*g_k)
@@ -710,7 +949,7 @@ def RBB_poincare(psi_0, f_grad, x_set, a_min, a_max, max_steps=10):
     g_seq.append(g_k)
 
     new_f = frechet_mean(new_psi, x_set, PoincareManifold.dist)
-    new_g = f_grad(new_psi, x_set)
+    new_g = f_grad(new_psi, x_set, PoincareManifold)
     s_k = -a_k*PoincareManifold.transp(psi, new_psi, g_k)
     y_k = new_g + s_k/a_k
 
@@ -719,52 +958,386 @@ def RBB_poincare(psi_0, f_grad, x_set, a_min, a_max, max_steps=10):
       a_BB = min(a_max, max(a_min, new_tau))
     else:
       a_BB = a_max
+
+
+    # forced exit condition
+    k = k+1
+    if k >= max_steps:
+      break
+
   return psi_seq, f_seq, g_seq
 
 psi_seq, f_seq, g_seq = RBB_poincare(psi_0, frechet_mean_poincare_grad, x_set, 0.0001, 0.9, 100)
 print("Limit sequence poincare euclidean: ", psi_seq[-1])
-plot_seq(psi_seq, f_seq, g_seq, limit, dim)
+plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
 psi_seq, f_seq, g_seq = RBB_poincare(psi_0, frechet_mean_poincare_rgrad, x_set, 0.0001, 0.9, 100)
 print("Limit sequence poincare: ", psi_seq[-1])
-plot_seq(psi_seq, f_seq, g_seq, limit, dim)
+print(f_seq)
+plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
 # supporta un learnign rate piu alto convergendo in modo piu veloce
 psi_seq, f_seq, g_seq = RBB_hyperboloid(psi_0, frechet_mean_hyperboloid_rgrad, x_set, 0.0001, 0.9, 100)
 print("Limit sequence iperboloide: ", psi_seq[-1])
-plot_seq(psi_seq, f_seq, g_seq, limit, dim)
+plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
+
+"""## LBFGS"""
+
+def choice_dir_LBFGS(manifold, l, k, x_k, g_k, s_seq, y_seq, p_seq, gamma_seq):
+  q = g_k
+  alpha = []
+
+  for i in reversed(range(k-l-1)):
+    a_i = p_seq[i]*manifold.inner(x_k, s_seq[i], q)
+    q = q - a_i*y_seq[i]
+    alpha.append(a_i)
+  alpha.reverse()
+
+  H = gamma_seq[-1] * np.eye(g_k.shape[0])
+  z = np.dot(H, q)
+  for i in range(k-l-1):
+    b = p_seq[i]*manifold.inner(x_k, y_seq[i], z)
+    z = z + s_seq[i]*(alpha[i] - b)
+  return z
+
+def LBFGS_hyperboloid(psi_0, f_grad, x_set, M, a_min, a_max, max_steps=100):
+  psi_seq = [psi_0]
+  f_seq = []
+  g_seq = []
+  s_seq = []
+  y_seq = []
+  p_seq = []
+  gamma_seq = [1]
+  
+  l = 0
+
+  x_set_h = [inv_rho(x_i) for x_i in x_set]
+
+  for k in range(max_steps):
+    theta = inv_rho(psi_seq[-1])
+    g_k = f_grad(theta, x_set_h, HyperboloidManifold)
+    g_seq.append(g_k)
+
+    z = choice_dir_LBFGS(HyperboloidManifold, l, k, theta, g_k, s_seq, y_seq, p_seq, gamma_seq)
+
+    new_theta = HyperboloidManifold.exp(theta, -z)
+    g_new = f_grad(new_theta, x_set_h, HyperboloidManifold)
+
+    tmp = HyperboloidManifold.norm(new_theta, HyperboloidManifold.transp(theta, new_theta, -z))
+    beta_k = 1
+    if tmp != 0:
+      beta_k = HyperboloidManifold.norm(theta, -z)/tmp
+    s_k = HyperboloidManifold.transp(theta, new_theta, -z)
+    y_k = g_new/beta_k - HyperboloidManifold.transp(theta, new_theta, g_k)
+    tmp = HyperboloidManifold.inner(new_theta, s_k, y_k)
+    if tmp == 0:
+      tmp = 10e-15
+    p_k = 1/tmp
+    
+    # controll taken from RBB
+    tmp = HyperboloidManifold.inner(new_theta, y_k, y_k)
+    if tmp > 0:
+      new_gamma = HyperboloidManifold.inner(new_theta, s_k, y_k)/tmp
+      gamma_seq.append(min(a_max, max(a_min, new_gamma)))
+    else:
+      gamma_seq.append(a_max)
+
+    l = max(k-M, 0)
+
+    s_seq.append(s_k)
+    y_seq.append(y_k)
+    p_seq.append(p_k)
+    if k>=M:
+      s_seq.pop(0)
+      y_seq.pop(0)
+      p_seq.pop(0)
+    
+    for i in range(k-l):
+      s_seq[i] = HyperboloidManifold.transp(theta, new_theta, s_seq[i])
+      y_seq[i] = HyperboloidManifold.transp(theta, new_theta, y_seq[i])
+
+    new_psi = rho(new_theta)
+    psi_seq.append(new_psi)
+    f_seq.append(frechet_mean(new_psi, x_set, PoincareManifold.dist))
+
+    if HyperboloidManifold.norm(new_theta, g_new) < 10e-10:
+      g_seq.append(g_new)
+      break
+
+  return psi_seq, f_seq, g_seq
+
+# Non riesce a convergere senza un fattore di riscalamento su z (applichiamo perciò Armijo)
+def LBFGS_poincare(psi_0, f_grad, x_set, M, a_min, a_max, max_steps=100):
+  psi_seq = [psi_0]
+  f_seq = []
+  g_seq = []
+  s_seq = []
+  y_seq = []
+  p_seq = []
+  gamma_seq = [1]
+  
+  l = 0
+
+  for k in range(max_steps):
+    psi = psi_seq[-1]
+    g_k = f_grad(psi, x_set, PoincareManifold)
+    g_seq.append(g_k)
+
+    z = choice_dir_LBFGS(PoincareManifold, l, k, psi, g_k, s_seq, y_seq, p_seq, gamma_seq)
+    new_psi = PoincareManifold.exp(psi, -z)
+    g_new = f_grad(new_psi, x_set, PoincareManifold)
+
+    tmp = PoincareManifold.norm(new_psi, PoincareManifold.transp(psi, new_psi, -z))
+    beta_k = 1
+    if tmp != 0:
+      beta_k = PoincareManifold.norm(psi, -z)/tmp
+    s_k = PoincareManifold.transp(psi, new_psi, -z)
+    y_k = g_new/beta_k - PoincareManifold.transp(psi, new_psi, g_k)
+    tmp = PoincareManifold.inner(new_psi, s_k, y_k)
+    if tmp == 0:
+      tmp = 10e-15
+    p_k = 1/tmp
+    
+    # controll taken from RBB
+    tmp = PoincareManifold.inner(new_psi, y_k, y_k)
+    if tmp > 0:
+      new_gamma = PoincareManifold.inner(new_psi, s_k, y_k)/tmp
+      gamma_seq.append(min(a_max, max(a_min, new_gamma)))
+    else:
+      gamma_seq.append(a_max)
+
+    l = max(k-M, 0)
+
+    s_seq.append(s_k)
+    y_seq.append(y_k)
+    p_seq.append(p_k)
+    if k>=M:
+      s_seq.pop(0)
+      y_seq.pop(0)
+      p_seq.pop(0)
+    
+    for i in range(k-l):
+      s_seq[i] = PoincareManifold.transp(psi, new_psi, s_seq[i])
+      y_seq[i] = PoincareManifold.transp(psi, new_psi, y_seq[i])
+
+    psi_seq.append(new_psi)
+    f_seq.append(frechet_mean(new_psi, x_set, PoincareManifold.dist))
+
+    if PoincareManifold.norm(new_psi, g_new) < 10e-9:
+      g_seq.append(g_new)
+      break
+
+  return psi_seq, f_seq, g_seq
+
+psi_seq, f_seq, g_seq = LBFGS_poincare(psi_0, frechet_mean_poincare_rgrad, x_set, 5, 0.0001, 0.9, 100)
+print(psi_seq)
+print("Limit sequence poincare: ", psi_seq[-1])
+plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
+
+psi_seq, f_seq, g_seq = LBFGS_hyperboloid(psi_0, frechet_mean_hyperboloid_rgrad, x_set, 5, 0.0001, 0.9, 100)
+print("Limit sequence iperboloide: ", psi_seq[-1])
+plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
 """# Confronto tra le due metodologie
 
 per ogni tipologia di algoritmo confrontiamo al variare dei parametri come variano e si comporta l'implementazione su iperboloide rispetto a quella su disco di Poincaré
 """
 
-fixed_lenght_poincare = []
-fixed_lenght_hyper = []
+poincareMan2 = PoincareBall(2, 1)
+poincareMan3 = PoincareBall(3, 1)
 
-def differences(seq):
+# TODO: creare dataset da poter scaricare in formato csv da poter ricaricare.
+def parse_set_in_list(x_set):
+  points = []
+  for x in x_set:
+    points += x.tolist()
+  return points
+
+
+def format_data_to_save(x_0, x_set, limit):
+  dim = x_set.shape[1]
+  points = parse_set_in_list(x_set)
+  return [dim] + x_0.tolist() + points + limit.tolist()
+
+
+def save_to_file(to_save_data, file_name="bunch.txt"):
+  with open(file_name, "w") as f:
+    for data in to_save_data:
+      f.write(",".join(str(i) for i in data) + "\n")
+
+
+def save_bunch_test_set(bunch_set):
+  to_save = [format_data_to_save(x_0, x_set, limit) for (x_0, x_set, limit) in bunch_set]
+  save_to_file(to_save)
+
+
+def load_bunch_from_file(file_name="bunch.txt"):
+  x_set_s = []
+  with open(file_name, "r") as f:
+    for line in f.readlines():
+      line_els = line.split(",")
+      dim = int(line_els[0])
+      limit = np.array([float(i) for i in line_els[-dim:]])
+      x_0 = np.array([float(i) for i in line_els[1:dim+1]])
+      x_set = []
+      for i in range(dim+1, len(line_els)-dim, dim):
+        x_set.append([float(i) for i in line_els[i:i+dim]])
+      x_set = np.array(x_set)
+      x_set_s.append((x_0, x_set, limit))
+  return x_set_s
+
+
+def create_bunch_test_set(manifold, card_bunch=50, card_x=4):
+  bunch_test_set = []
+  for i in range(card_bunch):
+    print(i/card_bunch * 100, "%")
+    x_set = np.array([poincareMan2.rand() for _ in range(card_x)])
+    x_0 = generate_starting_point(x_set)
+    # TODO: confrontarmi con il prof per il calcolo del limite
+    psi_seq, _, _ = optimisation_fl_poincare(x_0, frechet_mean_poincare_rgrad, x_set, 0.0001, 5000, False)
+    limit = psi_seq[-1]
+    bunch_test_set.append((x_0, x_set, limit))
+
+  return bunch_test_set
+
+
+def time_to_converge(seq, limit, iter_test, epsilon=10e-4):
   differences = []
   for s in seq:
-    s = s - limit
-    differences.append(math.sqrt(np.dot(s, s)) < epsilon)
-  return differences
+    diff = s - limit
+    differences.append(math.sqrt(np.dot(diff, diff)) < epsilon)
+  time_conv = np.argmax(differences)
+  if time_conv == 0:
+    time_conv = iter_test
+  return time_conv
 
-epsilon = 10e-8
-iter_ = 1000
-for i in range(1, iter_):
-  poincare_seq, _, _= optimisation_fl_poincare(psi_0, frechet_mean_poincare_rgrad, (i/iter_), x_set, 100)
-  min_poincare = np.argmax(differences(poincare_seq))
-  if min_poincare == 0:
-    min_poincare = 100+1
-  fixed_lenght_poincare.append(min_poincare)
-  hyper_seq, _, _ = optimisation_fl_hyperboloid(psi_0, frechet_mean_hyperboloid_rgrad, (i/iter_), x_set, 100)
-  min_hyper = np.argmax(differences(hyper_seq))
-  if min_hyper == 0:
-    min_hyper = 100+1
-  fixed_lenght_hyper.append(min_hyper)
+from itertools import compress
+
+from sklearn.linear_model import HuberRegressor
+from sklearn.preprocessing import StandardScaler
+
+def test_algorithm(algotithm_poincare, algorithm_hyperboloid, bunch_test_set, iter_test, tollerance_outelier=0):
+  a = []
+  b = []
+  
+  for (x_0, x_set, limit) in bunch_test_set:
+    seq, _, _ = algotithm_poincare(x_0, x_set, iter_test)
+    a.append(time_to_converge(seq, limit, iter_test, 10e-6))
+    seq, _, _ = algorithm_hyperboloid(x_0, x_set, iter_test)
+    b.append(time_to_converge(seq, limit, iter_test, 10e-6))
+    
+  ab = list(zip(a, b))
+  z = [ab.count(i) for i in ab]
+  filter = [z_i > tollerance_outelier for z_i in z]
+  a_cutted = list(compress(a, filter))
+  b_cutted = list(compress(b, filter))
+
+  a_scaler, b_scaler = StandardScaler(), StandardScaler()
+  a_train = a_scaler.fit_transform(np.array(a_cutted)[..., None])
+  b_train = b_scaler.fit_transform(np.array(b_cutted)[..., None])
+
+  model = HuberRegressor(epsilon=1)
+  model.fit(a_train, b_train.ravel())
+
+  w, t = np.polyfit(a_cutted, b_cutted, 1)
+  test_a = np.array([0, iter_test])
+  predictions = b_scaler.inverse_transform(
+      model.predict(a_scaler.transform(test_a[..., None]))
+  )
+
+  print("SLOPE Huber Regressor:", (predictions[1] - predictions[0]) / (test_a[1] - test_a[0]))
+  print("SLOPE Linear Regressor:", w)
+  plt.plot(test_a, w*np.array(test_a) + t, 'y')
+  plt.plot(test_a, predictions, 'r')
+
+  plt.scatter(a, b, c=z)
+
+
+def make_fl_curve(algorithm_poincare, algorithm_hyperbolid, X0, X, limit, iter_test, max_iter=100):
+  fixed_lenght_poincare = []
+  fixed_lenght_hyper = []
+
+  for i in range(1, iter_test):
+    poincare_seq, _, _= algorithm_poincare(X0, frechet_mean_poincare_rgrad, X, (i/iter_test), max_iter)
+    min_poincare = time_to_converge(poincare_seq, limit, max_iter)
+    fixed_lenght_poincare.append(min_poincare)
+    hyper_seq, _, _ = algorithm_hyperbolid(X0, frechet_mean_hyperboloid_rgrad, X, (i/iter_test), max_iter)
+    min_hyper = time_to_converge(hyper_seq, limit, max_iter)
+    fixed_lenght_hyper.append(min_hyper)
+
+  return np.array(fixed_lenght_poincare), np.array(fixed_lenght_hyper)
+
+
+def test_one_parameter_optimization(algorithm_poincare, algorithm_hyperbolid, bunch_test_set, iter_test, max_iter=100):
+  fixed_lenght_poincare = np.zeros(iter_test-1)
+  fixed_lenght_hyper = np.zeros(iter_test-1)
+  for (x_0, x_set, limit) in bunch_test_set:
+    fl_poincare_curve, fl_hyper_curve = make_fl_curve(algorithm_poincare, algorithm_hyperbolid, x_0, x_set, limit, iter_test, max_iter)
+    fixed_lenght_poincare += fl_poincare_curve
+    fixed_lenght_hyper += fl_hyper_curve
+  return fixed_lenght_poincare/len(bunch_test_set), fixed_lenght_hyper/len(bunch_test_set)
+
+bunch = create_bunch_test_set(PoincareManifold, card_bunch=200, card_x=6)
+save_bunch_test_set(bunch)
+
+bunch = load_bunch_from_file()
+
+fixed_lenght_poincare, fixed_lenght_hyper = test_one_parameter_optimization(
+    optimisation_fl_poincare,
+    optimisation_fl_hyperboloid,
+    bunch[:20],
+    1000)
 
 print(min(fixed_lenght_poincare))
-plt.plot([i/iter_ for i in range(1, iter_)], fixed_lenght_poincare)
+alpha_D = (np.argmin(fixed_lenght_poincare)+1)/1000
+print(alpha_D)
+
+plt.plot([i/1000 for i in range(1, 1000)], fixed_lenght_poincare)
 
 print(min(fixed_lenght_hyper))
-plt.plot([i/iter_ for i in range(1, iter_)], fixed_lenght_hyper)
+alpha_H = (np.argmin(fixed_lenght_hyper)+1)/1000
+print(alpha_H)
+
+plt.plot([i/1000 for i in range(1, 1000)], fixed_lenght_hyper)
+
+fixed_lenght_poincare, fixed_lenght_hyper = test_one_parameter_optimization(
+    lambda X0, rgrad, X, learning_rate, max_iter: armijo_opt_poincare_riemannian(X0, rgrad, X, 0.3, 0.001, learning_rate, max_iter),
+    lambda X0, rgrad, X, learning_rate, max_iter: armijo_opt_hiper_riemannian(X0, rgrad, X, 0.3, 0.001, learning_rate, max_iter),
+    bunch[:10],
+    100)
+
+print(min(fixed_lenght_poincare))
+lambda_D = (np.argmin(fixed_lenght_poincare)+1)/100
+print(lambda_D)
+
+plt.plot([i/100 for i in range(1, 100)], fixed_lenght_poincare)
+
+print(min(fixed_lenght_hyper))
+lambda_H = (np.argmin(fixed_lenght_hyper)+1)/100
+print(lambda_H)
+
+plt.plot([i/100 for i in range(1, 100)], fixed_lenght_hyper)
+
+test_algorithm(lambda X0, X, max_iter: optimisation_fl_poincare(X0, frechet_mean_poincare_rgrad, X, alpha_D, max_iter),
+               lambda X0, X, max_iter: optimisation_fl_hyperboloid(X0, frechet_mean_hyperboloid_rgrad, X, alpha_H, max_iter),
+               bunch,
+               100,
+               5)
+
+test_algorithm(lambda X0, X, max_iter: armijo_opt_poincare_riemannian(X0, frechet_mean_poincare_rgrad, X, 0.3, 0.001, lambda_D, max_iter),
+               lambda X0, X, max_iter: armijo_opt_hiper_riemannian(X0, frechet_mean_hyperboloid_rgrad, X, 0.3, 0.001, lambda_H, max_iter),
+               bunch,
+               100,
+               5)
+
+test_algorithm(lambda X0, X, max_iter: RBB_poincare(X0, frechet_mean_poincare_rgrad, X, 0.0001, 0.9, max_iter),
+               lambda X0, X, max_iter: RBB_hyperboloid(X0, frechet_mean_hyperboloid_rgrad, X, 0.0001, 0.9, max_iter),
+               bunch,
+               100,
+               5)
+
+test_algorithm(lambda X0, X, max_iter: LBFGS_poincare(X0, frechet_mean_poincare_rgrad, X, 5, 0.0001, 0.9, max_iter),
+               lambda X0, X, max_iter: LBFGS_hyperboloid(X0, frechet_mean_hyperboloid_rgrad, X, 5, 0.0001, 0.9, max_iter),
+               bunch,
+               100,
+               5)
