@@ -63,114 +63,113 @@
 Nella seguente trattazione verra presentato il problema del minimo della funzione media di frechet sulla varietà disco di poincare, verra proposta una metodologia risolutiva che consiste nel trasportare il problema su una varieta conforme definita iperboloide, nella quale alcune formule per dimensione arbitraria sono computazionalmente meno onerose (e numericamente piu stabili ?)
 
 \section{Metodi di ottimizzazione su $R^n$ e Varieta differenziabili}
-In tale sezione andremo ad esplicitare le metodologie generali per trovare un minimo di una funzione $f$ definita su una varieta differenziabile $M$ a valori reali (notiamo che $R^n$ è un caso particolare di varietà differenziabile).\\
+Nella presente trattazione i vettori verranno indicati tramite le ultime lettere minuscole dell'alfabeto $x, v, w$, che assumeremo essere vettori colonna, il trasposto di un vettore verrà identificato tramite il carattere apice ($'$) perciò per definire il prodotto scalare euclideo di due vettori $u, v$ scriveremo $u'v$, mentre se si intende  un prodotto scalare differente da quello euclideo, come è il prodotto scalare riemanniano, lo indicheremo con $\langle \cdot,\cdot \rangle$.\\
+In tale sezione andremo ad esplicitare le metodologie generali per trovare un minimo di una funzione $f$ definita su una varieta differenziabile $M$ a valori reali (notiamo che $R^n$ è un caso particolare di varietà differenziabile). Cercheremo di trovare quei punti che garantiscono l'ottimalità di una funzione, ovvero punti di massimo e di minimo, che descriveremo a breve.\\
 Sia $f: \mathbb{R} ^n \to \mathbb{R}$ non vincolata.
-Un vettore $x^\ast$ è un minimo locale non vincolato per la funzione $f$ se (informalmente) $f$ ha un valore in $x^\ast$ non più grande di un intorno di $x^\ast$ stesso. Più formalmente $x^\ast$ è minimo locale per $f$ se esiste $\epsilon > 0$ tale che\\
+Un vettore $x^\ast$ è un minimo locale non vincolato per la funzione $f$ se, informalmente, $f$ assume un valore in $x^\ast$ non più grande dei valori che assume in un intorno di $x^\ast$ stesso. Più formalmente $x^\ast$ è minimo locale per $f$ se esiste $\epsilon > 0$ tale che\\
 \[f(x^\ast) \leq f, \mbox{ per ogni } x \mbox{ con } \parallel x - x^\ast \parallel < \epsilon\]\\
-Un vettore $x^\ast$ è un minimo globale non vincolato rispetto ad $f$ se ha un valore in $f$ non più grande di ogni altro vettore, più formalmente è tale che\\\\
-$f(x^\ast) \leq f \quad \forall x \in R^n$\\\\
-
+$\parallel x \parallel$ rappresenta la norma euclidea del vettore $x$.\\
+Un vettore $x^\ast$ è un minimo globale non vincolato rispetto ad $f$ se la funzione assume un valore in $x^\ast$ non più grande dei valori che assume in ogni altro vettore nel proprio dominio, più formalmente $x^\ast$ è tale che\\
+\[f(x^\ast) \leq f, \mbox{ per ogni } x \in R^n \]\\
 \subsection{Condizioni necessarie per l'ottimalità}
 Se la funzione di costo $f$ è differenziabile, possiamo utilizzare il gradiente e l'espansione in serie di Taylor per comparare il costo di un vettore con il costo di un suo intorno.
-Ci aspettiamo perciò che se $x^\ast$ è un minimo non vincolato allora la variazione della funzione al primo ordine per una piccola variazione $\Delta x$ è non negativa\\\\
-$\nabla f ( x^\ast )' \Delta x \geq 0$\\\\
-perciò dovendo valere per $\Delta x$ sia positivi che negativi abbiamo la seguente condizione necessaria\\\\
-$\nabla f ( x^\ast )' = 0$\\\\
-Ci aspettiamo inoltre che anche la variazione della funzione al secondo ordine per una piccola variazione $\Delta x$ è non negativa\\\\
-$\nabla f ( x^\ast )' \Delta x + (1/2) \Delta x' \nabla ^2 f (x^\ast) \Delta x\geq 0$\\\\
-dato che la precedente osservazione ha imposto $\nabla f (x^\ast)' \Delta x = 0$ otteniamo che\\\\
-$\Delta x' \nabla ^2 f (x^\ast) \Delta x\geq 0$\\\\
-e che perciò\\\\
-$\nabla ^2 f (x^\ast)$: semidefinita  positiva
+Ci aspettiamo perciò che se $x^\ast$ è un minimo non vincolato allora la variazione della funzione al primo ordine per una piccola variazione $\Delta x$ è non negativa\\
+\[\nabla f ( x^\ast )' \Delta x \geq 0.\]\\
+Perciò valendo sia per $\Delta x$ positivi che negativi abbiamo la seguente condizione necessaria,\\
+\[\nabla f ( x^\ast )' = 0. \]\\
+Ci aspettiamo inoltre che anche la variazione della funzione al secondo ordine per una piccola variazione di $\Delta x$ è non negativa,\\
+\[\nabla f ( x^\ast )' \Delta x + (1/2) \Delta x' \nabla ^2 f (x^\ast) \Delta x\geq 0\]\\
+dato che la precedente osservazione ha imposto $\nabla f (x^\ast)' \Delta x = 0$ otteniamo che\\
+\[\Delta x' \nabla ^2 f (x^\ast) \Delta x\geq 0\]\\
+e che perciò\\
+\[\nabla ^2 f (x^\ast) \mbox{ è una matrice semidefinita positiva.}\]\\
+Diamo il seguente risultato che sintetizza quanto detto fin'ora.
 \begin{prop}[Condizioni necessarie di ottimalità]
 Sia $x^\ast$ un minimo locale non vincolato di $f:R^n \to R$, assumiamo $f$ differenziabile con continuità in un insieme aperto $S$ contenente $x^\ast$. Allora\\
-$\nabla f(x^\ast) = 0$\\
+\[\nabla f(x^\ast) = 0\]\\
 Se $f$ è due volte differenziabile con continuità in $S$, allora\\
-$\nabla^2 f(x^\ast)$: semi-definita positiva
+\[\nabla^2 f(x^\ast) \mbox{ è una matrice semidefinita positiva.}\]
 \end{prop}
 \subsection{Il caso della convessità}
-Se la funzione $f$ è convessa non ci sono distinzioni tra un minimo locale ed un minimo globale, tutti i punti di minimo locale sono punti di minimo globale. Perciò un fatto importante è che la condizione $\nabla f(x^\ast) = 0$ è sufficiente per l'ottimalità, la dimostrazione è basata sulle proprietà di base della convessità della funzione $f$.
+Se la funzione $f$ è convessa su un insieme convesso non ci sono distinzioni tra un minimo locale ed un minimo globale, tutti i punti di minimo locale sono anche punti di minimo globale. Perciò un fatto importante è che la condizione $\nabla f(x^\ast) = 0$ è sufficiente per l'ottimalità, da cui deriva il seguente risultato.
 \begin{prop}[Funzioni Convesse] Sia $f:R^n \to R$ una funzione convessa su un insieme convesso $X$.
 \begin{itemize}
   \item Un minimo locale di $f$ su $X$ è anche un minimo globale su $X$. Se inoltre $f$ è strettamente convessa, allora esiste al più un minimo per $f$.
-  \item Se $f$ è convess e l'insieme $X$ è aperto, allora $\nabla f(x^\ast) = 0$ è una condizione necessaria e sufficiente per il vettore $x^\ast \in X$ per essere minimo globale di $f$ su $X$.
+  \item Se $f$ è convessa e l'insieme $X$ è aperto, allora $\nabla f(x^\ast) = 0$ è una condizione necessaria e sufficiente per il vettore $x^\ast \in X$ per essere minimo globale di $f$ su $X$.
 \end{itemize}
 \end{prop}
 
 \subsection{Condizioni Sufficienti per L'ottimalità}
 Non è difficile trovare esempi in cui le condizione di ottimalita necessarie definite nelle sezione precedente
-[$\nabla f(x^\ast) = 0 \quad \& \quad \nabla^2 f(x^\ast) \geq 0$]
-portino ad identificare punti non di minimo locale come ad esempio punti di sella o punti di massimo.\\
+[$\nabla f(x^\ast) = 0 \quad \mbox{e} \quad \nabla^2 f(x^\ast) \geq 0$]
+portino ad identificare punti che non sono di minimo locale come ad esempio punti di sella o punti di massimo.\\
 Supponiamo di avere un vettore $x^\ast$ che soddisfa le seguenti condizioni\\\\
-- $\nabla f(x^\ast) = 0$\\
-- $\nabla^2 f(x^\ast)$: definita positiva\\\\
-Allora abbiamo che per ogni $\Delta x \neq 0$\\\\
-$\Delta x' \nabla^2f(x^\ast) \Delta x > 0$\\\\
+- $\nabla f(x^\ast) = 0$.\\
+- $\nabla^2 f(x^\ast)$ è una matrice definita positiva.\\\\
+Allora abbiamo che per ogni $\Delta x \neq 0$ con $\Delta x \in R^n \setminus 0$\\
+\[\Delta x' \nabla^2f(x^\ast) \Delta x > 0\]\\
 Ciò implica che in $x^\ast$ la variazione di $f$ al secondo ordine data da un piccolo spostamento $\Delta x$ è positiva, perciò $f$ tende ad incrementare nell'intorno di $x^\ast$ e ciò implica che le due condizioni di cui sopra sono necessarie e sufficienti per l'ottimalità locale di $x^\ast$.
-\begin{prop}[Condizioni di ottimalità sufficienti del secondo ordine] Sia $f:R^n \to R$ doppiamente differenziabile con continuità in un insieme aperto $S$. Si supponga esistere $x^\ast \in S$ che soddisfi le condizioni\\
-$\nabla f(x^\ast) \quad \nabla^2 f(x^\ast)$: definita positiva\\
-allora, $x^\ast$ è un minimo locale non vincolato di $f$. In particolare esistono $\gamma > 0$ e $\epsilon > 0$ tali che\\
-\[ f(x) \geq f(x^\ast) + \gamma/2\parallel x - x^\ast \parallel^2, \quad \forall x \quad con \parallel x - x^\ast \parallel < \epsilon  \]
+\begin{prop}[Condizioni di ottimalità sufficienti del secondo ordine] Sia $f:S \subset R^n \to R$ derivabile due volte con continuità. Si supponga che esista $x^\ast \in S$ che soddisfi le condizioni\\
+\[\nabla f(x^\ast) = 0 \quad \mbox{e} \quad \nabla^2 f(x^\ast) \mbox{è una matrice definita positiva.}\]\\
+Allora, $x^\ast$ è un minimo locale di $f$. In particolare esistono $\gamma > 0$ e $\epsilon > 0$ tali che\\
+\[ f(x) \geq f(x^\ast) + \frac{\gamma}{2} \parallel x - x^\ast \parallel^2, \quad \mbox{per ogni} x \quad \mbox{con} \parallel x - x^\ast \parallel < \epsilon  \]
 \end{prop}
 \subsection{Discesa del gradiente in $R^n$}
 Andiamo ora a definire nel dettaglio le principali metodologie computazionali di ottimizzazione non lineare su $R^n$. Tali metodologie sarannno trattate con un occhio alle possibili applicazioni.\\
-Consideriamo il problema di trovare il minimo non vincolato di una funzione $f:R^n \to R$ la risoluzione analitica è infattibile, per problemi pratici, perciò l'approccio adottato è quello di applicare un algoritmo iterativo chiamato \textit{iterative descent} che opera come segue: prendiamo un vettore iniziale $x0$ e successivamente si genera una sequenza $x1, x2, ...$ tali che $f$ decresce ad ogni iterazione $f(x^{k+1}) < f(x^k)$ e sperabilmente raggiungere un punto di minimo.\\
-I principali algoritmi di discesa sono Metodi del Gradiente poichè basano le decisioni in base al gradiente della funzione $f$.
+Consideriamo il problema di trovare il minimo non vincolato di una funzione $f:R^n \to R$. Nella maggior parte di casi non è possibile trovare una soluzione analitica, perciò l'approccio adottato è quello di applicare un algoritmo iterativo chiamato \textit{iterative descent} che opera come segue: prendiamo un vettore iniziale $x^0$ e successivamente generiamo una sequenza $x^1, x^2, ...$ tale che $f$ decresce ad ogni iterazione $f(x^{k+1}) < f(x^k)$ e sperabilmente converga un punto di minimo.\\
+I principali algoritmi di discesa sono metodi del gradiente poichè sono basati sul gradiente della funzione $f$.
 \subsubsection{Selezionare la direzione di discesa}
-Sia $v \in R^n-0$, $v^\perp$ è un iperpiano che divide lo spazio in due componenti connesse:
+Sia $v \in R^n \setminus 0$, $v^\perp$ è un iperpiano, contenente i punti tali che $v'd = 0$, divide lo spazio in due componenti connesse:
 \begin{itemize}
-  \item $v'd > 0$ (semipiano)
-  \item $v'd < 0$ (semipiano)
-  \item $v'd = 0$ (iperpiano)
+  \item $v'd > 0$ (semipiano).
+  \item $v'd < 0$ (semipiano).
 \end{itemize}
-se $v = \nabla f(x)$ ogni d tale che $v'd > 0$ è una direzione di decrescita.
+Se $v = \nabla f(x)$ ogni $d$ tale che $v'd < 0$ è una direzione di decrescita, come mostrato nel seguente teorema.
 \begin{theorem}
-Sia $f \in C^1(\Omega), \Omega$ aperto di $R^n$ e sia $x \in \Omega$ e $\nabla f(x) \neq 0$ $\forall d \in R^n$ tale che $\nabla f(x)'d < 0$  $\exists \alpha 0 > 0$ tale che $f(x + \alpha d) < f(x)$ con $\alpha \in (0, \alpha0]$
+Sia $f \in C^1(\Omega)$, con $\Omega$ aperto di $R^n$ e sia $x \in \Omega$ e $\nabla f(x) \neq 0$ per ogni $d \in R^n$ tale che $\nabla f(x)'d < 0$ ed esiste $\alpha^0 > 0$ tale che $f(x + \alpha d) < f(x)$ con $\alpha \in (0, \alpha^0]$
 \end{theorem}
-Detto cio possiamo esplitare una formula che definisce una classe di algoritmi\\
-$x^{k+1} = x^k + \alpha^k d^k \quad k=0, 1, ...$\\
-Dove se $\nabla f(x^k) \neq 0$ la direzione $d^k$ è scelto in modo tale che\\
-$\nabla f(x^k)'d^k < 0$\\
-Ci sono varie possibilita nella scelta di $d^k$ e di $\alpha^k$. Molti metodi di gradiente sono definiti nella forma 
-$x^{k+1} = x^k - \alpha^k D^k \nabla f(x^k)$,
-dove $D^k$ è una matrice definita positiva e con $d^k = -D^k\nabla f(x^k)$ allora è diretto che $\nabla f(x^k)'d^k < 0$.\\
-A seconda della scelta di $D^k$ abbiamo differenti metodologie applicabili.\\\\
-\textbf{Steepest Descent}:\\
-$D^k = I, \quad k = 0, 1, ...$\\\\
-\textbf{Metodi di Newton}:\\
-$D^k = (\nabla^2 f(x^k))^{-1}, \quad k = 0, 1, ...$\\
-$\nabla^2 f(x^k)$ deve essere definita positiva, proprietà sempre verificata se $f$ è convessa.\\\\
-\textbf{Steepest Descent Riscalata}:\\
-$D^k$ matrice diagonale.\\\\
-\textbf{Metodi di Schamsky}:\\
-$D^k = (\nabla^2 f(x^0))^{-1}$\\\\
-\textbf{Metodi di quasi Newton}:\\
-$D^k = H(x^k) \approx \nabla^2 f(x^k)$\\
-I metodi di quasi newton sono utilizzati nella pratica dal momento in cui il calcolo della matrice hessiana è computazionalmente oneroso, in tal caso la matrice $D^k$ è scelta in modo tale che la direzione $d^k = -D^k\nabla f(z^k)$ tenda ad approssimare la direzione del metodo di Newton. L'idea fondamentale riguardo questa metodologia è che tramite due iterate successive $k$, $k+1$ ed i valori $x^k$, $x^{k+1}$, $\nabla f(x^k)$, $\nabla f(x^{k+1})$ noi possiamo avere accesso a delle informazioni riguardo la matrice essiana, in particolare abbiamo che\\
-$(\nabla f(x^{k+1}) - \nabla f(x^k) \approx H(x^{k+1})(x^{k+1} - x^k)$ che sappiamo essere un uguaglianza nel caso di $f$ quadratica. Definiti $p^k = x^{k+1} - x^k$ e $q^k = \nabla f(x^{k+1}) - \nabla f(x^k)$ allora $D^{k+1}$ deve soddisfare l'uguaglianza $D^{k+1} p^k = q^k$, questo prende il nome di metodo delle secanti (equazione delle secanti).
-
+Detto ciò possiamo dare una classe di algoritmi con $x^0 \in \Omega$ e dove $d_k \in R^n$ è detta direizione ed $\alpha_k$ è detto passo, definiti secondo la seguente formula,\\
+\[x^{k+1} = x^k + \alpha^k d^k \quad k=0, 1, ... ,\]\\
+Dove se $\nabla f(x^k) \neq 0$ la direzione $d^k$ è scelta in modo tale che\\
+\[\nabla f(x^k)'d^k < 0\]\\
+Ci sono varie possibilita nella scelta di $d^k$ e di $\alpha^k$.\\
+Molti metodi di gradiente sono definiti nella forma,
+\[x^{k+1} = x^k - \alpha^k D^k \nabla f(x^k),\]
+dove $D^k$ è una matrice definita positiva e con $d^k = -D^k\nabla f(x^k)$ allora è immediato verificare che $\nabla f(x^k)'d^k < 0$.\\
+A seconda della scelta di $D^k$ abbiamo differenti metodi applicabili.\\\\
+\begin{itemize}
+    \item \textbf{Steepest Descent}: $D^k = I, \quad k = 0, 1, ...$.
+    \item \textbf{Metodi di Newton}: $D^k = (\nabla^2 f(x^k))^{-1}, \quad k = 0, 1, ...$, $\nabla^2 f(x^k)$ deve essere definita positiva, proprietà sempre verificata se $f$ è convessa.
+    \item \textbf{Steepest Descent Riscalata}: $D^k$ matrice diagonale.
+    \item \textbf{Metodi di Schamansky}: $D^k = (\nabla^2 f(x^0))^{-1}$.
+    \item \textbf{Metodi di quasi Newton}: $D^k = H(x^k) \approx \nabla^2 f(x^k)$.
+\end{itemize}
+Nonostante i metodi di Newton convergono molto velocemente, non sono utilizzati nella pratica dal momento in cui il calcolo della matrice hessiana è computazionalmente oneroso, perciò sono stati introdotti i metodi di quasi Newton, nel qual caso la matrice $D^k$ è scelta in modo tale che la direzione $d^k = -D^k\nabla f(z^k)$ tenda ad approssimare la direzione del metodo di Newton, e $D_k$ approssima la matrice hessiana. L'idea fondamentale riguardo questa metodologia è che tramite due iterate successive $k$, $k+1$ ed i valori $x^k$, $x^{k+1}$, $\nabla f(x^k)$, $\nabla f(x^{k+1})$ noi possiamo avere accesso a delle informazioni riguardo la matrice hessiana, in particolare abbiamo che\\
+\[(\nabla f(x^{k+1}) - \nabla f(x^k) \approx H(x^{k+1})(x^{k+1} - x^k).\]\\
+Definiti $p^k = x^{k+1} - x^k$ e $q^k = \nabla f(x^{k+1}) - \nabla f(x^k)$ allora $D^{k+1}$ deve soddisfare l'uguaglianza $D^{k+1} p^k = q^k$, questo prende il nome di equazione delle secanti.
 \subsubsection{Selezione del passo}
-Ci sono numerose metodologie per la scelta del passo $a^k$ nei metodi del gradiente, ne listiamo alcune.\\\\
+Ci sono numerose metodologie per la scelta del passo $a^k$ nei metodi del gradiente, ne elenchiamo alcune.\\\\
 \textbf{Ricerca lineare esatta}:\\
-scegliamo $\alpha^k$ tale che minimizza la funzione costo $f$ lungo la direzione $d^k$, percio\\
+scegliamo $\alpha^k$ tale che minimizza la funzione costo $f$ lungo la direzione $d^k$, perciò\\
 $f(x^k + \alpha^k d^k) = \min_{\alpha \geq 0} f(x^k + \alpha d^k)$.\\\\
 \textbf{Ricerca lineare esatta limitata}:\\
 Questa è una versione modifica della metodologia precedente più semplice da implementare in vari casi. definito un scalare $s > 0$ $\alpha^k$ è scelto in modo tale che minimizza il costo di $f$ nell'intervallo $[0, s]$\\
 $f(x^k + \alpha^k d^k) = \min_{\alpha \in [0, s]} f(x^k + \alpha d^k)$.\\\\
 Le due metodologie appena presentate sono solitamente implementate con l'aiuto delle tecniche risolutive dell'ottimizzazione in una variabile, che è un problema certamente più facile da risolvere in modo analitico.\\\\
-\textbf{Metodo di armijo}:\\
-scegliere $\alpha^k$ in modo che garantisca una decrescita sufficiente a garantire la convergenza del metodo sotto opportune ipotesi. Il metodo di armijo è stato definito come segue. Siano fissi $s, \beta$ e $\sigma$ con $0 < \beta < 1$, e $0 < \sigma < 1$ e sia $\alpha^k = \beta^{m_k} s$, dove $m_k$ è il primo intero non negativo per cui vale\\
-$f(x^k) - f(x^k + \beta^m s d^k) \geq -\sigma \beta^m s \nabla f(^k)'d^k$.\\
+\textbf{Metodo di Armijo}:\\
+Scegliere $\alpha^k$ in modo che garantisca una decrescita sufficiente a garantire la convergenza del metodo sotto opportune ipotesi. Il metodo di armijo è stato definito come segue. Siano fissati $s, \beta$ e $\sigma$ con $0 < \beta < 1$, e $0 < \sigma < 1$ e sia $\alpha^k = \beta^{m_k} s$, dove $m_k$ è il primo intero non negativo per cui vale\\
+\[f(x^k) - f(x^k + \beta^m s d^k) \geq -\sigma \beta^m s \nabla f(^k)'d^k.\]\\
 Solitamente si scelgono i valori come segue, $\sigma \in [10^{-5}, 10^{-1}]$, il fattore di riduzione $\beta \in [1/10, 1/2]$, possiamo scegliere $s = 1$ e moltiplicare la direzione $d^k$ per uno scalare.\\
 Per questa metodologia diamo anche il seguente teorema che rappresenta un risultato importante.
 \begin{definition}
-Una sequenza di direzioni $\{x^k\}_k$ è detta limitata se vale la seguente $\limsup\limits_{k \in K} \nabla f(x)'d^k < 0$
+Una successione di direzioni $\{d^k\}_k$ è detta limitata se vale la seguente,\\ \[\parallel d^k \parallel < M \mbox{ per ogni } k \mbox{ con } M \in R^+\]\\
 \end{definition}
 \begin{definition}
-Una successione di direzioni $\{x^k\}_k, \quad \{d^k\}_k$ è detta \textbf{gradient related} se per ogni sotto-successione di $\{x^k\}_k$ che converge ad un punto non stazionario $\{d^k\}_k$ è limitata. Perciò non sarà mai ortogonale al gradiente (sennò sarebbe stazionario)
+Una successione di direzioni $\{x^k\}_k, \quad \{d^k\}_k$ è detta \textbf{gradient related} se per ogni sotto-successione di $\{x^k\}_k$ che converge ad un punto non stazionario $\{d^k\}_k$ è limitata ed inoltre vale $\limsup\limits_{k \in K} \nabla f(x)'d^k < 0$.
 \end{definition}
+Ora diamo il risultato principale che garantisce la convergenza globale per metodi di discesa che utilizzano la tecnica di Armijo.
 \begin{theorem}
-Sia $\{x^k\}_k$ una sequenza infinita (non definitivamente uguale al suo limite) generata dal metodo $x^{k+1} = x^k + \alpha^k d^k$, dove $\alpha^k$ è generato con la regola di armijo e $d^k$ è \textbf{gradient related}. Allora il limite è un punto stazionario.
+Sia $\{x^k\}_k$ una sequenza infinita (non definitivamente uguale al suo limite) generata dal metodo $x^{k+1} = x^k + \alpha^k d^k$, dove $\alpha^k$ è generato con la regola di armijo e $d^k$ è \textbf{gradient related}. Allora ogni punto limite è stazionario.
 \end{theorem}
 \textbf{Metodo a passo costante}:\\
 Si definisce un passo costante $s > 0$ e si fissa $\alpha^k = s, \quad k = 0,1, ...$\\
@@ -179,8 +178,7 @@ Il passo costante è una metodologia veramente semplice da implementare ma si de
 Scegliamo il passo in modo tale che $\alpha^k \rightarrow 0$. Una problematica legata a questa metodologia è che il passo può diventare troppo piccolo per cui non può essere garantita la convergenza, per questa ragione viene richiesto che $\sum_{n=1}^{\infty} \alpha^k = \infty$
 
 \subsection{Discesa del gradiente su varietà}
-Ora che abbiamo un contesto teorico e una consapevolezza di cosa voglia dire effetutare ottimizzazione su uno spazio euclideo n-dimensionale ($R^n$), possiamo approcciare le metodologie computazionali per trovare un minimo non vincolato di una funzione $f:M \to R$ analoghe a quella definite nella sezione precedente. Prima di andare nel vivo del discorso dobbiamo però munirci degli strumenti necessari, richiamiamo la parte dedicata alle varietà differenziabili presente nell'appendice e aggiungiamo quanto segue.
-
+Ora che abbiamo un contesto teorico e una consapevolezza di cosa voglia dire effetutare ottimizzazione su uno spazio euclideo $n$-dimensionale ($R^n$), possiamo approcciare le metodologie computazionali per trovare un minimo non vincolato di una funzione $f:M \to R$ analoghe a quella definite nella sezione precedente. Prima di andare nel vivo del discorso dobbiamo però munirci degli strumenti necessari, richiamiamo la parte dedicata alle varietà differenziabili presente nell'appendice e aggiungiamo quanto segue.
 \subsubsection{Retrazioni}
 Su varietà differenziabili la nozione di muoversi nella direzione del vettore tangente rimanendo nella varietà stessa è generalizzato dal concetto di \textbf{Retrazione}, concettualmente una retrazione $R$ su $x$, denominata come $R_x$, è una mappa che va da $T_xM$ (spazio tangente in $x$ rispetto a $M$) in $M$ con una condizione di rigidità locale che preserva il gradiente in $x$.
 \begin{definition}[Retrazione]
@@ -194,9 +192,9 @@ Una retrazione in una varietà $M$ è una mappa liscia $R$ che ha come dominio l
 \end{definition}
 Ci riferiamo alla condizione $DR_x(0_x) = id_{T_xM}$ come condizione di \emph{rigidità locale}. Equivalentemente, per ogni vettore tangente $\xi$ in $T_xM$, la curva $\gamma_{\xi}:t \mapsto R_x(t\xi)$ soddisfa $\gamma_{\xi}(0)' = \xi$.\\
 Oltre a trasformare elementi di $T_xM$ in elementi di $M$, un secondo importate scopo della retrazione $R_x$ è quello di trasformare una funzione costo ($f:M \to R$) definita in un intorno di $x \in M$ in una funzione costo definita sullo spazio vettoriale $T_xM$. Nello specifico, data una funzione reale $f$ su una varietà $M$ su cui è definita una retrazione $R$, abbiamo che $\hat{f} = f \circ R$ denota il $\emph{pullback}$ di $f$ attraverso $R$. Per $x \in M$, abbiamo che\\
-$\hat{f_x} = f \circ R_x$\\
+\[\hat{f_x} = f \circ R_x\]\\
 denota la restrizione di $\hat{f}$ su $T_xM$. Si noti che $\hat{f_x}$ è una funzione reale su uno spazio vettoriale. Dalla condizione di rigidità locale abbiamo che $D\hat{f_x}(0_x) = Df(x)$. Se $M$ è dotato di una metrica Riemanniana abbiamo\\
-grad $\hat{f_x}(0_x) =$grad $f(x)$.\\
+\[ \mbox{grad} \hat{f_x}(0_x) = \mbox{grad} f(x).\]\\
 In alcuni casi può essere necessario dover effettuare operazioni tra vettori appartenenti a spazi tangente diffenti, come ad esempio nel caso dei metodi di ottimizzazzione quasi Newton. Nell'ottimizzazione basata su retrazioni lo strumento standard per trasportare vettori appartenenti ad uno spazio tangente in un altro spazio tangente è il $trasporto vettoriale$. Informalmente, dati due vettori tangenti ad $x$, chiamati $v_x, w_x \in T_xM$, un trasporto vettoriale $\mathcal{T}$ associato ad una retrazione $R$, è una mappa liscia che genera un vettore appartenente ad $T_{R_x(w_x)}M$. Per semplicità utilizzeremo la notazione $\mathcal{T}_{x \to y}(v)$.\\
 Un caso speciale di trasporto vettoriale è il $trasporto$ $parallelo$ che puo essere interpretato come un trasporto vettoriale la cui retrazione associata è la mappa esponenziale.
 \subsubsection{Metodi \emph{line-search}}
@@ -212,7 +210,8 @@ Data una funzione $f$ su una varietà riemanniana $M$ dotata di una retrazione $
 $f(x) - f(R_x(\beta^{m}\bar{\alpha}\eta)) \geq -\sigma \langle$grad $f(x), \beta^m\bar{\alpha}\eta \rangle_x$.\\
 Il valore reale $t^A$ è il \textbf{Passo di Armijo}.
 \end{definition}
-Andiamo ora a definire un algoritmo generico per la discesa di gradiente su varietà (\textbf{Accelerated Line Search}), tale algoritmo rappresenta una generalità di metodologie di ottimizzazione delineando però, nel contempo, delle restrizioni fondamentali che garantiscono la convergenza della sequenza di punti generati.
+Andiamo ora a definire un algoritmo generico per la discesa di gradiente su varietà (\textbf{Accelerated Line Search}), tale algoritmo rappresenta una generalità di metodologie di ottimizzazione delineando però, nel contempo, delle restrizioni fondamentali che garantiscono la convergenza della sequenza di punti generati.\\
+\begin{center}
 \begin{algorithm}[H]
 \SetAlgoLined
 \KwIn{Manifold $M$; funzione costo $f$ differenziabile definita su $M$; retraction $R$; scalari $\bar{\alpha} > 0$, $c, \beta, \sigma \in (0,1)$; initial iterate $x^0 \in M$}
@@ -228,11 +227,11 @@ Andiamo ora a definire un algoritmo generico per la discesa di gradiente su vari
 }
 \caption{Accelerated Line Search (ALS)}
 \end{algorithm}
-
+\end{center}
 Dallo pseudocodice appena esplicitato è chiaro che tale algoritmo puo essere visto come una generalizzazione della scelta del passo di Armijo descritto nella sotto-sezione 2.2, difatti scegliere $x^{k+1} = R_{x^k}(t^{k^A}\eta^k)$ soddisfa \eqref{ctr-als}. Inoltre la condizione rilassata \eqref{ctr-als} ci permette un ampio spazio di manovra nella scelta di $x^{k+1}$ grantendoci la convergenza ad un punto stazionario, come enunceremo formalmente, e ciò puo portare alla definizione di algoritmi altamente efficienti.
 
 \subsubsection{Convergenza}
-Il concetto di convergenza puo essere ridefinito e generalizzato su varietà. Una sequenza infinita $\{x^k\}_{k=0,1,...}$ di punti su una varietà $M$ è detta essere convergente se esiste una carta $(U, \psi)$ di $M$, un punto $x^\ast \in M$ e $K > 0$ tali che $x^k$ è in $U$ per ogni $k \geq K$ e tale che la sequenza $\{\psi(x^k)\}_{x=K, K+1, ...}$ converge a $\psi(x^\ast)$ (in tal caso applichiamo il concetto di convergenza di $R^n$, avendo $\psi$ come codominio uno spazio euclideo). Il punto $\psi^{-1}(\lim_{k \to \infty} \psi(x^k))$ è chiamato il \emph{limite} della sequenza $\{x^k\}_{k=0,1,...}$. Tutte le sequenze convergenti di una vairetà di \emph{Hausdorff} hanno uno ed un solo punto limite.\\
+Il concetto di convergenza puo essere ridefinito e generalizzato su varietà. Una sequenza infinita $\{x^k\}_{k=0,1,...}$ di punti su una varietà $M$ è detta essere convergente se esiste una carta $(U, \psi)$ di $M$, un punto $x^\ast \in M$ e $K > 0$ tali che $x^k$ è in $U$ per ogni $k \geq K$ e tale che la sequenza $\{\psi(x^k)\}_{x=K, K+1, ...}$ converge a $\psi(x^\ast)$ (in tal caso applichiamo il concetto di convergenza di $R^n$, avendo $\psi$ come codominio uno spazio euclideo). Il punto $\psi^{-1}(\lim_{k \to \infty} \psi(x^k))$ è chiamato il \emph{limite} della sequenza $\{x^k\}_{k=0,1,...}$. Tutte le sequenze convergenti di una varietà di \emph{Hausdorff} hanno uno ed un solo punto limite.\\
 Diamo ora un importante risultato rispetto alla convergenza dell'algoritmo \emph{ALS}, tale enunciato deriva direttamente dal risultato di convergenza definito nella sezione 2.2 rispetto al passo di Armijo in $R^n$, in tal caso però viene data una generalizzazione di quest'ultimo essendo, come già detto, ALS una generalizzazione del passo di Armijo e lavorando non più su $R^n$ ma su varietà differenziabili.
 \begin{theorem}
 Sia $\{x^k\}$ una sequenza infinita di iterate generate da ALS. Allora ogni punto di accumulazione  di $\{x^k\}$ è un punto stazionario della funzione costo $f$
@@ -249,10 +248,10 @@ Lo spazio iperbolico può essere definito in vari modi equivalenti, noi descrive
     \caption{Rappresentazione della proiezione stereografica tra disco e iperboloide}
 \end{figure}
 \subsection{Iperboloide}
-Possiamo definire $H^n$ come il luogo dei punti di norma -1 in $R^{n:1}$, dotato dell'usuale prodotto di minkowski $(\langle u, v \rangle_{n:1} = \sum_{i=1}^{n} u_iv_i - u_{n+1}v_{n+1}; \quad u,v \in R^{n+1})$, questo luogo di punti ha in realta due componenti connesse, noi ne scegliamo una.
+Possiamo definire $H^n$ come il luogo dei punti di norma -1 in $R^{n:1}$, dotato dell'usuale prodotto di minkowski $(\langle u, v \rangle_{n:1} = \sum_{i=1}^{n} u_iv_i - u_{n+1}v_{n+1}; \quad u,v \in R^{n+1})$, questo luogo di punti ha in realta due componenti connesse, noi ne scegliamo una. Definiamolo come segue.
 \begin{definition}[Iperboloide]
 Il modello dell'iperboloide è definito nel modo seguente.\\
-$H^n = \{x \in R^{n+1} | \langle x, x \rangle_{n:1} = -1; \quad x_{n+1} > 0 \}$
+\[H^n = \{x \in R^{n+1} | \langle x, x \rangle_{n:1} = -1; \quad x^{n+1} > 0 \}.\]
 \end{definition}
 Lo spazio tangente in un punto $p \in H^n$ è $T_pH^n = \{x \in R^{n:1} | \langle p,x \rangle_{n:1} = 0\}$.\\
 Possiamo asserire che l'iperboloide è una varietà riemanniana. Andiamo ora ad esplicitare gli strumenti necessari per effettuare ottimizzazione su questa varietà.
@@ -260,52 +259,59 @@ Possiamo asserire che l'iperboloide è una varietà riemanniana. Andiamo ora ad 
 La metrica, definita nel $Tangent Bundle$ dell'iperboloide, è la metrica indotta dal prodotto di Minkowski già esplicitata.
 \subsubsection{Distanza}
 La distanza tra due punti dell'iperboloide rappresenta la lunghezza della geodedica che unisce i due punti, è definita come segue.\\
-$d_{H^n} (u,v) = arccosh(-\langle u, v \rangle_{n:1}); \quad u,v \in H^n$
+\[d_{H^n} (u,v) = arccosh(-\langle u, v \rangle_{n:1}); \quad u,v \in H^n.\]
 \subsubsection{Mappa Esponenziale}
-La mappa esponenziale definita su $p \in H^n$ e $v \in T_pH^n$, che ha proprietà di retrazione. La mappa esponenziale rappresenta la curva geodedica calcolata nel punto $1$ originaria in $p$ con derivata in $0$ punto pari a $v$. E' definita come segue.\\
-$Exp_p(v) = cosh(\parallel v \parallel_{n:1})p + sinh(\parallel v \parallel_{n:1}) v / \parallel v \parallel_{n:1}$
+La mappa esponenziale definita su $p \in H^n$ e $v \in T_pH^n$, che ha proprietà di retrazione, rappresenta la curva geodedica calcolata nel punto $1$ originaria in $p$ con derivata in $0$ punto pari a $v$. E' definita come segue.\\
+\begin{equation*}\begin{gathered}
+Exp_p(v) = cosh(\parallel v \parallel_{n:1})p + sinh(\parallel v \parallel_{n:1}) \frac{v}{\parallel v \parallel_{n:1}}.
+\end{gathered}\end{equation*}
+
 \subsubsection{Gradiente della funzione distanza}
 La deifinize dell'iperboloide e dello spazio di minkowski nel quale è costruito ci aiuta nel calcolo del gradiente della funzione distanza.\\
 Data una funzione costo $E$ qualsiasi possiamo calcolarne il gradiente in un punto $p \in H^n$, anch'esso arbitrario, passando dapprima per il gradiente definito nell'ambiente, in tal caso lo spazio di minkowski, ricordiamo che quest'ultimo è cosi definito.\\
-$\nabla_{p}^{R^{n:1}} E = (\frac{\partial E}{\partial x_1}|_p, ..., \frac{\partial E}{\partial x_n}|_p, -\frac{\partial E}{\partial x_{n+1}}|_p)$\\
+\[nabla_{p}^{R^{n:1}} E = (\frac{\partial E}{\partial x_1}|_p, ..., \frac{\partial E}{\partial x_n}|_p, -\frac{\partial E}{\partial x_{n+1}}|_p).\]\\
 Una volta calcolato il gradiente nell'ambiente procediamo a proiettarlo nello spazio tangente del punto $p \in H^n$ come segue.\\
-$\nabla_{p}^{H^n} E = \nabla_{p}^{R^{n:1}} E + \langle p, \nabla_{p}^{R^{n:1}} E \rangle_{n:1} p$.\\
+\[\nabla_{p}^{H^n} E = \nabla_{p}^{R^{n:1}} E + \langle p, \nabla_{p}^{R^{n:1}} E \rangle_{n:1} p.\]\\
 Relativamente al problema della media di fréchet che andremo ad esplicitare definiamo la seguente formula rappresentante il gradiente su spazio di minkowski della funzione distanza.\\
-$\nabla_u^{R^{n:1}} d_{H^n}(u,v) = - (\langle u,v \rangle_{n:1}^2 - 1)^{-1/2} v$
+\[\nabla_u^{R^{n:1}} d_{H^n}(u,v) = - (\langle u,v \rangle_{n:1}^2 - 1)^{-1/2} v.\]
 \subsection{Disco di Poincaré}
-Andiamo ora a definire l'altro modello dello spazio iperbolico, rappresentato come tutti i punti di norma strettamente minore di 1 in $R^n$.
+Andiamo ora a definire l'altro modello dello spazio iperbolico, definito come l'insieme dei punti di norma strettamente minore di 1 in $R^n$.
 \begin{definition}[Disco di Poincaré]
 Il modello del disco di poincare è definito nel modo seguente\\
-$D^n = \{x \in R^n | \parallel x \parallel < 1\}$
+\[ D^n = \{x \in R^n | \parallel x \parallel < 1\} \]\\
 \end{definition}
-Essendo $D^n$ un sottoinsieme di $R^n$ lo spazio tangente in ogni punto di $D^n$ è $R^n$. Come fatto per l'iperboloide andiamo ad esplicitare i vari strumenti necessari per effettuare ottimizzazione.
+Essendo $D^n$ un sottoinsieme di $R^n$ lo spazio tangente in ogni punto di $D^n$ è $R^n$. Possiamo asserire che il disco di Poincaré è una varietà riemanniana. Come fatto per l'iperboloide andiamo ad esplicitare i vari strumenti necessari per effettuare ottimizzazione.
 \subsubsection{Metrica}
 La metrica, definita nello spazio tangente del disco di poincaré $T_pD^n$ rispetto ad un punto $p \in D^n$, è la seguente.\\
-$g^D = \lambda_p^2 g^E$; con $\lambda_p = \frac{2}{1- \parallel p \parallel^2}$ e con $g^E$ la metrica euclidea.
+\[g^D = \lambda_p^2 g^E \mbox{; con } \lambda_p = \frac{2}{1- \parallel p \parallel^2} \mbox{ e con } g^E \mbox{ la metrica euclidea}.\]
 \subsubsection{Distanza}
 La distanza tra due punti del disco di Poincaré rappresenta la lunghezza della geodedica che unisce i due punti, è definita come segue.\\
-$d_{D^n}(u, v) = arccosh(1 + \frac{\parallel u - v\parallel^2}{(1-\parallel u \parallel^2)(1-\parallel v \parallel^2)})$
+\[d_{D^n}(u, v) = arccosh(1 + \frac{\parallel u - v\parallel^2}{(1-\parallel u \parallel^2)(1-\parallel v \parallel^2)})\]
 \subsubsection{Mappa Esponenziale}
-La mappa esponenziale definita su $p \in D^n$ e $v \in T_pD^n$. La mappa esponenziale rappresenta la curva geodedica calcolata nel punto $1$ originaria in $p$ con derivata in $0$ punto pari a $v$. E' definita come segue.\\
-$Exp_p(v) = \frac{\lambda_p (cosh(\lambda_p \parallel v \parallel) + \langle p,\frac{v}{\parallel v \parallel} \rangle sinh(\lambda_p \parallel v \parallel))p}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)} + \frac{\frac{1}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel) v}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)}$
+La mappa esponenziale definita su $p \in D^n$ e $v \in T_pD^n$, rappresenta la curva geodedica calcolata nel punto $1$ originaria in $p$ con derivata in $0$ punto pari a $v$. E' definita come segue.\\
+\begin{equation*}\begin{gathered}
+Exp_p(v) = \\ \frac{\lambda_p (cosh(\lambda_p \parallel v \parallel) + \langle p,\frac{v}{\parallel v \parallel} \rangle sinh(\lambda_p \parallel v \parallel))p}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)} + \\ \frac{\frac{1}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel) v}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)}
+\end{gathered}\end{equation*}
 \subsubsection{Gradiente della funzione distanza}
 Dati $u,v \in D^n$ la formula del gradiente riemanniano della funzione distanza è dato da.\\
-$\nabla_u^{E} d(u,v) = \frac{4}{b \sqrt{c^2 - 1}} (\frac{(\parallel v \parallel^2 - 2\langle u,v \rangle + 1)v}{a^2} - \frac{v}{a})$ con $a = 1 - \parallel u \parallel^2$, $b = 1 - \parallel v \parallel^2$, $c = 1 + \frac{2}{ab} \parallel u - v \parallel^2$.\\
-Sappiamo che per per ricavare il gradiente riemanniano dal gradiente euclideo è sufficiente riscalare $\nabla^E$ per l'inverso della metrica riemanniana, perciò: $\nabla_u^{D^n} d(u,v) = \frac{\nabla_u^{E} d(u,v)}{\lambda_u^2}$
+\begin{equation*}\begin{gathered}
+\nabla_u^{E} d(u,v) = \frac{4}{b \sqrt{c^2 - 1}} (\frac{(\parallel v \parallel^2 - 2\langle u,v \rangle + 1)v}{a^2} - \frac{v}{a}) \\ \mbox{ con } a = 1 - \parallel u \parallel^2 \mbox{ , } b = 1 - \parallel v \parallel^2 \mbox{ , } c = 1 + \frac{2}{ab} \parallel u - v \parallel^2
+\end{gathered}\end{equation*}
+Sappiamo che per per ricavare il gradiente riemanniano dal gradiente euclideo è sufficiente riscalare $\nabla^E$ per l'inverso della metrica riemanniana, perciò,\\ \[\nabla_u^{D^n} d(u,v) = \frac{\nabla_u^{E} d(u,v)}{\lambda_u^2}.\]
 \subsection{Iperboloide come modello conforme}
 Come inizialmente accennato le due varietà trattate fin'ora sono due modelli conformi dello spazio iperbolico ovvero, esiste un diffeomorfismo invertibile conforme (mantiene gli angoli ma non le lunghezze) che porta da una varietà all'altra. Il diffeomorfismo in questione è la proieizone stereografica $\rho$ definita come segue.\\\\
-$\rho : H^n \to D^n$\\
-$\rho(x) = \frac{1}{x_{n+1} + 1}(x_1, ..., x_n)$; con $x \in H^n$\\\\
-$\rho^{-1} : D^n \to H^n$\\
-$\rho^{-1}(y) = \frac{2}{1 - r}(y_1, ..., \frac{1+r}{2})$; con $r = \parallel y \parallel^2$ e $y \in D^n$\\\\
+\[\rho : H^n \to D^n\]
+\[\rho(x) = \frac{1}{x_{n+1} + 1}(x_1, ..., x_n) \mbox{ ; con } x \in H^n\]
+\[\rho^{-1} : D^n \to H^n\]
+\[\rho^{-1}(y) = \frac{2}{1 - r}(y_1, ..., \frac{1+r}{2}) \mbox{ ; con } r = \parallel y \parallel^2 \mbox{ e } y \in D^n\]\\
 A questo punto facciamo vedere che vale la seguente uguaglianza, ci sarà utile nella sezione successiva.\\
-$d_{D^n}(a, b) = d_{H^n}(\rho^{-1}(a), \rho^{-1}(b))$\\\\
+\[d_{D^n}(a, b) = d_{H^n}(\rho^{-1}(a), \rho^{-1}(b))\]\\
 Daremo due risultati, dimostreremo che l'uguaglianza è valida, dando dapprima una dimostrazione per $n = 2$, e poi la generalizzeremo per $n$ qualsiasi.\\\\
-Caso $n=2$, siano $a, b \in D^2$\\
-$a = (a_1, a_2)$\\
-$b = (b_1, b_2)$\\
-$\rho^{-1}(a) = \frac{2}{1-r_a}(a_1, a_2, \frac{1 + r_a}{2})$\\
-$\rho^{-1}(b) = \frac{2}{1-r_b}(b_1, b_2, \frac{1 + r_b}{2})$\\
+Caso $n=2$, siano $a, b \in D^2$.\\
+\[a = (a_1, a_2)\]
+\[b = (b_1, b_2)\]
+\[\rho^{-1}(a) = \frac{2}{1-r_a}(a_1, a_2, \frac{1 + r_a}{2})\]
+\[\rho^{-1}(b) = \frac{2}{1-r_b}(b_1, b_2, \frac{1 + r_b}{2})\]
 con $r_a = (a_1^2 + a_2^2)$ e $r_b = (b_1^2 + b_2^2)$\\\\
 \begin{equation*}\begin{gathered}
 d_{H^n}(\rho^{-1}(a), \rho^{-1}(b)) = \\
@@ -340,7 +346,7 @@ Facciamo vedere ora, che gli argomenti della funzione arccosh, nelle due equazio
 \subsection{Media di Fréchet e problema del centroide}
 \begin{definition}[Media di Fréchet]
 La funzione media di Fréchet di p-punti è cosi definita.\\
-$f(\Theta) = \frac{1}{p}\sum_{i=1}^p d^2(\Theta, x^{(i)})$
+\[f(\Theta) = \frac{1}{p}\sum_{i=1}^p d^2(\Theta, x^{(i)}).\]
 \end{definition}
 Il problema di trovare il centroide di p-punti consiste nel trovare il punto che minimizza la funzione media di Fréchet definita a partire dai punti in questione, il cui minimo esiste ed è unico. Tale problema può essere risolto direttamente in uno spazio euclideo il cui minimo è dato dalla media aritmetica dei p-punti. Mentre in uno spazio iperbolico, come nel nostro caso, la soluzione non è diretta e perciò si applicano le metodologie di ottimizzazione su varietà differenziabili viste precedentemente.\\
 Diamo ora una congettura che possiamo affermare essere corretta in funzione dell'uguaglianza $d_{D^n}(a, b) = d_{H^n}(\rho^{-1}(a), \rho^{-1}(b))$ che abbiamo verificato nella sezione precedente.\\
@@ -351,63 +357,159 @@ In questa sezione andremo a definire lo pseudocodice degli algoritmi di ottimizz
 \subsection{Algoritmi e Pseudocodice}
 In tale sezione vedremo lo pseudocodice dei metodi utilizzati per i nostri esperimenti, descriveremo quattro algoritmi, di cui due sono algoritmi di prim'ordine \textbf{passo fisso} e \textbf{armijo}, ovvero che utilizzano informazioni solamente sul gradiente nel punto per decidere il passo e la direzione dell'iterazione, gli altri due \textbf{Barzilai-Borwein} ed \textbf{LBFGS - Limited memory BFGS} sono algoritmi di quasi Newton e perciò hanno accesso ad informazioni di approssimazione al secondo ordine approssimando la matrice hessiana, sfruttando l'equazione delle secanti. Tutti gli algoritmi si basano sul calcolo del gradiente della funzione da minimizzare, in tal caso la derivata della media di frechet che possiamo calcolare tramite la derivata riemanniana della funzione distanza esplicitata sia per il disco di Poincaré che per l'iperboloide nella sezione dedicata alle varietà utilizzate.
 \subsubsection{Passo fisso}
-L'algoritmo a Passo fisso è un algoritmo del primo ordine molto elementare, la direzione scelta è l'opposta della direzione del gradiente, tale algoritmo implementato su una varietà differenziabile necessita solamente del gradiente riemanniano della funzione da minimizzare, di una retrazione e di un parametro $\alpha$ che denota il passo fisso applicato ad ogni iterazione.\\\\
-TODO: PSEUDOCODICE
+L'algoritmo a Passo fisso è un algoritmo del primo ordine molto elementare, la direzione scelta è l'opposta della direzione del gradiente, tale algoritmo implementato su una varietà differenziabile necessita solamente del gradiente riemanniano della funzione da minimizzare, di una retrazione e di un parametro $\alpha$ che denota il passo fisso applicato ad ogni iterazione.\\
+\begin{center}
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{Manifold $M$; funzione costo $f$ differenziabile definita su $M$; retraction $R$; scalare $\alpha > 0$; initial iterate $x^0 \in M$}
+\KwOut{Sequenza $\{x^k\}$}
+\For{$k=0, 1, 2, ...$}{
+    $d_k \leftarrow - \alpha g^k$; con $g^k$ gradiente della funzione al passo $k$.\\
+    $x^{k+1} \leftarrow R_{x_k}(d_k)$
+}
+\caption{Fixed lenght step size Algorithm}
+\end{algorithm}
+\end{center}
 \subsubsection{Armijo}
-L'algoritmo di Armijo è anche esso un algoritmo del primo ordine, la direzione scelta è l'opposta della direzione del gradiente, per la selezione del passo si basa sul calcolo del punto di armijo riemanniano, descritto nella sezione dedicata all'ottimizzazione su varietà, per poter essere eseguito necessita, anche esso, del gradiente riemanniano della funzione da minimizzare, di una retrazione e di tre parametri $\gamma \in (0,1)$ , $\beta \in (0,1)$ e $s > 0$.\\\\
-TODO: PSEUDOCODICE
+L'algoritmo di Armijo è anche esso un algoritmo del primo ordine, la direzione scelta è l'opposta della direzione del gradiente, per la selezione del passo si basa sul calcolo del punto di armijo riemanniano, descritto nella sezione dedicata all'ottimizzazione su varietà, per poter essere eseguito necessita, anche esso, del gradiente riemanniano della funzione da minimizzare, di una retrazione e di tre parametri $\gamma \in (0,1)$ , $\beta \in (0,1)$ e $\lambda > 0$. Solitamente il parametro $s$ deve essere preso ad ogni iterazione necessario per effettuare il giusto rescaling di $d_k$ per semplicità di sperimentazione abbiamo deciso di assumere tale parametro fisso.\\
+\begin{center}
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{Manifold $M$; funzione costo $f$ differenziabile definita su $M$; retrazione $R$; scalari $\gamma \in (0,1)$, $\sigma \in (0,1)$, $\lambda > 0$; initial iterate $x^0 \in M$}
+\KwOut{Sequenza $\{x^k\}$}
+\For{$k=0, 1, 2, ...$}{
+    Trovare il più piccolo $h = 0, 1, ...$, tale per cui
+    \[f(R_{x^k}(\sigma^h\lambda d_k)) \leq f(x^k) + \gamma \sigma^h \lambda \langle g^k, d_k \rangle_{x^k};\] con $g^k$ gradiente della funzione al passo $k$.\\
+    $x^{k+1} \leftarrow R_{x_k}(-\sigma^h \lambda g^k)$.
+}
+\caption{Armijo Algorithm}
+\end{algorithm}
+\end{center}
 \subsubsection{Barzilai-Borwein}
 L'algoritmo di Barzilai-Borwein è un metodo quasi Newton e si basa sulla soluzione, per $k \geq 1$, del problema dei minimi quadrati, che ci permette di avere ricavare informazioni sulla matrice hessiana, quindi del secondo ordine.\\
 \[\min_{t} \parallel s_kt - y_k \parallel_2 \],\\
-con $s_k = x_{k+1} - x_k$ ed $y_k = \nabla f(x_{k+1}) - \nabla f(x_k)$, il quale, assumendo che $x_{k+1} \neq x_k$ ha un'unica soluzione $t = \frac{s_k'y_k}{s_k's_k}$. Quando $s_k'y_k > 0$ il passo viene scelto come.\\
+con $s_k = x^{k+1} - x^k$ ed $y_k = \nabla f(x^{k+1}) - \nabla f(x^k)$, il quale, assumendo che $x^{k+1} \neq x^k$ ha un'unica soluzione $t = \frac{s_k'y_k}{s_k's_k}$. Quando $s_k'y_k > 0$ il passo viene scelto come.\\
 \[a_{k+1}^{BB} = \frac{s_k's_k}{s_k'y_k}\].\\
-Per tradurre lalgoritmo dalla sua definizione su spazio euclideo in una versione compatibile con ottimizzazione su varietà differenziabili dobbiamo andare a ridefinire $s_k$ ed $y_k$. Al passo $k+1$, l'hessiana è una mappa lineare da $T_{x_{k+1}}M$ a $T_{x_{k+1}}M$ perciò considereremo il vettore $-\alpha_kg_k \in T_{x_k}M$ e lo trasporteremo in $T_{x_{k+1}}M$, perciò\\
-\[s_k = \mathcal{T}_{x_k \to x_{k+1}}(-\alpha_kg_k)\].\\
+Per tradurre lalgoritmo dalla sua definizione su spazio euclideo in una versione compatibile con ottimizzazione su varietà differenziabili dobbiamo andare a ridefinire $s_k$ ed $y_k$. Al passo $k+1$, l'hessiana è una mappa lineare da $T_{x^{k+1}}M$ a $T_{x^{k+1}}M$ perciò considereremo il vettore $-\alpha^kg^k \in T_{x^k}M$ e lo trasporteremo in $T_{x^{k+1}}M$, perciò\\
+\[s_k = \mathcal{T}_{x^k \to x^{k+1}}(-\alpha^kg^k)\].\\
 Per ottenere $y_k$ dobbiamo sottrarre due gradienti appartenenti a due differenti spazi tangente, perciò
-\[y_k = g_{k+1} - \mathcal{T}_{x_k \to x_{k+1}}(g_k)\].\\
+\[y_k = g^{k+1} - \mathcal{T}_{x^k \to x^{k+1}}(g^k)\].\\
 Mentre per quanto riguarda il prodotto scalare utilizzeremo quello riemanniano, quindi\\
-\[a_{k+1}^{BB} = \frac{\langle s_k,s_k \rangle_{x_{k+1}}}{\langle s_k,y_k \rangle_{x_{k+1}}}\].\\
-TODO: PSEUDOCODICE
+\[a_{k+1}^{BB} = \frac{\langle s_k,s_k \rangle_{x^{k+1}}}{\langle s_k,y_k \rangle_{x^{k+1}}}\].\\
+\begin{center}
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{Manifold $M$; funzione costo $f$ differenziabile definita su $M$; retrazione $R$ trasporto vettoriale $\mathcal{T}$; scalari $\alpha_{max} > \alpha_{min} > 0$, $\alpha_0^{BB} \in [\alpha_min, \alpha_max]$; punto di partenza $x^0 \in M$}
+\KwOut{Sequenza $\{x^k\}$}
+$g^0 \leftarrow \nabla^{(R)} f(x^0)$.\\
+\For{$k=0, 1, 2, ...$}{
+    $x^{k+1} \leftarrow R_{x^k}(-a_k^{BB}g^k)$.\\
+    $f_{k+1} \leftarrow f(x^{k+1})$, $g^{k+1} \leftarrow \nabla^{(R)}f(x^{k+1})$.\\
+    $s_k \leftarrow \mathcal{T}_{x^k \to x^{k+1}}(-\alpha^kg^k)$.\\
+    $y_k \leftarrow g^{k+1} - \mathcal{T}_{x^k \to x^{k+1}}(g^k)$.\\
+    $\tau_{k+1} \leftarrow \frac{\langle s_k,s_k \rangle_{x^{k+1}}}{\langle s_k,y_k \rangle_{x^{k+1}}}$.\\
+    \begin{equation*}
+    \begin{cases}
+        \alpha_{k+1}^{BB} = min\{\alpha_{max}, max\{\tau_{k+1}, \alpha_{min}\}\}\} \quad if \langle s_k,y_k \rangle_{x^{k+1}} > 0.\\
+        \alpha_{k+1}^{BB} = \alpha_max \quad otherwise
+    \end{cases}
+    \end{equation*}
+}
+\caption{Barzilai-Borwein Algorithm}
+\end{algorithm}
+\end{center}
+Nella nostra implementazione dell'algoritmo \textbf{Riemannian Barzilai-Borwein} abbiamo deciso di non applicare valori di riscalamento, tramite ricerca lineare esatta o non, al valore $\alpha_k^{BB}$, per motivazioni sperimentali sarebbe stato computazionalmente più oneroso ed alcuni esperimenti avrebbero richiesto più tempo per essere eseguiti.
 \subsubsection{LBFGS}
 L-BFGS è un algoritmo di quasi Newton e differisce dalla sua versione originale RBFGS nel calcolo della direzione $d_k = -H_kd_k$, la quale approssima la direzione di Newton ($H_k$ approssima l'inversa della matrice hessiana). Nella presente andremo a descrivere una delle implementazioni di L-BFGS chiamata \textbf{two loop recursion}. Definiamo dapprima l'algoritmo nella sua versione euclidea, assumiamo di avere in memoria $m$ aggiornamenti del tipo:\\
 \begin{itemize}
-    \item $s_k = x_{k+1} - x_k$.
-    \item $y_k = g_{k+1} - g_k$.
+    \item $s_k = x^{k+1} - x^k$.
+    \item $y_k = g^{k+1} - g^k$.
 \end{itemize}
 Definiamo $p_k = \frac{1}{y_k's_k}$, ed $H_k^0$ l'approssimazione iniziale dell'inversa della matrice hessiana sulla quale l'algoritmo all'iterata $k$-esima si basa.\\
 L'algoritmo fa fede al funzionamento di BGFGS per il calcolo di $H_{k+1}$ da $H_k$\\
 \[H_{k+1} = (I - p_ks_k'y_k)H_k(I - p_ky_ks_k') + p_ks_ks_k'\].\\
-Per un $k$ fissato definiamo una sequenza di vettori $q_{k-m}, ..., q_k$, con $q_i = (I - p_iy_is_i')q_{i+1}$ e $q_k = g_k$. Definiamo inoltre un'altra sequenza di vettori $z_{k-m}, ..., z_k$ con $z_i = H_iq_i$, definendo $z_{k-m} = H_k^0q_{k-m}$ e ricorsivamente $\beta_i = p_iy_i'z_i$ e $z_{i+1} = z_i + (p_is_i'q_{i+1} - \beta_i)s_i$ allora $z_k = H_kd_k$.
+Per un $k$ fissato definiamo una sequenza di vettori $q_{k-m}, ..., q_k$, con $q_i = (I - p_iy_is_i')q_{i+1}$ e $q_k = g^k$. Definiamo inoltre un'altra sequenza di vettori $z_{k-m}, ..., z_k$ con $z_i = H_iq_i$, definendo $z_{k-m} = H_k^0q_{k-m}$ e ricorsivamente $\beta_i = p_iy_i'z_i$ e $z_{i+1} = z_i + (p_is_i'q_{i+1} - \beta_i)s_i$ allora $z_k = H_kd_k$.
 Nella versione riemanniana faremo un forte uso del trasporto vettoriale, ridefinendo dapprima $s_k$ ed $y_k$ come fatto nella versione rieamanniana dell'algoritmo Barzilai-Borwain\\
-\[s_k = \mathcal{T}_{x_k \to x_{k+1}}(-\alpha_kg_k),\]\\
+\[s_k = \mathcal{T}_{x^k \to x^{k+1}}(-\alpha^kg^k),\]\\
 e\\
-\[y_k = g_{k+1} - \mathcal{T}_{x_k \to x_{k+1}}(g_k),\]\\
+\[y_k = g^{k+1} - \mathcal{T}_{x^k \to x^{k+1}}(g^k),\]\\
 ridefiniamo $p_k$ come segue\\
-\[p_k = \frac{1}{\langle s_k,y_k \rangle_{x_{k+1}}},\]\\
-Infine dobbiamo applicare il trasporto vettoriale a tutti i vettori $s_i$ e $y_i$ trasportandoli alla fine di ogni iterazione da $T_{x_k}M$ ad $T_{x_{k+1}}M$.\\
-TODO: PSEUDOCODICE
+\[p_k = \frac{1}{\langle s_k,y_k \rangle_{x^{k+1}}},\]\\
+Infine dobbiamo applicare il trasporto vettoriale a tutti i vettori $s_i$ e $y_i$ trasportandoli alla fine di ogni iterazione da $T_{x^k}M$ ad $T_{x^{k+1}}M$.\\
+\begin{center}
+\begin{algorithm}[H]
+\caption{L-BFGS Algorithm}
+\SetAlgoLined
+\KwIn{Manifold $M$; funzione costo $f$ differenziabile definita su $M$; retrazione $R$; trasporto vettoriale $\mathcal{T}$; scalare $L > 0$; punto di partenza $x^0 \in M$}
+\KwOut{Sequenza $\{x^k\}$}
+$\gamma_0 \leftarrow 1$, $l=0$\;
+\For{$k=0, 1, 2, ...$}{
+  $H_0^k \leftarrow \gamma_kid$\;
+  $q = \nabla^(R) f(x^k)$\;
+    \For{$i=k-1, k-2, ..., l$}{
+        $\alpha_i = p_i$ $\langle s_i,q \rangle_{x^k}$\;
+        $q \leftarrow q - \alpha_i y_i$\;
+    }
+    $z \leftarrow H_0^kq$
+    \For{$i=l, l+1, ..., k-1$}{
+        $\beta = p_i$ $\langle y_i,z \rangle_{x^k}$\;
+        $z \leftarrow z + s_i(\alpha_i \beta)$\;
+    }
+    $\eta_k \leftarrow -z$\;
+    $x^{k+1} \leftarrow R_{x^k}(\eta_k)$\;
+    Definire: $s_k = \mathcal{T}_{x^k \to x^{k+1}}(\eta_k)$, $y_k = \frac{\nabla^{(R)} f(x^{k+1})}{\sigma_k} - \mathcal{T}_{x^k \to x^{k+1}}(\nabla^(R) f(x^k))$, $p_k = \frac{1}{\langle s_k,y_k \rangle_{x^{k+1}}}$, $\gamma_{k+1} = \frac{\langle s_k,y_k \rangle_{x^{k+1}}}{\parallel y_k \parallel^2}$, $\sigma_k = \frac{\parallel \eta_k \parallel}{\parallel \mathcal{T}_{x^k \to x^{k+1}}(\eta_k) \parallel}$;
+    $l = max\{k-l, 0\}$\;
+    Aggiungere $s_k$, $y_k$ e $p_k$ in uno storage e se $k > l$, allora scartare $s_{l-1}$, $y_{l-1}$ e $p_{l-1}$ dallo storage\;
+    Trasportare $s_l, s_{l+1}, ..., s_{k-1}$ e $y_l, y_{l+1}, ..., y_{k-1}$ da $T_{x^k}M$ a $T_{x^{k+1}}M$ tramite il trasporto vettoriale $\mathcal{T}$\;
+}
+\end{algorithm}
+\end{center}
+Nella nostra implementazione dell'algoritmo \textbf{L-BFGS} abbiamo deciso di non applicare valori di riscalamento, tramite ricerca lineare esatta o non, alla direzione $\eta_k$, per le stesse motivazioni riportate nella sotto-sezione precedente.
 \subsection{Esperimenti}
 Gli esperimenti effettuati ci permetteranno di confrontare il problema di ottimizzazione sulle varietà disco di Poincaré e iperboloide ed inoltre saranno utili per capire se queste due varietà sono equivalenti ed interscambiabili, non solo nella rappresentazione dello spazio iperbolico ma anche come varietà su cui effettuare ottimizzazione.\\
-Gli esperimenti effettuati si suddividono in due parti che nel seguito descriveremo. Per effettuare gli esperimenti ci siamo muniti di un dataset di circa duecento istanze del problema, prendendo perciò un numero fissato, comune a tutte le istanze, di punti casuali sul disco (sampling effettuato sfruttando la funzione $rand$ del file $PoincareFactory$ della libreria manopt), per ogni istanza abbiamo calcolato il punto limite tramite l'algoritmo a passo fisso con un $\alpha$ molto piccolo e come guardia di arresto abbiamo scelto la condizione che la norma euclidea del gradiente $g_k$ scenda sotto un valore soglia (e.g. $10^{-8}$).\\
-Una volta ottenuto il dataset, prima di poter effettivamente confrontare gli algoritmi implementati nelle due varietà, abbiamo selezionato i parametri ottimi, uno per disco ed uno per iperboloide, per gli algoritmi che hanno necessità di dover modificare alcuni parametri, come $\alpha$ per il passo fisso e $\lambda$ per l'algoritmo di Armijo. Per fare ciò abbiamo preso un sotto insieme del dataset iniziale e, sia per l'algoritmo a passo fisso che per Armijo, abbiamo proceduto come segue. Abbiamo è scelto un valore che rappresenta il numero di elementi in cui si suddivide lo spazio dei possibili valori del parametro di cui si deve trovare  l'ottimo (e.g $100$, partiremo da $0.01$ ed arriveremo ad $1$ in $100$ passi), per ogni istanza del sotto dataset si è applicato l'algoritmo con un parametro incrementale creando per ogni istanza una sequenza che rappresenta il numero di passi che l'algoritmo con il parametro in questione impiega per convergere (numero di passi prima di arrivare ad una distanza di $10^{-4}$ dal limite), una volta calcolate queste sequenze ne abbiamo fatta una media aritmetica e come parametro ottimo abbiamo scelto il valore che minimizza la sequenza.\\
-Per quanto riguarda la scelta di $\alpha$ ottimo per l'algoritmo a passo fisso abbiamo notato sperimentalmente che le sequenze di convergenza, definite per l'implementazione su disco e su iperboloide, tendono ad avere valore minimo pressochè uguale, ciò che cambia è come si comportano nell'intorno del punto di minimo, l'implementazione su disco tende a non convergere in meno di $100$ passi per valori che si discostano di poco da punto di minimo, mentre l'implmentazione su iperboloide ha un andamento differente, prima di non riuscire più a convergere in meno di $100$ passi (o divergere) possiamo scortarci dal punto di minimo di un range più alto rispetto alla controparte su disco.\\
-
-FOTO: curva fl disco \\
-
-FOTO: curva fl iperboloide\\
-
-Contrariamente, Per quanto riguarda invece le curve definite dalla scelta di $\lambda$ per l'algoritmo di Armijo, si è notato un comportamento migliore della sequenza riferita all'implementazione su disco in quanto, la sequenza tende ad essere limitata, non arrivando mai a $100$, per ogni valore di $\lambda$ considerato. Mentre per l'implementazione su iperboloide abbiamo notato che solo per valori di $\lambda$ sopra un determinato valore abbiamo che la sequenza tende ad essere limitata.\\
-
-FOTO: curva armijo disco \\
-
-FOTO: curva armijo iperboloide\\
-
-A questo punto, avendo scelto i parametri che permettono ad in nostri algoritmi di performare al meglio, possiamo procedere con il confronto, abbiamo proceduto nel seguente modo,
+Gli esperimenti effettuati si suddividono in due parti che nel seguito descriveremo. Per effettuare gli esperimenti ci siamo muniti di un dataset di circa duecento istanze del problema, prendendo perciò un numero fissato, comune a tutte le istanze, di punti casuali sul disco (sampling effettuato sfruttando la funzione $rand$ del file $PoincareFactory$ della libreria manopt), per ogni istanza abbiamo calcolato il punto $x^0$ di partenza calcolato come la media aritmetica dei punti dell'istanza, abbiamo calcolato inoltre il punto limite tramite l'algoritmo a passo fisso con un $\alpha$ molto piccolo e come guardia di arresto abbiamo scelto la condizione che la norma euclidea del gradiente $g^k$ scenda sotto un valore soglia (e.g. $10^{-8}$).\\
+Una volta ottenuto il dataset, prima di poter effettivamente confrontare gli algoritmi implementati nelle due varietà, abbiamo selezionato i parametri ottimi, uno per disco ed uno per iperboloide, per gli algoritmi che hanno necessità di dover modificare alcuni parametri, come $\alpha$ per il passo fisso e $\lambda$ per l'algoritmo di Armijo. Per fare ciò abbiamo preso un sotto insieme del dataset iniziale e, sia per l'algoritmo a passo fisso che per Armijo, abbiamo proceduto come segue. Abbiamo è scelto un valore che rappresenta il numero di elementi in cui si suddivide lo spazio dei possibili valori del parametro di cui si deve trovare  l'ottimo (e.g $100$, partiremo da $0.01$ ed arriveremo ad $1$ in $100$ passi), per ogni istanza del sotto dataset si è applicato l'algoritmo con un parametro incrementale creando per ogni istanza una sequenza i cui valori rappresentano il numero di passi che l'algoritmo con il parametro in questione impiega per convergere al limite, o divergere (numero di passi prima di arrivare ad una distanza di $10^{-4}$ dal limite, se diverge il numero sarà il massimo delle iterazioni possibili), una volta calcolate queste sequenze ne abbiamo fatta una media aritmetica e come parametro ottimo abbiamo scelto il valore che minimizza la sequenza media.\\
+Per quanto riguarda la scelta di $\alpha$ ottimo per l'algoritmo a passo fisso abbiamo notato sperimentalmente che le sequenze di convergenza, definite per l'implementazione su disco e su iperboloide, tendono a differire di comportamento nell'intorno del punto di minimo, l'implementazione su disco tende a non convergere in meno di $100$ passi per valori che si discostano di poco da punto di minimo, mentre l'implmentazione su iperboloide ha un andamento differente, prima di non riuscire più a convergere in meno di $100$ passi (o divergere) possiamo scortarci dal punto di minimo di un range più alto rispetto alla controparte su disco.\\
+\begin{figure}[t] %inserisce le figure
+    \centering\includegraphics[width=1\textwidth]{fixed_step_parameter_poincare.png}
+    \caption{Sequenza relativa alla convergenza del'algoritmo a passo fisso implementato su disco, notiamo come sia stretto l'intorno del parametro ottimale tale per cui è garantita convergenza sotto i cento passi, i valori associato sono: Punto di minimo $5.35$, valore di convergeza minimo $0.016$.}
+\end{figure}
+\begin{figure}[t] %inserisce le figure
+    \centering\includegraphics[width=1\textwidth]{fixed_step_parameter_hyperboloid.png}
+    \caption{Sequenza relativa alla convergenza del'algoritmo a passo fisso implementato su iperboloide, notiamo come sia più ampio l'intorno del parametro ottimale tale per cui è garantita convergenza sotto i cento passi, rispetto all'implementazione su disco, i valori associato sono: Punto di minimo $5.3$, valore di convergeza minimo $0.244$.}
+\end{figure}
+Contrariamente, Per quanto riguarda invece le curve definite dalla scelta di $\lambda$ per l'algoritmo di Armijo, si è notato un comportamento migliore della sequenza riferita all'implementazione su disco in quanto, la sequenza tende ad essere limitata, non arrivando mai a $100$, per ogni valore di $\lambda$ considerato. Mentre per l'implementazione su iperboloide abbiamo notato che solo per valori di $\lambda$ sopra un determinato punto abbiamo che la sequenza tende ad essere limitata.\\
+\begin{figure}[t] %inserisce le figure
+    \centering\includegraphics[width=1\textwidth]{armijo_parameter_poincare.png}
+    \caption{Sequenza relativa alla convergenza del'algoritmo di Armijo implementato su disco, notiamo come la sequenza sia limitata superiormente per ogni valore del parametro. Punto di minimo , valore di convergeza minimo .}
+\end{figure}
+\begin{figure}[t] %inserisce le figure
+    \centering\includegraphics[width=1\textwidth]{armijo_parameter_hyperboloid.png}
+    \caption{Sequenza relativa alla convergenza del'algoritmo di Armijo implementato su iperboloide, notiamo come la sequenza sia limitata superiormente solo per valori del parametro superiori ad un determinato valore. Punto di minimo , valore di convergeza minimo .}
+\end{figure}
+A questo punto, avendo scelto i parametri che permettono ai nostri algoritmi di performare al meglio, possiamo procedere con il confronto. Riprendendo il dataset totale abbiamo proceduto nel seguente modo, per ogni algoritmo lo abbiamo eseguito su ogni istanza del dataset, sia per l'implementazione su disco che per quella su iperboloide, creando un punto  ($a$, $b$) in $R^2$ le cui coordinate sono $a$, il numero di passi per convergere al punto limite per l'implementazione su disco, $b$ invece, il numero di passi per convergere al punto limite per l'implementazione su iperboloide, creando cosi una nuvola di punti. Tramite tale nuvola possiamo verificare se le metodologie sono effettivamente equivalenti, riporteremo i grafici sui quali vengono plottate le nuvole di punti, in ogni grafico vengono costruite due rette di regressione su una versione ridotta della nuvola di punti, toglieremo quei punti che hanno una molteplicità bassa (e.g. sotto $\frac{1}{25}$ della cardinalità totale del dataset), la prima retta di regressione viene calcolata tramite il metodo dei minimi quadrati, la seconda invece viene calcolata tramite un algoritmo meno sensibile ai valori anomali, la regressione di $Huber$. Noteremo quindi che, se le rette di regressione tendono ad avere un coefficiente angolare "vicino" ad $1$ le due varietà possono essere ritenute equivalenti.  Riportiamo di seguito i grafici dei nostri esperimenti, verrà riportato, per ogni grafico, un valore medio di convergenza per il disco e per l'iperboloide, tale valore rappresenterà un ulteriore indice di confronto.\\
+\begin{figure}[t] %inserisce le figure
+    \centering\includegraphics[width=1\textwidth]{fixed_step_size.png}
+    \caption{Nuvola di punti relativa all'algoritmo a passo fisso, notiamo che i punti generati tendono a giacere sulla bisettrice, ciò indica un equvalenza tra le due implementazioni. Valore medio di convergenza sul disco $11.515$, valore medio di convergenza su iperboloide $11.58$.}
+\end{figure}
+\begin{figure}[t] %inserisce le figure
+    \centering\includegraphics[width=1\textwidth]{armijo.png}
+    \caption{Nuvola di punti relativa all'algoritmo di Armijo, notiamo che i punti generati tendono a giacere sulla bisettrice, ciò indica un equvalenza tra le due implementazioni. Valore medio di convergenza sul disco $12.07$, valore medio di convergenza su iperboloide $12.555$.}
+\end{figure}
+\begin{figure}[t] %inserisce le figure
+    \centering\includegraphics[width=1\textwidth]{barzilai_borwein.png}
+    \caption{Nuvola di punti relativa all'algoritmo di Barzilai-Borwein, notiamo che i punti generati tendono a giacere sulla bisettrice, ciò indica un equvalenza tra le due implementazioni. Valore medio di convergenza sul disco $6.205$, valore medio di convergenza su iperboloide $6.2$.}
+\end{figure}
+\begin{figure}[t] %inserisce le figure
+    \centering\includegraphics[width=1\textwidth]{l_bfgs.png}
+    \caption{Nuvola di punti relativa all'algoritmo di L-BFGS, come accennato nella sezione dedicata, l'algoritmo tende alle volte a generare una nuvola di punti non propriamente lineare, nonostante in tal caso la retta di regressione di Huber è pressochè lineare, ciò potrebbe essere sintomo di un'intrinseca equivalenza tra le due implementazioni. Valore medio di convergenza sul disco $25.365$, valore medio di convergenza su iperboloide $16.05$.}
+\end{figure}
+Durante le nostre sperimentazioni ci siamo resi conto che il grafico relativo all' algoritmo di Barzilai-Borwein tende ad avere i coefficienti delle rette di regressione "molto vicini" a $1$, l'algoritmo L-BFGS differisce di molto a seconda del dataset considerato, questo può essere dovuto alla scelta di non aver applicato valori di riscalamento alla direzione $H_kg_k$ tornata tramite il metodo "two-loop recursion", infine i grafici relativi all'algoritmo di Armijo e l'algoritmo a passo fisso tendono ad avere rette di regressione simili alla bisettrice se il minimo trovato dal parametro ottimo nella prima parte degli esperimenti coincide tra l'implementazione su disco e quella su iperboloide, questo dipende dal numero di punti in cui suddividiamo il range di valori testati del parametro da considerare, essendo l'implementazione su disco molto sensibile, ma dipende anche dal dataset preso in considerazione.
 \section{Appendice}
 \subsection{Varietà}
 Sia $M$ un insieme. Una bigiezione $\phi$ di un sottoinsime $U$ di $M$ in un sottoinsieme aperto di $R^d$ è chiamata mappa d-dimensionale dell'insieme $U$. Data una carta $(U, \psi)$ e $x \in U$ gli elementi di $\psi(x) \in R^d$ sono le coordinate di $x$ nella carta $(U, \psi)$. Un $Atlas$ $(A)$ di $M$ in $R^d$ è un insieme di carte $(U_a, \psi_a)$ dell'insieme $M$ tali che:
 \begin{itemize}
-    \item $\bigcup_a U_a = M$
+    \item $\bigcup_a U_a = M$.
     \item Per ogni coppia $\alpha, \beta$ con $U_{\alpha} \bigcap U_{\beta} \neq \emptyset$ gli insiemi $\psi_{\alpha}(U_{\alpha} \bigcap U_{\beta})$ e $\psi_{\beta}(U_{\alpha} \bigcap U_{\beta})$ sono sottoinsiemi aperti di $R^d$ ed il cambio di coordinate $\psi_{\alpha} \circ \psi_{\beta}^{-1}:$ $R^d \to R^d$ è $smooth$.
 \end{itemize}
 Dato un'atlas $A$, sia $A^+$ l'insieme delle carte $(U, \psi)$ tali che $A \bigcup \{(U, \psi)\}$ è ancora un'atlas. $A^+$ è un'atlas massimale generato da $A$. Un'atlas massimale dell'insieme $M$ è chiamato struttra differenziabile su $M$.
@@ -419,8 +521,8 @@ Data una carta $\psi$ su $M$, l'inverso $\psi^{-1}$ è chiamata parametrizzazion
 Riprendendo il concetto di derivata direzionale possiamo generalizzarla per un funzione $f$ definita su un manifold, sustituendo $t \mapsto (x + t\eta)$ con una curva su $M$ attraverso $x \in M$ (punto di derivazione) $(\gamma (0) = x)$ questo porta ad una derivata direzionale ben definita $\frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$. Formalmente, sia $M$ una varietà e $\gamma$ una mappa differenziabile $\gamma : R \to M | t \mapsto \gamma (t)$ detta curva in $M$, data, una funzione $f$ a valori reali definita su $M$, la funzione $f \circ \gamma : t \mapsto f(\gamma (t))$ è una funzione differenziabile da $R$ in $R$ con una ben definita deerivata.\\
 Sia $x \in M$; $\gamma (0) = x$ allora $F_{x}(M)$ è l'insieme delle funzioni reali differenziabili definite in un intorno di $x$. Il mapping $\dot{\gamma} (0)$ da $F_x(M)$ in $R$ è definito come: $\dot{\gamma} (0) f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$ con $f \in F_x(M)$; é chiamato vettore tangente alla curva $\gamma$ in $t=0$.
 \begin{definition}[Vettore Tangente]
-Un vettore tangente $\epsilon_x$ ad una varietà $M$ in un punto $x \in M$ è una mappa da $F_x(M)$ in $R$ tale ceh esiste una curva $\gamma$ a valori in $M$ con $\gamma (0) = x$ e che soddisfa:\\
-$\epsilon_xf = \dot{\gamma (0)} f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0} \quad \forall f \in F_x(M)$.\\
+Un vettore tangente $\epsilon_x$ ad una varietà $M$ in un punto $x \in M$ è una mappa da $F_x(M)$ in $R$ tale ceh esiste una curva $\gamma$ a valori in $M$ con $\gamma (0) = x$ e che soddisfa,\\
+\[\epsilon_xf = \dot{\gamma (0)} f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0} \quad \forall f \in F_x(M).\]\\
 Tale curva $\gamma$ è detta realizzare il vettore tangente $\epsilon_x$
 \end{definition}
 \begin{definition}[Spazio Tangente]
@@ -429,7 +531,7 @@ Uno spazio tangente ad $M$ in $x$ denominato come $T_xM$ è l'insieme di tutti i
 Lo spazio tangente $T_xM$ mette a disposizione un'approssimazione locale di spazio vettoriale della varietà. Perciò tramite le Retrazioni possiamo effettuare ottimizzazione sullo spazio vettoriale $T_xM$.
 \begin{definition}[Tangent Bundle]
 Data una varietà $M$, sia $TM$ l'insieme di tutti i vettori tangenti ad $M$.\\
-$TM = \bigcup_{x \in M} T_xM$.
+\[TM = \bigcup_{x \in M} T_xM.\]
 \end{definition}
 Sia $P:M \to N$ una mappa liscia tra due varietà $M$ ed $N$. sia $\epsilon_x$ un vettore tangente in un punto $x$ di $M$, si può far vedere che la mappa $DP(x)[\epsilon_x]$ da $F_{P(x)}(N)$ in $R$ è definita da:\\
 $(DP(x)[\epsilon_x])f = \epsilon_x(f \circ P)$\\
@@ -437,16 +539,18 @@ $(DP(x)[\epsilon_x])f = \epsilon_x(f \circ P)$\\
 La mappa $DP(X) : T_xM \to T_{P(x)}N | \epsilon_x \mapsto DP(x)[\epsilon_x]$ è una mappa lineare chiamata \emph{differenziale} di P in x.
 \subsubsection{Metriche distanze e e gradienti Riemanniani}
 I vettori tangenti ad una varietà generalizzano la nozione di derivata direzionale. Questo può essere fatto munendo lo spazio tangente $T_xM$ con un prodotto interno $\langle \cdot, \cdot \rangle_x$ bilineare, definito positivo e simmetrico. Il prodotto interno induce una norma $\parallel \epsilon_x \parallel_x = \sqrt{\langle \epsilon_x, \epsilon_x \rangle_x}$ sun $T_xM$. Una varietà il cui spazio tangente è munito di un prodotto interno prende il nome di varietà riemanniana $(M, g)$ con $g$ metrica riemanniana.\\
-La lunghezza di una curva $\gamma:[a,b] \to M$ in una varietà riemanniana $(M, g)$ è definita da: $L(\gamma) = \int_a^b \sqrt{g(\dot{\gamma (t)}, g(\dot{\gamma (t)}))}$\\
+La lunghezza di una curva $\gamma:[a,b] \to M$ in una varietà riemanniana $(M, g)$ è definita da,\\
+\[L(\gamma) = \int_a^b \sqrt{g(\dot{\gamma (t)}, g(\dot{\gamma (t)}))}.\]\\
 La distanza riemanniana in una varietà riemanniana connessa $(M,g)$ è $dist: MxM \to R | dist(x,y) \mapsto inf_{\gamma \in \Gamma}(L(\gamma))$, dove $\Gamma$ è l'insieme di tutte le curve in $M$ che connettono $x$ ed $y$.\\
-Sia $f$ la solita funzione liscia definita su $(M,g)$, il gradiente di $f$ in $x$ è definito come l'elemento di $T_xM$ che soddisfa: $\langle f(x), \epsilon \rangle_x = Df(x)[\epsilon]$.\\
+Sia $f$ la solita funzione liscia definita su $(M,g)$, il gradiente di $f$ in $x$ è definito come l'elemento di $T_xM$ che soddisfa,\\
+\[\langle f(x), \epsilon \rangle_x = Df(x)[\epsilon].\]\\
 Sia $M$ una sottovarietà immersa di una varietà riemanniana $\hat{M}$ siccome ogni spazio tangente $T_xM$ può essere trattato come sottospazio di $T_x\hat{M}$ la metrica $\hat{g}$ di $\hat{M}$ induce una metrica $g$ su $M$, $g_x(\epsilon, c) = \hat{g}_x(\epsilon, c)$ con $\epsilon, c \in T_xM$, perciò $M$ è una sotto varietà riemanniana.
 \subsection{Topologia}
 Una topologia su un insieme $X$ è una collezione $T$ di sottoinsiemi di $X$ chiamati insiemi aperti, tali che:
 \begin{itemize}
-    \item $X$ e $\emptyset$ appartengono a $T$
-    \item L'unione di elementi di qualsiasi sottoinsieme di $T$ è in $T$
-    \item L'intersezione di elementi di qualsiasi sotto collezione di $T$ è in $T$
+    \item $X$ e $\emptyset$ appartengono a $T$.
+    \item L'unione di elementi di qualsiasi sottoinsieme di $T$ è in $T$.
+    \item L'intersezione di elementi di qualsiasi sotto collezione di $T$ è in $T$.
 \end{itemize}
 Uno spazio topologico è una coppia $(X,T)$ dove $X$ è un insieme e $T$ è una topologia su $X$.
 \begin{definition}[Hausdorff]
@@ -462,17 +566,24 @@ Una funzione $f:\Omega \to R$ con $\Omega \leq V$, $V$ (spazio vettoriale) allor
 \end{definition}
 \begin{definition}[Derivate Parziali]
 Data una funzione $f:V \to R$, $V$ (spazio vettoriale), allora una derivata parziale su $x \in V$ è definita come:\\
-$\frac{\partial f(x)}{\partial x_i}$ = $\lim_{h \to 0} \frac{f(x + h e_i) - f(x)}{h}$; con $x_i$ componente i-esima di $x$ ed $e_i$ i-esimo vettore della base canonica.\\
+\[\frac{\partial f(x)}{\partial x_i} = \lim_{h \to 0} \frac{f(x + h e_i) - f(x)}{h};\]\\ 
+con $x_i$ componente i-esima di $x$ ed $e_i$ i-esimo vettore della base canonica.\\
 Se una funzione è differenziabile in $x$ allora tutte le derivate parziali esistono in $x$.
 \end{definition}
 \begin{definition}[Punto di accumulazione]
-Diciamo che $x_0 \in R$ è un punto di accumulazione per un insieme $E \subset R$ se comunque scelto un intorno $B(x_0, \epsilon)$, risulta che $B(x_0, \epsilon)$ contiene almeno un punto di $E$ diverso da $x_0$.
+Diciamo che $x \in R$ è un punto di accumulazione per un insieme $E \subset R$ se comunque scelto un intorno $B(x, \epsilon)$, risulta che $B(x, \epsilon)$ contiene almeno un punto di $E$ diverso da $x$.
 \end{definition}
 \begin{definition}[Gradiente]
-Consideriamo una funzione $f$ definita su un insieme aperto $A \subset R^n$ e sia $x \in A$ se esistono in $x$ le derivate parziali rispetto ad $\{x_i\}_{i=1...n}$ allora è possibile costruire un vettore che ha per componenti le derivate perziali, perciò il gradiente è definito come: $\nabla f = [\frac{\partial f(x)}{\partial x_1}, ..., \frac{\partial f(x)}{\partial x_n}]$, inoltre per il teorema della formula del gradiente sappiamo che, dato un versore $v$ esiste la derivata direzionale $f_v$ in $x$ e che $f_v(x) = \nabla f(x) \cdot v$.
+Consideriamo una funzione $f$ definita su un insieme aperto $A \subset R^n$ e sia $x \in A$ se esistono in $x$ le derivate parziali rispetto ad $\{x_i\}_{i=1...n}$ allora è possibile costruire un vettore che ha per componenti le derivate perziali, perciò il gradiente è definito come.\\
+\[\nabla f = [\frac{\partial f(x)}{\partial x_1}, ..., \frac{\partial f(x)}{\partial x_n}].\]
+Inoltre per il teorema della formula del gradiente sappiamo che, dato un versore $v$ esiste la derivata direzionale $f_v$ in $x$ e che $f_v(x) = \nabla f(x) \cdot v$.
 \end{definition}
 \subsubsection{Teorema di Taylor}
 Il teorema di Taylor è un teorema che fornisce una sequenza di approssimazioni di una funzione differenziabile attorno ad un dato punto mediante i polinomi di taylor, ovvero polinomi i cui coefficienti dipendono solo dalle derivate della funzione nel punto.
-Diamo un esempio pratico di approssimazione di taylor del secondo ordine di una funzione a due variabili.\\\\
-$f(x_0+h, y_0+k) = f(x_0, y_0) + f_x(x_0, y_0)h + f_y(x_0, y_0)k + \frac{1}{2}[f_{xx}(x_0, y_0)h^2 + f_{xy}(x_0, y_0)hk + f_{yy}(x_0, y_0)k^2] + R(h, k)$; con $R(h, k) \in o(\parallel (h, k) \parallel^2)$.
+Diamo un esempio pratico di approssimazione di taylor del secondo ordine di una funzione a due variabili.\\
+\begin{equation*}\begin{gathered}
+f(x_0+h, y_0+k) = f(x_0, y_0) + f_x(x_0, y_0)h + f_y(x_0, y_0)k + \\ \frac{1}{2}[f_{xx}(x_0, y_0)h^2 + f_{xy}(x_0, y_0)hk + f_{yy}(x_0, y_0)k^2] + \\
+R(h, k).
+\end{gathered}\end{equation*}
+con $R(h, k) \in o(\parallel (h, k) \parallel^2)$.
 \end{document}

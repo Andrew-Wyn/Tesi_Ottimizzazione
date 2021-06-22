@@ -1216,7 +1216,7 @@ from itertools import compress
 from sklearn.linear_model import HuberRegressor
 from sklearn.preprocessing import StandardScaler
 
-def test_algorithm(algotithm_poincare, algorithm_hyperboloid, bunch_test_set, iter_test, tollerance_outelier=0):
+def test_algorithm(algotithm_poincare, algorithm_hyperboloid, bunch_test_set, iter_test, figname, tollerance_outlier=0):
   a = []
   b = []
   
@@ -1226,9 +1226,16 @@ def test_algorithm(algotithm_poincare, algorithm_hyperboloid, bunch_test_set, it
     seq, _, _ = algorithm_hyperboloid(x_0, x_set, iter_test)
     b.append(time_to_converge(seq, limit, iter_test, 10e-6))
     
+
+  mean_conv_a = sum(a)/len(bunch_test_set)
+  mean_conv_b = sum(b)/len(bunch_test_set)
+
+  print("Mean convergence Disk:", mean_conv_a)
+  print("Mean convergence Iperboloid:", mean_conv_b)
+
   ab = list(zip(a, b))
   z = [ab.count(i) for i in ab]
-  filter = [z_i > tollerance_outelier for z_i in z]
+  filter = [z_i > tollerance_outlier for z_i in z]
   a_cutted = list(compress(a, filter))
   b_cutted = list(compress(b, filter))
 
@@ -1239,19 +1246,28 @@ def test_algorithm(algotithm_poincare, algorithm_hyperboloid, bunch_test_set, it
   model = HuberRegressor(epsilon=1)
   model.fit(a_train, b_train.ravel())
 
-  w, t = np.polyfit(a_cutted, b_cutted, 1)
+  ang_coef_lin, t = np.polyfit(a_cutted, b_cutted, 1)
   test_a = np.array([0, iter_test])
   predictions = b_scaler.inverse_transform(
       model.predict(a_scaler.transform(test_a[..., None]))
   )
 
-  print("SLOPE Huber Regressor:", (predictions[1] - predictions[0]) / (test_a[1] - test_a[0]))
-  print("SLOPE Linear Regressor:", w)
-  plt.plot(test_a, w*np.array(test_a) + t, 'y')
+  ang_coef_huber = (predictions[1] - predictions[0]) / (test_a[1] - test_a[0])
+
+  print("SLOPE Huber Regressor:", ang_coef_huber)
+  print("SLOPE Linear Regressor:", ang_coef_lin)
+  plt.figure(figsize=(20, 20))
+  plt.plot(test_a, ang_coef_lin*np.array(test_a) + t, 'y')
   plt.plot(test_a, predictions, 'r')
+  plt.legend([f'Least Square Regression Line, ang. coeff. = {ang_coef_lin:.4f}', 
+              f'Huber Regression Line, ang. coeff. = {ang_coef_huber:.4f}'],
+             prop={'size': 20})
 
   plt.scatter(a, b, c=z)
-
+  plt.colorbar()
+  plt.xlabel("Step to Converge on Poincare Disk", fontsize=18)
+  plt.ylabel("Step to Converge on Hyperboloid", fontsize=18)
+  plt.savefig(figname)
 
 def make_fl_curve(algorithm_poincare, algorithm_hyperbolid, X0, X, limit, iter_test, max_iter=100):
   fixed_lenght_poincare = []
@@ -1292,52 +1308,72 @@ print(min(fixed_lenght_poincare))
 alpha_D = (np.argmin(fixed_lenght_poincare)+1)/1000
 print(alpha_D)
 
+plt.figure(figsize=(10,10))
 plt.plot([i/1000 for i in range(1, 1000)], fixed_lenght_poincare)
+plt.xlabel("parameter value", fontsize=18)
+plt.ylabel("step to convergence", fontsize=18)
+plt.savefig("fixed_step_parameter_poincare")
 
 print(min(fixed_lenght_hyper))
 alpha_H = (np.argmin(fixed_lenght_hyper)+1)/1000
 print(alpha_H)
 
+plt.figure(figsize=(10,10))
 plt.plot([i/1000 for i in range(1, 1000)], fixed_lenght_hyper)
+plt.xlabel("parameter value", fontsize=18)
+plt.ylabel("step to convergence", fontsize=18)
+plt.savefig("fixed_step_parameter_hyperboloid")
 
-fixed_lenght_poincare, fixed_lenght_hyper = test_one_parameter_optimization(
+armijo_poincare, armijo_hyper = test_one_parameter_optimization(
     lambda X0, rgrad, X, learning_rate, max_iter: armijo_opt_poincare_riemannian(X0, rgrad, X, 0.3, 0.001, learning_rate, max_iter),
     lambda X0, rgrad, X, learning_rate, max_iter: armijo_opt_hiper_riemannian(X0, rgrad, X, 0.3, 0.001, learning_rate, max_iter),
     bunch[:10],
     100)
 
-print(min(fixed_lenght_poincare))
-lambda_D = (np.argmin(fixed_lenght_poincare)+1)/100
+print(min(armijo_poincare))
+lambda_D = (np.argmin(armijo_poincare)+1)/100
 print(lambda_D)
 
-plt.plot([i/100 for i in range(1, 100)], fixed_lenght_poincare)
+plt.figure(figsize=(10,10))
+plt.plot([i/100 for i in range(1, 100)], armijo_poincare)
+plt.xlabel("parameter value", fontsize=18)
+plt.ylabel("step to convergence", fontsize=18)
+plt.savefig("armijo_parameter_poincare")
 
-print(min(fixed_lenght_hyper))
-lambda_H = (np.argmin(fixed_lenght_hyper)+1)/100
+print(min(armijo_hyper))
+lambda_H = (np.argmin(armijo_hyper)+1)/100
 print(lambda_H)
 
-plt.plot([i/100 for i in range(1, 100)], fixed_lenght_hyper)
+plt.figure(figsize=(10,10))
+plt.plot([i/100 for i in range(1, 100)], armijo_hyper)
+plt.xlabel("parameter value", fontsize=18)
+plt.ylabel("step to convergence", fontsize=18)
+plt.savefig("armijo_parameter_hyperboloid")
 
 test_algorithm(lambda X0, X, max_iter: optimisation_fl_poincare(X0, frechet_mean_poincare_rgrad, X, alpha_D, max_iter),
                lambda X0, X, max_iter: optimisation_fl_hyperboloid(X0, frechet_mean_hyperboloid_rgrad, X, alpha_H, max_iter),
                bunch,
                100,
+               "fixed_step_size",
                5)
 
 test_algorithm(lambda X0, X, max_iter: armijo_opt_poincare_riemannian(X0, frechet_mean_poincare_rgrad, X, 0.3, 0.001, lambda_D, max_iter),
                lambda X0, X, max_iter: armijo_opt_hiper_riemannian(X0, frechet_mean_hyperboloid_rgrad, X, 0.3, 0.001, lambda_H, max_iter),
                bunch,
                100,
+               "armijo",
                5)
 
 test_algorithm(lambda X0, X, max_iter: RBB_poincare(X0, frechet_mean_poincare_rgrad, X, 0.0001, 0.9, max_iter),
                lambda X0, X, max_iter: RBB_hyperboloid(X0, frechet_mean_hyperboloid_rgrad, X, 0.0001, 0.9, max_iter),
                bunch,
                100,
+               "barzilai_borwein",
                5)
 
 test_algorithm(lambda X0, X, max_iter: LBFGS_poincare(X0, frechet_mean_poincare_rgrad, X, 5, 0.0001, 0.9, max_iter),
                lambda X0, X, max_iter: LBFGS_hyperboloid(X0, frechet_mean_hyperboloid_rgrad, X, 5, 0.0001, 0.9, max_iter),
                bunch,
                100,
+               "l_bfgs",
                5)
