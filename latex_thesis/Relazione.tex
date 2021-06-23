@@ -7,6 +7,7 @@
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{float}
 
 \newtheorem{theorem}{Teorema}
 \newtheorem{definition}{Definizione}
@@ -31,7 +32,6 @@
 \end{center}
 \end{Large}
 
-
 \vspace{30mm}
 %minipage divide la pagina in due sezioni settabili
 \begin{minipage}[t]{0.47\textwidth}
@@ -54,13 +54,26 @@
 
 \end{titlepage}
 
+\clearpage
+\begin{center}
+    \thispagestyle{empty}
+    \vspace*{\fill}
+    Alla mia famiglia ed alla loro estrema pazienza.
+    \vspace*{\fill}
+\end{center}
+\clearpage
+
+
+\newpage
+
 \renewcommand{\contentsname}{Contenuti}
 \tableofcontents
 
 \newpage
 
 \section{Introduzione}
-Nella seguente trattazione verra presentato il problema del minimo della funzione media di frechet sulla varietà disco di poincare, verra proposta una metodologia risolutiva che consiste nel trasportare il problema su una varieta conforme definita iperboloide, nella quale alcune formule per dimensione arbitraria sono computazionalmente meno onerose (e numericamente piu stabili ?)
+Le applicazioni pratiche nelle quali è necessario effettuare ottimizzazione di funzioni non lineari, ovvero trovarne un valore di minimo, nei giorni d'oggi sono molteplici. Praticamente i metodi di ottimizzazione non lineare sono alla base del funzionamento di tecnologie utilizzatissime, tra cui le reti neurali, il cui apprendimento pone le fondamenta sulla solida teoria matematica dei metodi numerici per l'ottimizzazione. Nella sua versione più generale, ovvero quando la funzione da ottimizzare non ha come dominio un sottoinsieme dello spazio euclideo ma una varietà differenziabile, le applicazioni possibili in numero sono nettamente superiori, possiamo pensare ad esempio al calcolo di autospazi di una matrice che rappresenta un problema molto comune ed utile da risolvere nelle applicazioni dell'algebra lineare, ancora, possiamo pensare al problema della decomposizione SVD il quale può essere modellizzato come un problema di ottimizzazione su varietà, un altro problema è l'analisi delle componenti indipendenti, Indipendent Component Analysis (ICA) conosciuto come separazione delle sorgenti, che ha ricevuto un forte interesse nella ricerca di questi ultimi anni dato dalla forte applicazione nell'ambito biomedico. Infine, l'applicazione su cui si basa la tesi, il calcolo della centroide di $p$-punti definiti in una varietà riemanniana qualsiasi.\\
+Nella presente trattazione verrà, perciò, presentato il problema della ricerca del minimo della funzione \textbf{media di Fréchet}, quindi del calcolo del centroide di $p$-punti, sulla varietà riemanniana \textbf{disco di poincaré}, verrà confrontata la risoluzione di tale problema con il corrispettivo problema trasferito nella varietà conforme \textbf{iperboloide}, tale speriementazione prende spunto da confronto effettuato in \cite{Gradient Descent in Hyperbolic Space}, nel quale si confrontano tali varietà per il medesimo problema, in tale trattazione però utilizzeremo vari algoritmi, non solo quello a passo fisso, ed inoltre gli algoritmi di ottimizzazione tramite l'utilizzo della mappa esponenziale per entrambe le varieà, capendo dunque se, tali modelli conformi sono equivalenti, non sono da un punto di vista geometrico ma anche sotto un aspetto computazionale tale per cui effettuare ottimizzazione su varietà. Per il confronto utilizzeremo vari algoritmi di ottimizzazione implementati ognuno sia su disco di Poincaré che su iperboloide. Tale trattazione vuole far comprendere la possibilità, in problemi di ottimizzazione su varietà, di interscambiare modelli conformi. Gli esperimenti trattati vorrebbero, inoltre, dare l'incipit per continuare con tali sperimentazioni andando, magari, a trattare anche il modello del \textbf{semipiano di Poincaré}, del quale non siamo riusciti a trovare materiale sufficiente per poter implementare gli algoritmi di ottimizzazione trattati.
 
 \section{Metodi di ottimizzazione su $R^n$ e Varieta differenziabili}
 Nella presente trattazione i vettori verranno indicati tramite le ultime lettere minuscole dell'alfabeto $x, v, w$, che assumeremo essere vettori colonna, il trasposto di un vettore verrà identificato tramite il carattere apice ($'$) perciò per definire il prodotto scalare euclideo di due vettori $u, v$ scriveremo $u'v$, mentre se si intende  un prodotto scalare differente da quello euclideo, come è il prodotto scalare riemanniano, lo indicheremo con $\langle \cdot,\cdot \rangle$.\\
@@ -195,6 +208,7 @@ Oltre a trasformare elementi di $T_xM$ in elementi di $M$, un secondo importate 
 \[\hat{f_x} = f \circ R_x\]\\
 denota la restrizione di $\hat{f}$ su $T_xM$. Si noti che $\hat{f_x}$ è una funzione reale su uno spazio vettoriale. Dalla condizione di rigidità locale abbiamo che $D\hat{f_x}(0_x) = Df(x)$. Se $M$ è dotato di una metrica Riemanniana abbiamo\\
 \[ \mbox{grad} \hat{f_x}(0_x) = \mbox{grad} f(x).\]\\
+Un caso particolare di retrazione è la \textbf{mappa esponenziale} definita su $p \in M$ e $v \in T_pM$, che ha proprietà di retrazione, rappresenta la curva geodedica calcolata nel punto $1$ originaria in $p$ con derivata in $0$ punto pari a $v$.\\
 In alcuni casi può essere necessario dover effettuare operazioni tra vettori appartenenti a spazi tangente diffenti, come ad esempio nel caso dei metodi di ottimizzazzione quasi Newton. Nell'ottimizzazione basata su retrazioni lo strumento standard per trasportare vettori appartenenti ad uno spazio tangente in un altro spazio tangente è il $trasporto vettoriale$. Informalmente, dati due vettori tangenti ad $x$, chiamati $v_x, w_x \in T_xM$, un trasporto vettoriale $\mathcal{T}$ associato ad una retrazione $R$, è una mappa liscia che genera un vettore appartenente ad $T_{R_x(w_x)}M$. Per semplicità utilizzeremo la notazione $\mathcal{T}_{x \to y}(v)$.\\
 Un caso speciale di trasporto vettoriale è il $trasporto$ $parallelo$ che puo essere interpretato come un trasporto vettoriale la cui retrazione associata è la mappa esponenziale.
 \subsubsection{Metodi \emph{line-search}}
@@ -242,7 +256,7 @@ Sia $\{x^k\}$ una sequenza finita di iterate generata da ALS. Assumiamo che l'in
 \end{corollary}
 
 \section{Disco di poincare e Iperboloide}
-Lo spazio iperbolico può essere definito in vari modi equivalenti, noi descriveremo l'iperboloide ed il disco di poincare, ciascuno di questi è un modello dello spazio iperbolico ed inoltre nessuno dei due è prevalente in letteratura.\\
+Lo spazio iperbolico può essere definito in vari modi equivalenti, noi descriveremo l'iperboloide ed il disco di poincare, ciascuno di questi è un modello dello spazio iperbolico, nessuno dei due è prevalente in letteratura.\\
 \begin{figure}[t] %inserisce le figure
     \centering\includegraphics[width=0.50\textwidth]{HyperboloidProjection.png}
     \caption{Rappresentazione della proiezione stereografica tra disco e iperboloide}
@@ -254,14 +268,14 @@ Il modello dell'iperboloide è definito nel modo seguente.\\
 \[H^n = \{x \in R^{n+1} | \langle x, x \rangle_{n:1} = -1; \quad x^{n+1} > 0 \}.\]
 \end{definition}
 Lo spazio tangente in un punto $p \in H^n$ è $T_pH^n = \{x \in R^{n:1} | \langle p,x \rangle_{n:1} = 0\}$.\\
-Possiamo asserire che l'iperboloide è una varietà riemanniana. Andiamo ora ad esplicitare gli strumenti necessari per effettuare ottimizzazione su questa varietà.
+Possiamo asserire che l'iperboloide è una \textbf{varietà riemanniana}. Andiamo ora ad esplicitare gli strumenti necessari per effettuare ottimizzazione su questa varietà, le formule riportate di seguito, tra cui la derivata della funzione distanza, sono state riprese da \cite{Gradient Descent in Hyperbolic Space}
 \subsubsection{Metrica}
 La metrica, definita nel $Tangent Bundle$ dell'iperboloide, è la metrica indotta dal prodotto di Minkowski già esplicitata.
 \subsubsection{Distanza}
 La distanza tra due punti dell'iperboloide rappresenta la lunghezza della geodedica che unisce i due punti, è definita come segue.\\
 \[d_{H^n} (u,v) = arccosh(-\langle u, v \rangle_{n:1}); \quad u,v \in H^n.\]
 \subsubsection{Mappa Esponenziale}
-La mappa esponenziale definita su $p \in H^n$ e $v \in T_pH^n$, che ha proprietà di retrazione, rappresenta la curva geodedica calcolata nel punto $1$ originaria in $p$ con derivata in $0$ punto pari a $v$. E' definita come segue.\\
+La mappa esponenziale definita su $p \in H^n$ e $v \in T_pH^n$. E' definita come segue.\\
 \begin{equation*}\begin{gathered}
 Exp_p(v) = cosh(\parallel v \parallel_{n:1})p + sinh(\parallel v \parallel_{n:1}) \frac{v}{\parallel v \parallel_{n:1}}.
 \end{gathered}\end{equation*}
@@ -269,7 +283,7 @@ Exp_p(v) = cosh(\parallel v \parallel_{n:1})p + sinh(\parallel v \parallel_{n:1}
 \subsubsection{Gradiente della funzione distanza}
 La deifinize dell'iperboloide e dello spazio di minkowski nel quale è costruito ci aiuta nel calcolo del gradiente della funzione distanza.\\
 Data una funzione costo $E$ qualsiasi possiamo calcolarne il gradiente in un punto $p \in H^n$, anch'esso arbitrario, passando dapprima per il gradiente definito nell'ambiente, in tal caso lo spazio di minkowski, ricordiamo che quest'ultimo è cosi definito.\\
-\[nabla_{p}^{R^{n:1}} E = (\frac{\partial E}{\partial x_1}|_p, ..., \frac{\partial E}{\partial x_n}|_p, -\frac{\partial E}{\partial x_{n+1}}|_p).\]\\
+\[\nabla_{p}^{R^{n:1}} E = (\frac{\partial E}{\partial x_1}|_p, ..., \frac{\partial E}{\partial x_n}|_p, -\frac{\partial E}{\partial x_{n+1}}|_p).\]\\
 Una volta calcolato il gradiente nell'ambiente procediamo a proiettarlo nello spazio tangente del punto $p \in H^n$ come segue.\\
 \[\nabla_{p}^{H^n} E = \nabla_{p}^{R^{n:1}} E + \langle p, \nabla_{p}^{R^{n:1}} E \rangle_{n:1} p.\]\\
 Relativamente al problema della media di fréchet che andremo ad esplicitare definiamo la seguente formula rappresentante il gradiente su spazio di minkowski della funzione distanza.\\
@@ -280,7 +294,7 @@ Andiamo ora a definire l'altro modello dello spazio iperbolico, definito come l'
 Il modello del disco di poincare è definito nel modo seguente\\
 \[ D^n = \{x \in R^n | \parallel x \parallel < 1\} \]\\
 \end{definition}
-Essendo $D^n$ un sottoinsieme di $R^n$ lo spazio tangente in ogni punto di $D^n$ è $R^n$. Possiamo asserire che il disco di Poincaré è una varietà riemanniana. Come fatto per l'iperboloide andiamo ad esplicitare i vari strumenti necessari per effettuare ottimizzazione.
+Essendo $D^n$ un sottoinsieme di $R^n$ lo spazio tangente in ogni punto di $D^n$ è $R^n$. Possiamo asserire che il disco di Poincaré è una \textbf{varietà riemanniana}. Come fatto per l'iperboloide andiamo ad esplicitare i vari strumenti necessari per effettuare ottimizzazione. Le formule riportate sono state riprese da \cite{GeoOpt}, \cite{Hyperbolic Entailment Cones for Learning Hierarchical Embeddings}, mentre per il calcolo del gradiente della funzione distanza abbiamo fatto riferimento a \cite{Poincare for Learning Hierarchical Representations}.
 \subsubsection{Metrica}
 La metrica, definita nello spazio tangente del disco di poincaré $T_pD^n$ rispetto ad un punto $p \in D^n$, è la seguente.\\
 \[g^D = \lambda_p^2 g^E \mbox{; con } \lambda_p = \frac{2}{1- \parallel p \parallel^2} \mbox{ e con } g^E \mbox{ la metrica euclidea}.\]
@@ -288,7 +302,7 @@ La metrica, definita nello spazio tangente del disco di poincaré $T_pD^n$ rispe
 La distanza tra due punti del disco di Poincaré rappresenta la lunghezza della geodedica che unisce i due punti, è definita come segue.\\
 \[d_{D^n}(u, v) = arccosh(1 + \frac{\parallel u - v\parallel^2}{(1-\parallel u \parallel^2)(1-\parallel v \parallel^2)})\]
 \subsubsection{Mappa Esponenziale}
-La mappa esponenziale definita su $p \in D^n$ e $v \in T_pD^n$, rappresenta la curva geodedica calcolata nel punto $1$ originaria in $p$ con derivata in $0$ punto pari a $v$. E' definita come segue.\\
+La mappa esponenziale definita su $p \in D^n$ e $v \in T_pD^n$. E' definita come segue.\\
 \begin{equation*}\begin{gathered}
 Exp_p(v) = \\ \frac{\lambda_p (cosh(\lambda_p \parallel v \parallel) + \langle p,\frac{v}{\parallel v \parallel} \rangle sinh(\lambda_p \parallel v \parallel))p}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)} + \\ \frac{\frac{1}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel) v}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)}
 \end{gathered}\end{equation*}
@@ -371,7 +385,7 @@ L'algoritmo a Passo fisso è un algoritmo del primo ordine molto elementare, la 
 \end{algorithm}
 \end{center}
 \subsubsection{Armijo}
-L'algoritmo di Armijo è anche esso un algoritmo del primo ordine, la direzione scelta è l'opposta della direzione del gradiente, per la selezione del passo si basa sul calcolo del punto di armijo riemanniano, descritto nella sezione dedicata all'ottimizzazione su varietà, per poter essere eseguito necessita, anche esso, del gradiente riemanniano della funzione da minimizzare, di una retrazione e di tre parametri $\gamma \in (0,1)$ , $\beta \in (0,1)$ e $\lambda > 0$. Solitamente il parametro $s$ deve essere preso ad ogni iterazione necessario per effettuare il giusto rescaling di $d_k$ per semplicità di sperimentazione abbiamo deciso di assumere tale parametro fisso.\\
+L'algoritmo di Armijo è anche esso un algoritmo del primo ordine, la direzione scelta è l'opposta della direzione del gradiente, per la selezione del passo si basa sul calcolo del punto di armijo riemanniano, descritto nella sezione dedicata all'ottimizzazione su varietà, per poter essere eseguito necessita, anche esso, del gradiente riemanniano della funzione da minimizzare, di una retrazione e di tre parametri $\gamma \in (0,1)$ , $\beta \in (0,1)$ e $\lambda > 0$. Solitamente il parametro $s$ deve essere preso ad ogni iterazione necessario per effettuare il giusto rescaling di $d_k$ per semplicità di sperimentazione abbiamo deciso di assumere tale parametro fisso. L'implementazione riemanniana di tale algoritmo fa riferimento alle formule in \cite{Iannazzo}.\\
 \begin{center}
 \begin{algorithm}[H]
 \SetAlgoLined
@@ -386,7 +400,7 @@ L'algoritmo di Armijo è anche esso un algoritmo del primo ordine, la direzione 
 \end{algorithm}
 \end{center}
 \subsubsection{Barzilai-Borwein}
-L'algoritmo di Barzilai-Borwein è un metodo quasi Newton e si basa sulla soluzione, per $k \geq 1$, del problema dei minimi quadrati, che ci permette di avere ricavare informazioni sulla matrice hessiana, quindi del secondo ordine.\\
+L'algoritmo di Barzilai-Borwein è un metodo quasi Newton e si basa sulla soluzione, per $k \geq 1$, del problema dei minimi quadrati, che ci permette di avere ricavare informazioni sulla matrice hessiana, quindi del secondo ordine. Tale algoritmo è stato implementato in riferimento a \cite{Iannazzo}.\\
 \[\min_{t} \parallel s_kt - y_k \parallel_2 \],\\
 con $s_k = x^{k+1} - x^k$ ed $y_k = \nabla f(x^{k+1}) - \nabla f(x^k)$, il quale, assumendo che $x^{k+1} \neq x^k$ ha un'unica soluzione $t = \frac{s_k'y_k}{s_k's_k}$. Quando $s_k'y_k > 0$ il passo viene scelto come.\\
 \[a_{k+1}^{BB} = \frac{s_k's_k}{s_k'y_k}\].\\
@@ -429,7 +443,7 @@ Definiamo $p_k = \frac{1}{y_k's_k}$, ed $H_k^0$ l'approssimazione iniziale dell'
 L'algoritmo fa fede al funzionamento di BGFGS per il calcolo di $H_{k+1}$ da $H_k$\\
 \[H_{k+1} = (I - p_ks_k'y_k)H_k(I - p_ky_ks_k') + p_ks_ks_k'\].\\
 Per un $k$ fissato definiamo una sequenza di vettori $q_{k-m}, ..., q_k$, con $q_i = (I - p_iy_is_i')q_{i+1}$ e $q_k = g^k$. Definiamo inoltre un'altra sequenza di vettori $z_{k-m}, ..., z_k$ con $z_i = H_iq_i$, definendo $z_{k-m} = H_k^0q_{k-m}$ e ricorsivamente $\beta_i = p_iy_i'z_i$ e $z_{i+1} = z_i + (p_is_i'q_{i+1} - \beta_i)s_i$ allora $z_k = H_kd_k$.
-Nella versione riemanniana faremo un forte uso del trasporto vettoriale, ridefinendo dapprima $s_k$ ed $y_k$ come fatto nella versione rieamanniana dell'algoritmo Barzilai-Borwain\\
+La versione riemanniana di L-BFGS è stata implementata in riferimento a \cite{A Broyden Class of Quasi-Newton Methods for Riemannian Optimization}, nella versione riemanniana inoltre faremo un forte uso del trasporto vettoriale, ridefinendo dapprima $s_k$ ed $y_k$ come fatto nella versione rieamanniana dell'algoritmo Barzilai-Borwain\\
 \[s_k = \mathcal{T}_{x^k \to x^{k+1}}(-\alpha^kg^k),\]\\
 e\\
 \[y_k = g^{k+1} - \mathcal{T}_{x^k \to x^{k+1}}(g^k),\]\\
@@ -453,7 +467,7 @@ $\gamma_0 \leftarrow 1$, $l=0$\;
     $z \leftarrow H_0^kq$
     \For{$i=l, l+1, ..., k-1$}{
         $\beta = p_i$ $\langle y_i,z \rangle_{x^k}$\;
-        $z \leftarrow z + s_i(\alpha_i \beta)$\;
+        $z \leftarrow z + s_i(\alpha_i - \beta)$\;
     }
     $\eta_k \leftarrow -z$\;
     $x^{k+1} \leftarrow R_{x^k}(\eta_k)$\;
@@ -467,40 +481,40 @@ $\gamma_0 \leftarrow 1$, $l=0$\;
 Nella nostra implementazione dell'algoritmo \textbf{L-BFGS} abbiamo deciso di non applicare valori di riscalamento, tramite ricerca lineare esatta o non, alla direzione $\eta_k$, per le stesse motivazioni riportate nella sotto-sezione precedente.
 \subsection{Esperimenti}
 Gli esperimenti effettuati ci permetteranno di confrontare il problema di ottimizzazione sulle varietà disco di Poincaré e iperboloide ed inoltre saranno utili per capire se queste due varietà sono equivalenti ed interscambiabili, non solo nella rappresentazione dello spazio iperbolico ma anche come varietà su cui effettuare ottimizzazione.\\
-Gli esperimenti effettuati si suddividono in due parti che nel seguito descriveremo. Per effettuare gli esperimenti ci siamo muniti di un dataset di circa duecento istanze del problema, prendendo perciò un numero fissato, comune a tutte le istanze, di punti casuali sul disco (sampling effettuato sfruttando la funzione $rand$ del file $PoincareFactory$ della libreria manopt), per ogni istanza abbiamo calcolato il punto $x^0$ di partenza calcolato come la media aritmetica dei punti dell'istanza, abbiamo calcolato inoltre il punto limite tramite l'algoritmo a passo fisso con un $\alpha$ molto piccolo e come guardia di arresto abbiamo scelto la condizione che la norma euclidea del gradiente $g^k$ scenda sotto un valore soglia (e.g. $10^{-8}$).\\
-Una volta ottenuto il dataset, prima di poter effettivamente confrontare gli algoritmi implementati nelle due varietà, abbiamo selezionato i parametri ottimi, uno per disco ed uno per iperboloide, per gli algoritmi che hanno necessità di dover modificare alcuni parametri, come $\alpha$ per il passo fisso e $\lambda$ per l'algoritmo di Armijo. Per fare ciò abbiamo preso un sotto insieme del dataset iniziale e, sia per l'algoritmo a passo fisso che per Armijo, abbiamo proceduto come segue. Abbiamo è scelto un valore che rappresenta il numero di elementi in cui si suddivide lo spazio dei possibili valori del parametro di cui si deve trovare  l'ottimo (e.g $100$, partiremo da $0.01$ ed arriveremo ad $1$ in $100$ passi), per ogni istanza del sotto dataset si è applicato l'algoritmo con un parametro incrementale creando per ogni istanza una sequenza i cui valori rappresentano il numero di passi che l'algoritmo con il parametro in questione impiega per convergere al limite, o divergere (numero di passi prima di arrivare ad una distanza di $10^{-4}$ dal limite, se diverge il numero sarà il massimo delle iterazioni possibili), una volta calcolate queste sequenze ne abbiamo fatta una media aritmetica e come parametro ottimo abbiamo scelto il valore che minimizza la sequenza media.\\
+Gli esperimenti effettuati si suddividono in due parti che nel seguito descriveremo. Per effettuare gli esperimenti ci siamo muniti di un dataset di circa duecento istanze del problema definito su disco di Poincaré, prendendo perciò un numero fissato, comune a tutte le istanze, di punti casuali sul disco (sampling effettuato sfruttando la funzione $rand$ del file $PoincareFactory$ della libreria manopt \cite{ManOpt}), per ogni istanza abbiamo calcolato il punto $x^0$ di partenza calcolato come la media aritmetica dei punti dell'istanza, abbiamo calcolato inoltre il punto limite tramite l'algoritmo a passo fisso con un $\alpha$ molto piccolo e come guardia di arresto abbiamo scelto la condizione che la norma euclidea del gradiente $g^k$ scenda sotto un valore soglia (e.g. $10^{-8}$).\\
+Una volta ottenuto il dataset, prima di poter effettivamente confrontare gli algoritmi implementati nelle due varietà, abbiamo selezionato i parametri ottimi, uno per disco ed uno per iperboloide, per gli algoritmi che hanno necessità di dover modificare alcuni parametri, come $\alpha$ per il passo fisso e $\lambda$ per l'algoritmo di Armijo. Per fare ciò abbiamo preso un sotto insieme del dataset iniziale e, sia per l'algoritmo a passo fisso che per Armijo, abbiamo proceduto come segue. Abbiamo scelto un valore che rappresenta il numero di elementi in cui si suddivide lo spazio dei possibili valori del parametro di cui si deve trovare  l'ottimo (e.g $100$, partiremo da $0.01$ ed arriveremo ad $1$ in $100$ passi), per ogni istanza del sotto dataset si è applicato l'algoritmo con un parametro incrementale creando per ogni istanza una sequenza i cui valori rappresentano il numero di passi che l'algoritmo con il parametro in questione impiega per convergere al limite, o divergere (numero di passi prima di arrivare ad una distanza di $10^{-4}$ dal limite, se diverge il numero sarà il massimo delle iterazioni possibili), una volta calcolate queste sequenze ne abbiamo fatta una media aritmetica e come parametro ottimo abbiamo scelto il valore che minimizza la sequenza media.\\
 Per quanto riguarda la scelta di $\alpha$ ottimo per l'algoritmo a passo fisso abbiamo notato sperimentalmente che le sequenze di convergenza, definite per l'implementazione su disco e su iperboloide, tendono a differire di comportamento nell'intorno del punto di minimo, l'implementazione su disco tende a non convergere in meno di $100$ passi per valori che si discostano di poco da punto di minimo, mentre l'implmentazione su iperboloide ha un andamento differente, prima di non riuscire più a convergere in meno di $100$ passi (o divergere) possiamo scortarci dal punto di minimo di un range più alto rispetto alla controparte su disco.\\
-\begin{figure}[t] %inserisce le figure
+\begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{fixed_step_parameter_poincare.png}
     \caption{Sequenza relativa alla convergenza del'algoritmo a passo fisso implementato su disco, notiamo come sia stretto l'intorno del parametro ottimale tale per cui è garantita convergenza sotto i cento passi, i valori associato sono: Punto di minimo $5.35$, valore di convergeza minimo $0.016$.}
 \end{figure}
-\begin{figure}[t] %inserisce le figure
+\begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{fixed_step_parameter_hyperboloid.png}
     \caption{Sequenza relativa alla convergenza del'algoritmo a passo fisso implementato su iperboloide, notiamo come sia più ampio l'intorno del parametro ottimale tale per cui è garantita convergenza sotto i cento passi, rispetto all'implementazione su disco, i valori associato sono: Punto di minimo $5.3$, valore di convergeza minimo $0.244$.}
 \end{figure}
 Contrariamente, Per quanto riguarda invece le curve definite dalla scelta di $\lambda$ per l'algoritmo di Armijo, si è notato un comportamento migliore della sequenza riferita all'implementazione su disco in quanto, la sequenza tende ad essere limitata, non arrivando mai a $100$, per ogni valore di $\lambda$ considerato. Mentre per l'implementazione su iperboloide abbiamo notato che solo per valori di $\lambda$ sopra un determinato punto abbiamo che la sequenza tende ad essere limitata.\\
-\begin{figure}[t] %inserisce le figure
+\begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{armijo_parameter_poincare.png}
     \caption{Sequenza relativa alla convergenza del'algoritmo di Armijo implementato su disco, notiamo come la sequenza sia limitata superiormente per ogni valore del parametro. Punto di minimo , valore di convergeza minimo .}
 \end{figure}
-\begin{figure}[t] %inserisce le figure
+\begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{armijo_parameter_hyperboloid.png}
     \caption{Sequenza relativa alla convergenza del'algoritmo di Armijo implementato su iperboloide, notiamo come la sequenza sia limitata superiormente solo per valori del parametro superiori ad un determinato valore. Punto di minimo , valore di convergeza minimo .}
 \end{figure}
-A questo punto, avendo scelto i parametri che permettono ai nostri algoritmi di performare al meglio, possiamo procedere con il confronto. Riprendendo il dataset totale abbiamo proceduto nel seguente modo, per ogni algoritmo lo abbiamo eseguito su ogni istanza del dataset, sia per l'implementazione su disco che per quella su iperboloide, creando un punto  ($a$, $b$) in $R^2$ le cui coordinate sono $a$, il numero di passi per convergere al punto limite per l'implementazione su disco, $b$ invece, il numero di passi per convergere al punto limite per l'implementazione su iperboloide, creando cosi una nuvola di punti. Tramite tale nuvola possiamo verificare se le metodologie sono effettivamente equivalenti, riporteremo i grafici sui quali vengono plottate le nuvole di punti, in ogni grafico vengono costruite due rette di regressione su una versione ridotta della nuvola di punti, toglieremo quei punti che hanno una molteplicità bassa (e.g. sotto $\frac{1}{25}$ della cardinalità totale del dataset), la prima retta di regressione viene calcolata tramite il metodo dei minimi quadrati, la seconda invece viene calcolata tramite un algoritmo meno sensibile ai valori anomali, la regressione di $Huber$. Noteremo quindi che, se le rette di regressione tendono ad avere un coefficiente angolare "vicino" ad $1$ le due varietà possono essere ritenute equivalenti.  Riportiamo di seguito i grafici dei nostri esperimenti, verrà riportato, per ogni grafico, un valore medio di convergenza per il disco e per l'iperboloide, tale valore rappresenterà un ulteriore indice di confronto.\\
-\begin{figure}[t] %inserisce le figure
+A questo punto, avendo scelto i parametri che permettono ai nostri algoritmi di performare al meglio, possiamo procedere con il confronto. Riprendendo il dataset totale abbiamo proceduto nel seguente modo, per ogni algoritmo lo abbiamo eseguito su ogni istanza del dataset, sia per l'implementazione su disco che per quella su iperboloide, creando un punto  ($a$, $b$) in $R^2$ le cui coordinate sono $a$, il numero di passi per convergere al punto limite per l'implementazione su disco, $b$ invece, il numero di passi per convergere al punto limite per l'implementazione su iperboloide, creando cosi una nuvola di punti. Tramite tale nuvola possiamo verificare se le metodologie sono effettivamente equivalenti, riporteremo i grafici sui quali vengono plottate le nuvole di punti, in ogni grafico vengono costruite due rette di regressione su una versione ridotta della nuvola di punti, toglieremo quei punti che hanno una molteplicità bassa (e.g. sotto $\frac{1}{40}$ della cardinalità totale del dataset), la prima retta di regressione viene calcolata tramite il metodo dei minimi quadrati, la seconda invece viene calcolata tramite un algoritmo meno sensibile ai valori anomali, la regressione di $Huber$. Noteremo quindi che, se le rette di regressione tendono ad avere un coefficiente angolare "vicino" ad $1$ le due varietà possono essere ritenute equivalenti.  Riportiamo di seguito i grafici dei nostri esperimenti, verrà riportato, per ogni grafico, un valore medio di convergenza per il disco e per l'iperboloide, tale valore rappresenterà un ulteriore indice di confronto.\\
+\begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{fixed_step_size.png}
     \caption{Nuvola di punti relativa all'algoritmo a passo fisso, notiamo che i punti generati tendono a giacere sulla bisettrice, ciò indica un equvalenza tra le due implementazioni. Valore medio di convergenza sul disco $11.515$, valore medio di convergenza su iperboloide $11.58$.}
 \end{figure}
-\begin{figure}[t] %inserisce le figure
+\begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{armijo.png}
     \caption{Nuvola di punti relativa all'algoritmo di Armijo, notiamo che i punti generati tendono a giacere sulla bisettrice, ciò indica un equvalenza tra le due implementazioni. Valore medio di convergenza sul disco $12.07$, valore medio di convergenza su iperboloide $12.555$.}
 \end{figure}
-\begin{figure}[t] %inserisce le figure
+\begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{barzilai_borwein.png}
     \caption{Nuvola di punti relativa all'algoritmo di Barzilai-Borwein, notiamo che i punti generati tendono a giacere sulla bisettrice, ciò indica un equvalenza tra le due implementazioni. Valore medio di convergenza sul disco $6.205$, valore medio di convergenza su iperboloide $6.2$.}
 \end{figure}
-\begin{figure}[t] %inserisce le figure
+\begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{l_bfgs.png}
     \caption{Nuvola di punti relativa all'algoritmo di L-BFGS, come accennato nella sezione dedicata, l'algoritmo tende alle volte a generare una nuvola di punti non propriamente lineare, nonostante in tal caso la retta di regressione di Huber è pressochè lineare, ciò potrebbe essere sintomo di un'intrinseca equivalenza tra le due implementazioni. Valore medio di convergenza sul disco $25.365$, valore medio di convergenza su iperboloide $16.05$.}
 \end{figure}
@@ -586,4 +600,36 @@ f(x_0+h, y_0+k) = f(x_0, y_0) + f_x(x_0, y_0)h + f_y(x_0, y_0)k + \\ \frac{1}{2}
 R(h, k).
 \end{gathered}\end{equation*}
 con $R(h, k) \in o(\parallel (h, k) \parallel^2)$.
+\newpage
+\begin{thebibliography}{9}
+\bibitem{Gradient Descent in Hyperbolic Space}
+Benjamin Wilson and Matthias Leimeister.
+\textit{Gradient Descent in Hyperbolic Space}.
+
+\bibitem{Hyperbolic Entailment Cones for Learning Hierarchical Embeddings} 
+Octavian-Eugen Ganea, Gary Becigneul and Thomas Hofmann.
+\textit{Hyperbolic Entailment Cones for Learning Hierarchical Embeddings}.
+
+\bibitem{Poincare for Learning Hierarchical Representations}
+Maximilian Nikel and Douwe Kiela.
+\textit{Poincaré for Learning Hierarchical Representations}.
+
+\bibitem{Iannazzo} 
+Bruno Iannazzo and Margherita Porcelli.
+\textit{THE RIEMANNIAN BARZILAI-BORWEIN METHOD WITH NONMONOTONE LINE SEARCH AND THE MATRIX GEOMETRIC MEAN COMPUTATION}.
+
+\bibitem{A Broyden Class of Quasi-Newton Methods for Riemannian Optimization} 
+Wen Huang, K. A. Gallivan and P.-A. Absil.
+\textit{A Broyden Class of Quasi-Newton Methods for Riemannian Optimization}.
+
+\bibitem{GeoOpt} 
+GeoOpt: Python Library for Manifold Optimization,
+\\\texttt{https://geoopt.readthedocs.io/en/latest/}
+
+\bibitem{ManOpt} 
+Manopt: Python Library for Manifold Optimization,
+\\\texttt{https://www.manopt.org/}
+
+\end{thebibliography}
+
 \end{document}
