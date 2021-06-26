@@ -15,7 +15,7 @@ import math
 from itertools import compress
 
 import matplotlib.pyplot as plt
-from numpy import linalg as LA
+# from numpy import linalg as LA
 import numpy.linalg as la
 from sklearn.linear_model import HuberRegressor
 from sklearn.preprocessing import StandardScaler
@@ -298,7 +298,7 @@ def frechet_mean_poincare_grad(psi, x_set, manifold):
 
 def frechet_mean_poincare_rgrad(psi, x_set, manifold):
   egrad = frechet_mean_poincare_grad(psi, x_set, manifold)
-  return PoincareManifold.egrad2rgrad(psi, egrad)
+  return manifold.egrad2rgrad(psi, egrad)
 
 
 # --- Hyperboloid Gradient
@@ -314,7 +314,7 @@ def frechet_mean_hyperboloid_grad(theta, x_set, manifold):
 
 def frechet_mean_hyperboloid_rgrad(theta, x_set, manifold):
   egrad = frechet_mean_hyperboloid_grad(theta, x_set, manifold)
-  return HyperboloidManifold.egrad2rgrad(theta, egrad)
+  return manifold.egrad2rgrad(theta, egrad)
 
 
 def frechet_mean(theta, x_set, distance):
@@ -374,7 +374,7 @@ def plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim):
   conv_seq = convergence_seq(psi_seq, limit)
   ax2.semilogy(conv_seq)
   ax3.semilogy(f_seq)
-  g_norm = [LA.norm(g) for g in g_seq]
+  g_norm = [la.norm(g) for g in g_seq]
   ax4.semilogy((g_norm))
 
 """# Optimization Algorithm
@@ -393,7 +393,7 @@ def optimisation_fixed_lenght(manifold, x_0, f_grad, x_set, learning_rate, max_s
     psi = x_seq[-1]
     g = f_grad(psi, x_set, manifold)
 
-    if LA.norm(g) < 10e-10:
+    if la.norm(g) < 10e-10:
       break
 
     if np.isnan(g).any():
@@ -414,12 +414,12 @@ def optimisation_fixed_lenght(manifold, x_0, f_grad, x_set, learning_rate, max_s
   return x_seq, f_seq, g_seq
 
 
-def optimisation_fl_poincare(psi_0, f_grad, x_set, learning_rate, max_steps=10, limited=True):
-  return optimisation_fixed_lenght(PoincareManifold, psi_0, f_grad, x_set, learning_rate, max_steps, limited)
+def optimisation_fl_poincare(psi_0, x_set, learning_rate, max_steps=10, limited=True):
+  return optimisation_fixed_lenght(PoincareManifold, psi_0, frechet_mean_poincare_rgrad, x_set, learning_rate, max_steps, limited)
 
 
-def optimisation_fl_hyperboloid(psi_0, f_grad, x_set, learning_rate, max_steps=10, limited=True):
-  psi_seq, f_seq, g_seq = optimisation_fixed_lenght(HyperboloidManifold, inv_rho(psi_0), f_grad, [inv_rho(x_i) for x_i in x_set], learning_rate, max_steps, limited)
+def optimisation_fl_hyperboloid(psi_0, x_set, learning_rate, max_steps=10, limited=True):
+  psi_seq, f_seq, g_seq = optimisation_fixed_lenght(HyperboloidManifold, inv_rho(psi_0), frechet_mean_hyperboloid_rgrad, [inv_rho(x_i) for x_i in x_set], learning_rate, max_steps, limited)
   return [rho(psi) for psi in psi_seq], f_seq, g_seq
 
 """## Armijo"""
@@ -444,7 +444,7 @@ def armijo_optimization(manifold, x_0, f_grad, x_set, sigma, gamma, lambda_, max
     if np.isnan(g_k).any():
       x_seq = x_seq[:-1]
       break
-    if LA.norm(g_k) < 10e-10:
+    if la.norm(g_k) < 10e-10:
       break
 
     h_k = armijo_step_riemannian(manifold, x_k, x_set, g_k, sigma, gamma, lambda_)
@@ -462,12 +462,12 @@ def armijo_optimization(manifold, x_0, f_grad, x_set, sigma, gamma, lambda_, max
   return x_seq, f_seq, g_seq
 
 
-def armijo_poincare(psi_0, f_grad, x_set, sigma, gamma, lambda_, max_steps=10):
-  return armijo_optimization(PoincareManifold, psi_0 , f_grad, x_set, sigma, gamma, lambda_, max_steps)
+def armijo_poincare(psi_0, x_set, sigma, gamma, lambda_, max_steps=10):
+  return armijo_optimization(PoincareManifold, psi_0 , frechet_mean_poincare_rgrad, x_set, sigma, gamma, lambda_, max_steps)
 
 
-def armijo_hyperboloid(psi_0, f_grad, x_set, sigma, gamma, lambda_, max_steps=10):
-  psi_seq, f_seq, g_seq = armijo_optimization(HyperboloidManifold, inv_rho(psi_0), f_grad, [inv_rho(x_i) for x_i in x_set], sigma, gamma, lambda_, max_steps)
+def armijo_hyperboloid(psi_0, x_set, sigma, gamma, lambda_, max_steps=10):
+  psi_seq, f_seq, g_seq = armijo_optimization(HyperboloidManifold, inv_rho(psi_0), frechet_mean_hyperboloid_rgrad, [inv_rho(x_i) for x_i in x_set], sigma, gamma, lambda_, max_steps)
   return [rho(psi) for psi in psi_seq], f_seq, g_seq
 
 """## Barzilai Borwein"""
@@ -483,7 +483,7 @@ def RBB(manifold, x_0, f_grad, x_set, a_min, a_max, max_steps=100):
 
   g_k = f_grad(x_0, x_set, manifold)
   while True:
-    if LA.norm(g_k) < 10e-10:
+    if la.norm(g_k) < 10e-10:
       break
 
     x_k = x_seq[-1]
@@ -516,12 +516,12 @@ def RBB(manifold, x_0, f_grad, x_set, a_min, a_max, max_steps=100):
   return x_seq, f_seq, g_seq
 
 
-def RBB_poincare(psi_0, f_grad, x_set, a_min, a_max, max_steps=100):
-  return RBB(PoincareManifold, psi_0, f_grad, x_set, a_min, a_max, max_steps)
+def RBB_poincare(psi_0, x_set, a_min, a_max, max_steps=100):
+  return RBB(PoincareManifold, psi_0, frechet_mean_poincare_rgrad, x_set, a_min, a_max, max_steps)
 
 
-def RBB_hyperboloid(psi_0, f_grad, x_set, a_min, a_max, max_steps=100):
-  psi_seq, f_seq, g_seq = RBB(HyperboloidManifold, inv_rho(psi_0), f_grad, [inv_rho(x) for x in x_set], a_min, a_max, max_steps)
+def RBB_hyperboloid(psi_0, x_set, a_min, a_max, max_steps=100):
+  psi_seq, f_seq, g_seq = RBB(HyperboloidManifold, inv_rho(psi_0), frechet_mean_hyperboloid_rgrad, [inv_rho(x) for x in x_set], a_min, a_max, max_steps)
   return [rho(psi) for psi in psi_seq], f_seq, g_seq
 
 """## L-BFGS"""
@@ -633,7 +633,7 @@ def LBFGS_poincare(psi_0, f_grad, x_set, M, p_min, p_max, max_steps=100):
   f_seq.append(frechet_mean(psi_0, x_set, PoincareManifold.dist))
 
   while True:
-    if LA.norm(g_k) < 10e-10:
+    if la.norm(g_k) < 10e-10:
       g_seq.append(g_new)
       break
 
@@ -706,7 +706,7 @@ def LBFGS_hyperboloid(psi_0, f_grad, x_set, M, p_min, p_max, max_steps=100):
   f_seq.append(frechet_mean(psi_0, x_set, PoincareManifold.dist))
 
   while True:
-    if LA.norm(g_k) < 10e-10:
+    if la.norm(g_k) < 10e-10:
       break
 
     theta = inv_rho(psi_seq[-1])
@@ -815,22 +815,22 @@ def create_bunch_test_set(manifold, card_bunch=50, card_x=4):
     x_set = np.array([manifold.rand() for _ in range(card_x)])
     x_0 = generate_starting_point(x_set)
     # TODO: confrontarmi con il prof per il calcolo del limite
-    psi_seq, _, _ = optimisation_fl_poincare(x_0, frechet_mean_poincare_rgrad, x_set, 0.001, 5000, False)
+    psi_seq, _, _ = optimisation_fl_poincare(x_0, x_set, 0.001, 5000, False)
     limit = psi_seq[-1]
     print(limit)
     bunch_test_set.append((x_0, x_set, limit))
 
   return bunch_test_set
 
-dim = 2
-PoincareManifold = PoincareBall(dim, 1)
-HyperboloidManifold = Hyperboloid(dim, 1)
-bunch = create_bunch_test_set(PoincareManifold, card_bunch=200, card_x=4)
-save_bunch_test_set(bunch)
-
-#dim, bunch = load_bunch_from_file()
+#dim = 2
 #PoincareManifold = PoincareBall(dim, 1)
 #HyperboloidManifold = Hyperboloid(dim, 1)
+#bunch = create_bunch_test_set(PoincareManifold, card_bunch=200, card_x=4)
+#save_bunch_test_set(bunch)
+
+dim, bunch = load_bunch_from_file()
+PoincareManifold = PoincareBall(dim, 1)
+HyperboloidManifold = Hyperboloid(dim, 1)
 
 """# Test Algorithms"""
 
@@ -903,10 +903,10 @@ def make_fl_curve(algorithm_poincare, algorithm_hyperbolid, X0, X, limit, iter_t
   sequence_hyper = []
 
   for i in range(1, iter_test):
-    poincare_seq, _, _= algorithm_poincare(X0, frechet_mean_poincare_rgrad, X, (i/iter_test), max_iter)
+    poincare_seq, _, _= algorithm_poincare(X0, X, (i/iter_test), max_iter)
     min_poincare = time_to_converge(poincare_seq, limit, max_iter)
     sequence_poincare.append(min_poincare)
-    hyper_seq, _, _ = algorithm_hyperbolid(X0, frechet_mean_hyperboloid_rgrad, X, (i/iter_test), max_iter)
+    hyper_seq, _, _ = algorithm_hyperbolid(X0, X, (i/iter_test), max_iter)
     min_hyper = time_to_converge(hyper_seq, limit, max_iter)
     sequence_hyper.append(min_hyper)
 
@@ -925,38 +925,29 @@ def test_one_parameter_optimization(algorithm_poincare, algorithm_hyperbolid, bu
 x_0, x_set, limit = bunch[0]
 print("limit:", limit)
 
-psi_seq, f_seq, g_seq = optimisation_fl_poincare(x_0, frechet_mean_poincare_rgrad, x_set, 0.1, 100)
+psi_seq, f_seq, g_seq = optimisation_fl_poincare(x_0, x_set, 0.1, 100)
 print("Limit sequence poincare: ", psi_seq[-1])
 print(psi_seq)
 plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
-psi_seq, f_seq, g_seq = optimisation_fl_hyperboloid(x_0, frechet_mean_hyperboloid_rgrad, x_set, 0.20, 100)
+psi_seq, f_seq, g_seq = optimisation_fl_hyperboloid(x_0, x_set, 0.20, 100)
 print("Limit sequence iperboloide: ", psi_seq[-1])
 plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
-psi_seq, f_seq, g_seq = armijo_poincare(x_0, frechet_mean_poincare_rgrad, x_set, 0.2, 0.001, 0.25, 100)
+psi_seq, f_seq, g_seq = armijo_poincare(x_0, x_set, 0.2, 0.001, 0.25, 100)
 print("Limit sequence poincare: ", psi_seq[-1])
 plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
-psi_seq, f_seq, g_seq = armijo_hyperboloid(x_0, frechet_mean_hyperboloid_rgrad, x_set, 0.2, 0.0001, 0.25, 100)
+psi_seq, f_seq, g_seq = armijo_hyperboloid(x_0, x_set, 0.2, 0.0001, 0.25, 100)
 print("Limit sequence iperboloide: ", psi_seq[-1])
 plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
-psi_seq, f_seq, g_seq = RBB_poincare(x_0, frechet_mean_poincare_rgrad, x_set, 0.0001, 0.9, 100)
+psi_seq, f_seq, g_seq = RBB_poincare(x_0, x_set, 0.0001, 0.9, 100)
 print("Limit sequence poincare: ", psi_seq[-1])
 print(f_seq)
 plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
-psi_seq, f_seq, g_seq = RBB_hyperboloid(x_0, frechet_mean_hyperboloid_rgrad, x_set, 0.0001, 0.9, 100)
-print("Limit sequence iperboloide: ", psi_seq[-1])
-plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
-
-psi_seq, f_seq, g_seq = LBFGS_poincare(x_0, frechet_mean_poincare_rgrad, x_set, 5, 0.000001, 0.9, 100)
-print(psi_seq)
-print("Limit sequence poincare: ", psi_seq[-1])
-plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
-
-psi_seq, f_seq, g_seq = LBFGS_hyperboloid(x_0, frechet_mean_hyperboloid_rgrad, x_set, 5, 0.000001, 0.9, 100)
+psi_seq, f_seq, g_seq = RBB_hyperboloid(x_0, x_set, 0.0001, 0.9, 100)
 print("Limit sequence iperboloide: ", psi_seq[-1])
 plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
@@ -987,8 +978,8 @@ plt.ylabel("step to convergence", fontsize=18)
 plt.savefig("fixed_step_parameter_hyperboloid")
 
 sequence_armijo_poincare, sequence_armijo_hyper = test_one_parameter_optimization(
-    lambda X0, rgrad, X, learning_rate, max_iter: armijo_poincare(X0, rgrad, X, 0.2, 0.001, learning_rate, max_iter),
-    lambda X0, rgrad, X, learning_rate, max_iter: armijo_hyperboloid(X0, rgrad, X, 0.2, 0.001, learning_rate, max_iter),
+    lambda X0, X, learning_rate, max_iter: armijo_poincare(X0, X, 0.2, 0.001, learning_rate, max_iter),
+    lambda X0, X, learning_rate, max_iter: armijo_hyperboloid(X0, X, 0.2, 0.001, learning_rate, max_iter),
     bunch[:10],
     100)
 
@@ -1012,30 +1003,23 @@ plt.xlabel("parameter value", fontsize=18)
 plt.ylabel("step to convergence", fontsize=18)
 plt.savefig("armijo_parameter_hyperboloid")
 
-test_algorithm(lambda X0, X, max_iter: optimisation_fl_poincare(X0, frechet_mean_poincare_rgrad, X, alpha_D, max_iter),
-               lambda X0, X, max_iter: optimisation_fl_hyperboloid(X0, frechet_mean_hyperboloid_rgrad, X, alpha_H, max_iter),
+test_algorithm(lambda X0, X, max_iter: optimisation_fl_poincare(X0, X, alpha_D, max_iter),
+               lambda X0, X, max_iter: optimisation_fl_hyperboloid(X0, X, alpha_H, max_iter),
                bunch,
                100,
                "fixed_step_size",
                5)
 
-test_algorithm(lambda X0, X, max_iter: armijo_poincare(X0, frechet_mean_poincare_rgrad, X, 0.2, 0.001, lambda_D, max_iter),
-               lambda X0, X, max_iter: armijo_hyperboloid(X0, frechet_mean_hyperboloid_rgrad, X, 0.2, 0.001, lambda_H, max_iter),
+test_algorithm(lambda X0, X, max_iter: armijo_poincare(X0, X, 0.2, 0.001, lambda_D, max_iter),
+               lambda X0, X, max_iter: armijo_hyperboloid(X0, X, 0.2, 0.001, lambda_H, max_iter),
                bunch,
                100,
                "armijo",
                5)
 
-test_algorithm(lambda X0, X, max_iter: RBB_poincare(X0, frechet_mean_poincare_rgrad, X, 0.0001, 0.9, max_iter),
-               lambda X0, X, max_iter: RBB_hyperboloid(X0, frechet_mean_hyperboloid_rgrad, X, 0.0001, 0.9, max_iter),
+test_algorithm(lambda X0, X, max_iter: RBB_poincare(X0, X, 0.0001, 0.9, max_iter),
+               lambda X0, X, max_iter: RBB_hyperboloid(X0, X, 0.0001, 0.9, max_iter),
                bunch,
                100,
                "barzilai_borwein",
-               5)
-
-test_algorithm(lambda X0, X, max_iter: LBFGS_poincare(X0, frechet_mean_poincare_rgrad, X, 5, 0.0001, 0.9, max_iter),
-               lambda X0, X, max_iter: LBFGS_hyperboloid(X0, frechet_mean_hyperboloid_rgrad, X, 5, 0.0001, 0.9, max_iter),
-               bunch,
-               100,
-               "l_bfgs",
                5)
