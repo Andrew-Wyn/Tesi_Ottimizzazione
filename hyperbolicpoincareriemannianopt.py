@@ -353,7 +353,8 @@ def poincare_dist(x, y):
 
 
 def convergence_seq(psi_seq, limit):
-  return [poincare_dist(psi, limit) for psi in psi_seq]
+  # return [poincare_dist(psi, limit) for psi in psi_seq]
+  return [la.norm(psi - limit) for psi in psi_seq]
 
 
 def plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim):
@@ -493,9 +494,9 @@ def RBB(manifold, x_0, f_grad, x_set, a_min, a_max, max_steps=100):
     new_g = f_grad(new_psi, x_set, manifold)
 
     x_seq.append(new_psi)
-    f_seq.append(frechet_mean(x_k, x_set, manifold.dist))
+    f_seq.append(frechet_mean(new_psi, x_set, manifold.dist))
     g_seq.append(g_k)
-
+    
     s_k = -a_k*manifold.transp(x_k, new_psi, g_k)
     y_k = new_g + s_k/a_k
 
@@ -817,7 +818,6 @@ def create_bunch_test_set(manifold, card_bunch=50, card_x=4):
     # TODO: confrontarmi con il prof per il calcolo del limite
     psi_seq, _, _ = optimisation_fl_poincare(x_0, x_set, 0.001, 5000, False)
     limit = psi_seq[-1]
-    print(limit)
     bunch_test_set.append((x_0, x_set, limit))
 
   return bunch_test_set
@@ -927,10 +927,9 @@ print("limit:", limit)
 
 psi_seq, f_seq, g_seq = optimisation_fl_poincare(x_0, x_set, 0.1, 100)
 print("Limit sequence poincare: ", psi_seq[-1])
-print(psi_seq)
 plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
-psi_seq, f_seq, g_seq = optimisation_fl_hyperboloid(x_0, x_set, 0.20, 100)
+psi_seq, f_seq, g_seq = optimisation_fl_hyperboloid(x_0, x_set, 0.28, 100)
 print("Limit sequence iperboloide: ", psi_seq[-1])
 plot_seq(x_set, psi_seq, f_seq, g_seq, limit, dim)
 
