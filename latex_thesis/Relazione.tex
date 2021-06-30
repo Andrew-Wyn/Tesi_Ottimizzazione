@@ -35,7 +35,7 @@
 \vspace{30mm}
 %minipage divide la pagina in due sezioni settabili
 \begin{minipage}[t]{0.47\textwidth}
-	{\large{\bf Relatore:\\ Prof. Bruno Iannazzo}}
+	{\large{\bf Relatore:\\ Bruno Iannazzo}}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.47\textwidth}\raggedleft
@@ -72,18 +72,21 @@
 \newpage
 
 \section{Introduzione}
-Le applicazioni pratiche nelle quali è necessario effettuare ottimizzazione di funzioni non lineari, ovvero trovarne un valore di minimo, nei giorni d'oggi sono molteplici. Praticamente i metodi di ottimizzazione non lineare sono alla base del funzionamento di tecnologie utilizzatissime, tra cui le reti neurali, il cui apprendimento pone le fondamenta sulla solida teoria matematica dei metodi numerici per l'ottimizzazione. Nella sua espressione più generale, ovvero quando la funzione da ottimizzare non ha come dominio un sottoinsieme dello spazio euclideo ma una varietà differenziabile, le applicazioni possibili in numero sono nettamente superiori, possiamo pensare ad esempio al calcolo di autospazi di una matrice, che rappresenta un problema molto comune e necessario da risolvere nelle applicazioni dell'algebra lineare, inoltre, possiamo pensare al problema della decomposizione SVD il quale può essere modellizzato come un problema di ottimizzazione su varietà, un altro problema è l'analisi delle componenti indipendenti, Indipendent Component Analysis (ICA) conosciuto come separazione delle sorgenti e modellizzabile anch'esso come un problema di ottimizzazione su varietà, ha ricevuto un forte interesse nella ricerca di questi ultimi anni dato dall'ampia applicazione nell'ambito biomedico. Infine, l'applicazione su cui si basa la tesi, il calcolo della centroide di $p$-punti definiti in una varietà riemanniana.\\
-Nella presente trattazione verrà, perciò, presentato il problema della ricerca del minimo della funzione \textbf{somma delle distanze al quadrato}, quindi del calcolo del centroide di $p$-punti, sulla varietà riemanniana \textbf{disco di poincaré}, verrà confrontata la risoluzione di tale problema con il corrispettivo problema trasferito nella varietà conforme \textbf{iperboloide}, tale speriementazione prende spunto dagli esperimenti effettuati in \cite{Gradient Descent in Hyperbolic Space}, nel quale si confrontano tali varietà per il medesimo problema, nella presente però utilizzeremo vari algoritmi, non solo quello a passo fisso, ed inoltre gli algoritmi di ottimizzazione sono stati implementati utilizzando la mappa esponenziale per entrambe le varità. Capiremo dunque se, tali modelli conformi sono equivalenti, non solo da un punto di vista geometrico ma anche sotto un aspetto computazionale tale per cui effettuare ottimizzazione. Inoltre tale trattazione vuole far comprendere la possibilità, in problemi di ottimizzazione su varietà, di interscambiare modelli conformi. Gli esperimenti trattati vorrebbero, infine, dare l'incipit per continuare con altre sperimentazioni analoghe andando, magari, a trattare anche il modello del \textbf{semipiano di Poincaré}, del quale non siamo riusciti a trovare materiale sufficiente per poter implementare gli algoritmi di ottimizzazione considerati.
+Le applicazioni pratiche nelle quali è necessario effettuare ottimizzazione di funzioni non lineari, ovvero trovarne un valore di minimo, nei giorni d'oggi sono molteplici. In particolare sono alla base del funzionamento di tecnologie molto utilizzate, tra cui le reti neurali, il cui apprendimento pone le fondamenta sulla solida teoria matematica dei metodi numerici per l'ottimizzazione.\\
+Negli ultimi anni si sta affermando una generalizzazione dell'ottimizzazione classica dove la funzione da ottimizzare non ha come dominio un sottoinsieme dello spazio euclideo ma una varietà differenziabile. le applicazioni di queste nuove tecniche sono moltissime: possiamo pensare ad esempio al calcolo di autospazi di una matrice, che rappresenta un problema molto comune e necessario da risolvere in molte applicazioni dell'algebra lineare; possiamo pensare al problema della decomposizione SVD il quale può essere modellizzato come un problema di ottimizzazione su varietà. un altro problema è l'analisi delle componenti indipendenti, Indipendent Component Analysis (ICA), conosciuto come separazione delle sorgenti e modellizzabile anch'esso come un problema di ottimizzazione su varietà, il quale ha ricevuto un forte interesse nella ricerca di questi ultimi anni dato dall'ampia applicazione nell'ambito biomedico.\\
+L'applicazione su cui si basa la tesi è il calcolo del centroide di $p$-punti in una varietà riemanniana, che può essere posto come un problema di ottimizzazione sulla varietà stessa, infatti è il minimo della funzione somma delle distanza al quadrato dai punti dati, questo problema ammette un unico minimo, questo accade in particolare per il disco di Poincaré che è una famosa varietà riemanniana, che è forse il più famoso modello di geometria non euclide con curvatura negatiava, verrà confrontata la risoluzione di tale problema con il corrispettivo problema trasferito nella varietà conforme iperboloide. Confonteremo vari algoritmi di ottimizzazione su varietà per calcolare il centroinde di p-punti, per questo faremo uso di metodi di discesa del gradiente, è importante notare che tali metodi non possono essere implementati in modo "naturale" come avviene nel caso euclideo, ma è necessaria una "codifica" del problema ed inoltre sono necessari particolari strumenti, che verranno trattati ed esplicitati nella presente, questo poichè, contrariamente al caso euclideo, il gradiente non appartiene allo stesso spazio su cui è definita la funzione da minimizzare ma in uno spazio tangente alla varietà che è uno spazio ben diverso, perciò la normale somma del gradiente non garantirebbe il corretto funzionamento dei metodi che descriveremo, tra i quali sono presenti l'algoritmo a passo fisso, ricerca lineare ed altri più performanti.\\
+Tale sperimentazione prende spunto dall'articolo \cite{Wilson}, il nostro contributo consiste nel considerare una più ampia gamma di algoritmi tra cui il metodo di Barzilai Borwain riemanniano recentemente introdotto in \cite{Iannazzo} dove viene mostrata la sua efficienza nel calcolo del centroide nella varietà delle matrici definite positive. I nostri esperimenti mostrano che anche nel caso del disco di Poincaré e dell'iperboloide questo algoritmo è estremamente più efficiente dei metodi classici del gradiente con ricerca lineare o passo fisso.\\
+Capiremo inoltre se tali modelli conformi sono equivalenti, non solo da un punto di vista geometrico ma anche sotto un aspetto computazionale tale per cui effettuare ottimizzazione. Inoltre tale trattazione vuole far comprendere la possibilità, in problemi di ottimizzazione su varietà, di interscambiare modelli conformi. Gli esperimenti trattati vorrebbero, infine, dare l'incipit per continuare con altre sperimentazioni analoghe andando, magari, a trattare anche il modello del semipiano di Poincaré.
 
-\section{Metodi di ottimizzazione su $R^n$ e Varieta differenziabili}
-Nella presente trattazione i vettori verranno indicati tramite le ultime lettere minuscole dell'alfabeto $x, v, w$, che assumeremo essere vettori colonna, il trasposto di un vettore verrà identificato tramite il carattere apice ($'$) perciò per definire il prodotto scalare euclideo di due vettori $u, v$ scriveremo $u'v$, mentre se si intende  un prodotto scalare differente da quello euclideo, come è il prodotto scalare riemanniano, lo indicheremo con $\langle \cdot,\cdot \rangle$.\\
-In tale sezione andremo ad esplicitare le metodologie generali per trovare un minimo di una funzione $f$ definita su una varieta differenziabile $M$ a valori reali (notiamo che $R^n$ è un caso particolare di varietà differenziabile). Cercheremo di trovare quei punti che garantiscono l'ottimalità di una funzione, ovvero punti di massimo e di minimo, che descriveremo a breve.\\
+\section{Metodi di ottimizzazione su $\mathbb{R}^n$ e varietà differenziabili}
+Nella presente trattazione i vettori verranno indicati tramite le ultime lettere minuscole dell'alfabeto $x, v, w$, che assumeremo essere vettori colonna, il trasposto di un vettore verrà identificato tramite il carattere apice ($'$) perciò per definire il prodotto scalare euclideo di due vettori $u, v$ scriveremo $u'v$, mentre se si intende  un prodotto scalare differente da quello euclideo, come è il prodotto scalare riemanniano, lo indicheremo con $\langle \cdot,\cdot \rangle$, ricordiamo che il prodotto scalare in una varietà riemanniana dipende da un punto nella varità.\\
+In tale sezione andremo ad esplicitare le metodologie generali per trovare un minimo di una funzione $f$ definita su una varieta differenziabile $M$ a valori reali (notiamo che $\mathbb{R}^n$ è un caso particolare di varietà differenziabile). Cercheremo di trovare quei punti che garantiscono l'ottimalità di una funzione, ovvero punti di massimo e di minimo, che descriveremo a breve.\\
 Sia $f: \mathbb{R} ^n \to \mathbb{R}$ non vincolata.
-Un vettore $x^\ast$ è un minimo locale non vincolato per la funzione $f$ se, informalmente, $f$ assume un valore in $x^\ast$ non più grande dei valori che assume in un intorno di $x^\ast$ stesso. Più formalmente $x^\ast$ è minimo locale per $f$ se esiste $\epsilon > 0$ tale che\\
-\[f(x^\ast) \leq f, \mbox{ per ogni } x \mbox{ con } \parallel x - x^\ast \parallel < \epsilon\]\\
-$\parallel x \parallel$ rappresenta la norma euclidea del vettore $x$.\\
+Un vettore $x^\ast$ è un minimo locale non vincolato per la funzione $f$ se, informalmente, $f$ assume un valore in $x^\ast$ non più grande dei valori che assume in un intorno di $x^\ast$ stesso. Più formalmente $x^\ast$ è minimo locale per $f$ se esiste $\epsilon > 0$ tale che,\\
+\[f(x^\ast) \leq f, \mbox{ per ogni } x \mbox{ con } \parallel x - x^\ast \parallel < \varepsilon,\]\\
+$\| x \|$ rappresenta la norma euclidea del vettore $x$.\\
 Un vettore $x^\ast$ è un minimo globale non vincolato rispetto ad $f$ se la funzione assume un valore in $x^\ast$ non più grande dei valori che assume in ogni altro vettore nel proprio dominio, più formalmente $x^\ast$ è tale che\\
-\[f(x^\ast) \leq f, \mbox{ per ogni } x \in R^n \]\\
+\[f(x^\ast) \leq f, \mbox{ per ogni } x \in \mathbb{R}^n.\]\\
 \subsection{Condizioni necessarie per l'ottimalità}
 Se la funzione di costo $f$ è differenziabile, possiamo utilizzare il gradiente e l'espansione in serie di Taylor per comparare il costo di un vettore con il costo di un suo intorno.
 Ci aspettiamo perciò che se $x^\ast$ è un minimo non vincolato allora la variazione della funzione al primo ordine per una piccola variazione $\Delta x$ è non negativa\\
@@ -91,60 +94,60 @@ Ci aspettiamo perciò che se $x^\ast$ è un minimo non vincolato allora la varia
 Perciò valendo sia per $\Delta x$ positivi che negativi abbiamo la seguente condizione necessaria,\\
 \[\nabla f ( x^\ast )' = 0. \]\\
 Ci aspettiamo inoltre che anche la variazione della funzione al secondo ordine per una piccola variazione di $\Delta x$ è non negativa,\\
-\[\nabla f ( x^\ast )' \Delta x + (1/2) \Delta x' \nabla ^2 f (x^\ast) \Delta x\geq 0\]\\
+\[\nabla f ( x^\ast )' \Delta x + (1/2) \Delta x' \nabla ^2 f (x^\ast) \Delta x\geq 0,\]\\
 dato che la precedente osservazione ha imposto $\nabla f (x^\ast)' \Delta x = 0$ otteniamo che\\
-\[\Delta x' \nabla ^2 f (x^\ast) \Delta x\geq 0\]\\
+\[\Delta x' \nabla ^2 f (x^\ast) \Delta x\geq 0,\]\\
 e che perciò\\
 \[\nabla ^2 f (x^\ast) \mbox{ è una matrice semidefinita positiva.}\]\\
 Diamo il seguente risultato che sintetizza quanto detto fin'ora.
 \begin{prop}[Condizioni necessarie di ottimalità]
-Sia $x^\ast$ un minimo locale non vincolato di $f:R^n \to R$, assumiamo $f$ differenziabile con continuità in un insieme aperto $S$ contenente $x^\ast$. Allora\\
-\[\nabla f(x^\ast) = 0\]\\
+Sia $x^\ast$ un minimo locale non vincolato di $f:\mathbb{R}^n \to R$, assumiamo $f$ differenziabile con continuità in un insieme aperto $S$ contenente $x^\ast$. Allora\\
+\[\nabla f(x^\ast) = 0,\]\\
 Se $f$ è due volte differenziabile con continuità in $S$, allora\\
 \[\nabla^2 f(x^\ast) \mbox{ è una matrice semidefinita positiva.}\]
 \end{prop}
 \subsection{Il caso della convessità}
 Se la funzione $f$ è convessa su un insieme convesso non ci sono distinzioni tra un minimo locale ed un minimo globale, tutti i punti di minimo locale sono anche punti di minimo globale. Perciò un fatto importante è che la condizione $\nabla f(x^\ast) = 0$ è sufficiente per l'ottimalità, da cui deriva il seguente risultato.
-\begin{prop}[Funzioni Convesse] Sia $f:R^n \to R$ una funzione convessa su un insieme convesso $X$.
+\begin{prop}[Funzioni Convesse] Sia $f:\mathbb{R}^n \to R$ una funzione convessa su un insieme convesso $X$.
 \begin{itemize}
   \item Un minimo locale di $f$ su $X$ è anche un minimo globale su $X$. Se inoltre $f$ è strettamente convessa, allora esiste al più un minimo per $f$.
   \item Se $f$ è convessa e l'insieme $X$ è aperto, allora $\nabla f(x^\ast) = 0$ è una condizione necessaria e sufficiente per il vettore $x^\ast \in X$ per essere minimo globale di $f$ su $X$.
 \end{itemize}
 \end{prop}
 
-\subsection{Condizioni Sufficienti per L'ottimalità}
+\subsection{Condizioni Sufficienti per l'ottimalità}
 Non è difficile trovare esempi in cui le condizione di ottimalita necessarie definite nelle sezione precedente
 [$\nabla f(x^\ast) = 0 \quad \mbox{e} \quad \nabla^2 f(x^\ast) \geq 0$]
 portino ad identificare punti che non sono di minimo locale come ad esempio punti di sella o punti di massimo.\\
 Supponiamo di avere un vettore $x^\ast$ che soddisfa le seguenti condizioni\\\\
 - $\nabla f(x^\ast) = 0$.\\
 - $\nabla^2 f(x^\ast)$ è una matrice definita positiva.\\\\
-Allora abbiamo che per ogni $\Delta x \neq 0$ con $\Delta x \in R^n \setminus 0$\\
-\[\Delta x' \nabla^2f(x^\ast) \Delta x > 0\]\\
+Allora abbiamo che per ogni $\Delta x \neq 0$ con $\Delta x \in \mathbb{R}^n \setminus \{0\}$\\
+\[\Delta x' \nabla^2f(x^\ast) \Delta x > 0.\]\\
 Ciò implica che in $x^\ast$ la variazione di $f$ al secondo ordine data da un piccolo spostamento $\Delta x$ è positiva, perciò $f$ tende ad incrementare nell'intorno di $x^\ast$ e ciò implica che le due condizioni di cui sopra sono necessarie e sufficienti per l'ottimalità locale di $x^\ast$.
-\begin{prop}[Condizioni di ottimalità sufficienti del secondo ordine] Sia $f:S \subset R^n \to R$ derivabile due volte con continuità. Si supponga che esista $x^\ast \in S$ che soddisfi le condizioni\\
+\begin{prop}[Condizioni di ottimalità sufficienti del secondo ordine] Sia $f:S \subset \mathbb{R}^n \to R$ derivabile due volte con continuità. Si supponga che esista $x^\ast \in S$ che soddisfi le condizioni\\
 \[\nabla f(x^\ast) = 0 \quad \mbox{e} \quad \nabla^2 f(x^\ast) \mbox{è una matrice definita positiva.}\]\\
 Allora, $x^\ast$ è un minimo locale di $f$. In particolare esistono $\gamma > 0$ e $\epsilon > 0$ tali che\\
 \[ f(x) \geq f(x^\ast) + \frac{\gamma}{2} \parallel x - x^\ast \parallel^2, \quad \mbox{per ogni} x \quad \mbox{con} \parallel x - x^\ast \parallel < \epsilon  \]
 \end{prop}
-\subsection{Discesa del gradiente in $R^n$}
-Andiamo ora a definire nel dettaglio le principali metodologie computazionali di ottimizzazione non lineare su $R^n$. Tali metodologie sarannno trattate con un occhio alle possibili applicazioni.\\
-Consideriamo il problema di trovare il minimo non vincolato di una funzione $f:R^n \to R$. Nella maggior parte di casi non è possibile trovare una soluzione analitica, perciò l'approccio adottato è quello di applicare un algoritmo iterativo chiamato \textit{iterative descent} che opera come segue: prendiamo un vettore iniziale $x^0$ e successivamente generiamo una sequenza $x^1, x^2, ...$ tale che $f$ decresce ad ogni iterazione $f(x^{k+1}) < f(x^k)$ e sperabilmente converga un punto di minimo.\\
+\subsection{Discesa del gradiente in $\mathbb{R}^n$}
+Andiamo ora a definire nel dettaglio le principali metodologie computazionali di ottimizzazione non lineare su $\mathbb{R}^n$. Tali metodologie sarannno trattate con un occhio alle possibili applicazioni.\\
+Consideriamo il problema di trovare il minimo non vincolato di una funzione $f:\mathbb{R}^n \to R$. Nella maggior parte di casi non è possibile trovare una soluzione analitica, perciò l'approccio adottato è quello di applicare un algoritmo iterativo chiamato \textit{iterative descent} che opera come segue: prendiamo un vettore iniziale $x^0$ e successivamente generiamo una sequenza $x^1, x^2, ...$ tale che $f$ decresce ad ogni iterazione $f(x^{k+1}) < f(x^k)$ e sperabilmente converga un punto di minimo.\\
 I principali algoritmi di discesa sono metodi del gradiente poichè sono basati sul gradiente della funzione $f$.
 \subsubsection{Selezionare la direzione di discesa}
-Sia $v \in R^n \setminus 0$, $v^\perp$ è un iperpiano, contenente i punti tali che $v'd = 0$, divide lo spazio in due componenti connesse:
+Sia $v \in \mathbb{R}^n \setminus 0$, $v^\perp$ è un iperpiano, contenente i punti tali che $v'd = 0$, divide lo spazio in due componenti connesse:
 \begin{itemize}
   \item $v'd > 0$ (semipiano).
   \item $v'd < 0$ (semipiano).
 \end{itemize}
 Se $v = \nabla f(x)$ ogni $d$ tale che $v'd < 0$ è una direzione di decrescita, come mostrato nel seguente teorema.
 \begin{theorem}
-Sia $f \in C^1(\Omega)$, con $\Omega$ aperto di $R^n$ e sia $x \in \Omega$ e $\nabla f(x) \neq 0$ per ogni $d \in R^n$ tale che $\nabla f(x)'d < 0$ ed esiste $\alpha^0 > 0$ tale che $f(x + \alpha d) < f(x)$ con $\alpha \in (0, \alpha^0]$
+Sia $f \in C^1(\Omega)$, con $\Omega$ aperto di $\mathbb{R}^n$ e sia $x \in \Omega$ e $\nabla f(x) \neq 0$ per ogni $d \in \mathbb{R}^n$ tale che $\nabla f(x)'d < 0$ ed esiste $\alpha^0 > 0$ tale che $f(x + \alpha d) < f(x)$ con $\alpha \in (0, \alpha^0]$
 \end{theorem}
-Detto ciò possiamo dare una classe di algoritmi con $x^0 \in \Omega$ e dove $d_k \in R^n$ è detta direizione ed $\alpha_k$ è detto passo, definiti secondo la seguente formula,\\
+Detto ciò possiamo dare una classe di algoritmi con $x^0 \in \Omega$ e dove $d_k \in \mathbb{R}^n$ è detta direizione ed $\alpha_k$ è detto passo, definiti secondo la seguente formula,\\
 \[x^{k+1} = x^k + \alpha^k d^k \quad k=0, 1, ... ,\]\\
 Dove se $\nabla f(x^k) \neq 0$ la direzione $d^k$ è scelta in modo tale che\\
-\[\nabla f(x^k)'d^k < 0\]\\
+\[\nabla f(x^k)'d^k < 0.\]\\
 Ci sono varie possibilita nella scelta di $d^k$ e di $\alpha^k$.\\
 Molti metodi di gradiente sono definiti nella forma,
 \[x^{k+1} = x^k - \alpha^k D^k \nabla f(x^k),\]
@@ -175,7 +178,7 @@ Scegliere $\alpha^k$ in modo che garantisca una decrescita sufficiente a garanti
 Solitamente si scelgono i valori come segue, $\gamma \in [10^{-5}, 10^{-1}]$, il fattore di riduzione $\sigma \in [1/10, 1/2]$, possiamo scegliere $s = 1$ e moltiplicare la direzione $d^k$ per uno scalare.\\
 Per questa metodologia diamo anche il seguente teorema che rappresenta un risultato importante.
 \begin{definition}
-Una successione di direzioni $\{d^k\}_k$ è detta limitata se vale la seguente,\\ \[\parallel d^k \parallel < M \mbox{ per ogni } k \mbox{ con } M \in R^+\]
+Una successione di direzioni $\{d^k\}_k$ è detta limitata se vale la seguente,\\ \[\parallel d^k \parallel < M \mbox{ per ogni } k \mbox{ con } M \in \mathbb{R}^+.\]
 \end{definition}
 \begin{definition}
 Una successione di direzioni $\{x^k\}_k, \quad \{d^k\}_k$ è detta \textbf{gradient related} se per ogni sotto-successione di $\{x^k\}_k$ che converge ad un punto non stazionario $\{d^k\}_k$ è limitata ed inoltre vale,\\
@@ -191,8 +194,8 @@ Il passo costante è una metodologia veramente semplice da implementare ma si de
 \textbf{Metodo di diminuzione del passo}:\\
 Scegliamo il passo in modo tale che $\alpha^k \rightarrow 0$. Una problematica legata a questa metodologia è che il passo può diventare troppo piccolo per cui non può essere garantita la convergenza, per questa ragione viene richiesto che.\\ \[\sum_{n=1}^{\infty} \alpha^k = \infty.\]
 \subsection{Discesa del gradiente su varietà} \label{riemanniangd}
-Ora che abbiamo un contesto teorico e una consapevolezza di cosa voglia dire effetutare ottimizzazione su uno spazio euclideo $n$-dimensionale ($R^n$), possiamo approcciare le metodologie computazionali per trovare un minimo non vincolato di una funzione $f:M \to R$ analoghe a quella definite nella sezione precedente. Prima di andare nel vivo del discorso dobbiamo però munirci degli strumenti necessari, richiamiamo la parte dedicata alle varietà differenziabili presente nell'appendice e aggiungiamo quanto segue.
-\subsubsection{Retrazioni}
+Ora che abbiamo un contesto teorico e una consapevolezza di cosa voglia dire effetutare ottimizzazione su uno spazio euclideo $n$-dimensionale ($\mathbb{R}^n$), possiamo approcciare le metodologie computazionali per trovare un minimo non vincolato di una funzione $f:M \to R$ analoghe a quella definite nella sezione precedente. Prima di andare nel vivo del discorso dobbiamo però munirci degli strumenti necessari, richiamiamo la parte dedicata alle varietà differenziabili presente nell'appendice e aggiungiamo quanto segue.
+\subsubsection{Retrazioni} \label{retraction}
 Su varietà differenziabili la nozione di muoversi nella direzione del vettore tangente rimanendo nella varietà stessa è generalizzato dal concetto di \textbf{Retrazione}, concettualmente una retrazione $R$ su $x$, denominata come $R_x$, è una mappa che va da $T_xM$ (spazio tangente in $x$ rispetto a $M$) in $M$ con una condizione di rigidità locale che preserva il gradiente in $x$.
 \begin{definition}[Retrazione]
 Una retrazione in una varietà $M$ è una mappa liscia $R$ che ha come dominio l'insieme dei $T_xM \quad \forall x \in M$ in $M$ con le seguenti proprietà. Sia $R_x$ la restrizione di $R$ a $T_xM$.
@@ -245,8 +248,8 @@ Andiamo ora a definire un algoritmo generico per la discesa di gradiente su vari
 Dallo pseudocodice appena esplicitato è chiaro che tale algoritmo puo essere visto come una generalizzazione della scelta del passo di Armijo descritto nella sotto-sezione 2.2, difatti scegliere $x^{k+1} = R_{x^k}(t^{k^A}\eta^k)$ soddisfa \eqref{ctr-als}. Inoltre la condizione rilassata \eqref{ctr-als} ci permette un ampio spazio di manovra nella scelta di $x^{k+1}$ grantendoci la convergenza ad un punto stazionario, come enunceremo formalmente, e ciò puo portare alla definizione di algoritmi altamente efficienti.
 
 \subsubsection{Convergenza}
-Il concetto di convergenza puo essere ridefinito e generalizzato su varietà. Una sequenza infinita $\{x^k\}_{k=0,1,...}$ di punti su una varietà $M$ è detta essere convergente se esiste una carta $(U, \psi)$ di $M$, un punto $x^\ast \in M$ e $K > 0$ tali che $x^k$ è in $U$ per ogni $k \geq K$ e tale che la sequenza $\{\psi(x^k)\}_{x=K, K+1, ...}$ converge a $\psi(x^\ast)$ (in tal caso applichiamo il concetto di convergenza di $R^n$, avendo $\psi$ come codominio uno spazio euclideo). Il punto $\psi^{-1}(\lim_{k \to \infty} \psi(x^k))$ è chiamato il \emph{limite} della sequenza $\{x^k\}_{k=0,1,...}$. Tutte le sequenze convergenti di una varietà di \emph{Hausdorff} hanno uno ed un solo punto limite.\\
-Diamo ora un importante risultato rispetto alla convergenza dell'algoritmo \emph{ALS}, tale enunciato deriva direttamente dal risultato di convergenza definito nella sezione 2.2 rispetto al passo di Armijo in $R^n$, in tal caso però viene data una generalizzazione di quest'ultimo essendo, come già detto, ALS una generalizzazione del passo di Armijo e lavorando non più su $R^n$ ma su varietà differenziabili.
+Il concetto di convergenza puo essere ridefinito e generalizzato su varietà. Una sequenza infinita $\{x^k\}_{k=0,1,...}$ di punti su una varietà $M$ è detta essere convergente se esiste una carta $(U, \psi)$ di $M$, un punto $x^\ast \in M$ e $K > 0$ tali che $x^k$ è in $U$ per ogni $k \geq K$ e tale che la sequenza $\{\psi(x^k)\}_{x=K, K+1, ...}$ converge a $\psi(x^\ast)$ (in tal caso applichiamo il concetto di convergenza di $\mathbb{R}^n$, avendo $\psi$ come codominio uno spazio euclideo). Il punto $\psi^{-1}(\lim_{k \to \infty} \psi(x^k))$ è chiamato il \emph{limite} della sequenza $\{x^k\}_{k=0,1,...}$. Tutte le sequenze convergenti di una varietà di \emph{Hausdorff} hanno uno ed un solo punto limite.\\
+Diamo ora un importante risultato rispetto alla convergenza dell'algoritmo \emph{ALS}, tale enunciato deriva direttamente dal risultato di convergenza definito nella sezione 2.2 rispetto al passo di Armijo in $\mathbb{R}^n$, in tal caso però viene data una generalizzazione di quest'ultimo essendo, come già detto, ALS una generalizzazione del passo di Armijo e lavorando non più su $\mathbb{R}^n$ ma su varietà differenziabili.
 \begin{theorem}
 Sia $\{x^k\}$ una sequenza infinita di iterate generate da ALS. Allora ogni punto di accumulazione  di $\{x^k\}$ è un punto stazionario della funzione costo $f$
 \end{theorem}
@@ -269,7 +272,7 @@ Il modello dell'iperboloide è definito nel modo seguente.\\
 \[H^n = \{x \in R^{n+1} | \langle x, x \rangle_{n:1} = -1; \quad x^{n+1} > 0 \}.\]
 \end{definition}
 Lo spazio tangente in un punto $p \in H^n$ è $T_pH^n = \{x \in R^{n:1} | \langle p,x \rangle_{n:1} = 0\}$.\\
-Possiamo asserire che l'iperboloide è una \textbf{varietà riemanniana}. Andiamo ora ad esplicitare gli strumenti necessari per effettuare ottimizzazione su questa varietà, le formule riportate di seguito, tra cui la derivata della funzione distanza, sono state riprese da \cite{Gradient Descent in Hyperbolic Space}
+Possiamo asserire che l'iperboloide è una \textbf{varietà riemanniana}. Andiamo ora ad esplicitare gli strumenti necessari per effettuare ottimizzazione su questa varietà, le formule riportate di seguito, tra cui la derivata della funzione distanza, sono state riprese da \cite{Wilson}
 \subsubsection{Metrica}
 La metrica, definita nel \textit{Tangent Bundle} dell'iperboloide, è la metrica indotta dal prodotto di Minkowski già esplicitato.
 \subsubsection{Distanza}
@@ -290,13 +293,13 @@ Una volta calcolato il gradiente nell'ambiente procediamo a proiettarlo nello sp
 Relativamente al problema della media di fréchet, che andremo ad esplicitare, definiamo la seguente formula la quale rappresenta il gradiente su spazio di minkowski della funzione distanza.\\
 \[\nabla_u^{R^{n:1}} d_{H^n}(u,v) = - (\langle u,v \rangle_{n:1}^2 - 1)^{-1/2} v.\]
 \subsection{Disco di Poincaré}
-Andiamo ora a definire l'altro modello dello spazio iperbolico definito disco di Poicaré, definito come l'insieme dei punti di norma strettamente minore di 1 in $R^n$.\\
+Andiamo ora a definire l'altro modello dello spazio iperbolico definito disco di Poicaré, definito come l'insieme dei punti di norma strettamente minore di 1 in $\mathbb{R}^n$.\\
 Di seguito ne riportiamo una definizione formale.\\
 \begin{definition}[Disco di Poincaré]
 Il modello del disco di poincare è definito nel modo seguente\\
-\[ D^n = \{x \in R^n | \parallel x \parallel < 1\} \]\\
+\[ D^n = \{x \in \mathbb{R}^n | \parallel x \parallel < 1\} \]\\
 \end{definition}
-Essendo $D^n$ un sottoinsieme di $R^n$ lo spazio tangente in ogni punto di $D^n$ è $R^n$. Possiamo asserire che il disco di Poincaré è una \textbf{varietà riemanniana}. Come fatto per l'iperboloide andiamo ad esplicitare i vari strumenti necessari per effettuare ottimizzazione. Le formule riportate sono state riprese da \cite{GeoOpt}, \cite{Hyperbolic Entailment Cones for Learning Hierarchical Embeddings}, mentre per il calcolo del gradiente della funzione distanza abbiamo fatto riferimento a \cite{Poincare for Learning Hierarchical Representations}.
+Essendo $D^n$ un sottoinsieme di $\mathbb{R}^n$ lo spazio tangente in ogni punto di $D^n$ è $\mathbb{R}^n$. Possiamo asserire che il disco di Poincaré è una \textbf{varietà riemanniana}. Come fatto per l'iperboloide andiamo ad esplicitare i vari strumenti necessari per effettuare ottimizzazione. Le formule riportate sono state riprese da \cite{GeoOpt}, \cite{Ganea}, mentre per il calcolo del gradiente della funzione distanza abbiamo fatto riferimento a \cite{Nickel}.
 \subsubsection{Metrica}
 La metrica, definita nello spazio tangente del disco di poincaré $T_pD^n$ rispetto ad un punto $p \in D^n$, è la seguente.\\
 \[g^D = \lambda_p^2 g^E \mbox{; con } \lambda_p = \frac{2}{1- \parallel p \parallel^2} \mbox{ e con } g^E \mbox{ la metrica euclidea}.\]
@@ -478,87 +481,88 @@ Durante le nostre sperimentazioni ci siamo resi conto che il grafico relativo al
 Concludendo, possiamo asserire che le implementazioni su disco e su iperboloide, degli algoritmi ottimizzazzione per il calcolo della media di Fréchet, sono pressoché equivalenti, i risultati di tali sperimentazioni ci portano a congetturare che, dato un problema di ottimizzazione su una varietà è possibile trasferire il problema da tale varietà ad una varietà conforme, tenendo presente che deve essere preservata l'esistenza di una soluzione ottima per la funzione da ottimizzare.\\
 Riportiamo il link alla repository Github contenente i codici degli esperimenti: \textit{https://github.com/Andrew-Wyn/Tesi\_Ottimizzazione}.
 \section{Appendice}
+Richiamiamo qui alcuni concetti teorici necessari per la piena comprensione del presente elaborato.
 \subsection{Varietà}
-Sia $M$ un insieme. Una bigiezione $\psi$ di un sottoinsime $U$ di $M$ in un sottoinsieme aperto di $R^d$ è chiamata mappa d-dimensionale dell'insieme $U$. Data una carta $(U, \psi)$ e $x \in U$ gli elementi di $\psi(x) \in R^d$ sono le coordinate di $x$ nella carta $(U, \psi)$. Un $Atlas$ $(A)$ di $M$ in $R^d$ è un insieme di carte $(U_a, \psi_a)$ dell'insieme $M$ tali che:
+Sia $M$ un insieme. Una bigezione $\psi$ differenziabile di un sottoinsime $U$ di $M$ in un sottoinsieme aperto di $\mathbb{R}^d$ è chiamata mappa $d$-dimensionale dell'insieme $U$ che definisce una \textit{carta} $(U, \psi)$. Data una carta $(U, \psi)$ e $x \in U$ gli elementi di $\psi(x) \in \mathbb{R}^d$ sono le coordinate di $x$ nella carta $(U, \psi)$. Un \textit{Atlante} $(A)$ di $M$ in $R^d$ è un insieme di carte $(U_a, \psi_a)$ dell'insieme $M$, dove $a$ varia in un insieme di indici $\mathcal{A}$, tali che:
 \begin{itemize}
-    \item $\bigcup_a U_a = M$.
-    \item Per ogni coppia $\alpha, \beta$ con $U_{\alpha} \bigcap U_{\beta} \neq \emptyset$ gli insiemi $\psi_{\alpha}(U_{\alpha} \bigcap U_{\beta})$ e $\psi_{\beta}(U_{\alpha} \bigcap U_{\beta})$ sono sottoinsiemi aperti di $R^d$ ed il cambio di coordinate $\psi_{\alpha} \circ \psi_{\beta}^{-1}:$ $R^d \to R^d$ è $smooth$.
+    \item $\bigcup_a U_a = M$, per $a \in \mathcal{A}$.
+    \item Per ogni coppia $\alpha, \beta \in \mathcal{A}$ con $U_{\alpha} \cap U_{\beta} \neq \emptyset$ gli insiemi $\psi_{\alpha}(U_{\alpha} \cap U_{\beta})$ e $\psi_{\beta}(U_{\alpha} \cap U_{\beta})$ sono sottoinsiemi aperti di $R^d$ ed il cambio di coordinate $\psi_{\alpha} \circ \psi_{\beta}^{-1}:$ $\mathbb{R}^d \to \mathbb{R}^d$ è differenziabile.
 \end{itemize}
-Dato un'atlas $A$, sia $A^+$ l'insieme delle carte $(U, \psi)$ tali che $A \bigcup \{(U, \psi)\}$ è ancora un'atlas. $A^+$ è un'atlas massimale generato da $A$. Un'atlas massimale dell'insieme $M$ è chiamato struttra differenziabile su $M$.
+Dato un'atlante $A$, sia $A^+$ l'insieme delle carte $(U, \psi)$ tali che $A \bigcup \{(U, \psi)\}$ è ancora un'atlante. $A^+$ è un'atlante massimale generato da $A$. Un'atlante massimale dell'insieme $M$ è chiamato struttura differenziabile su $M$.
 \begin{definition}
-Una varietà d-dimensionale è una coppia $(M, A^+)$, dove $M$ è un insieme e $A^+$ è un atlas massimale su $M$ in $R^d$, tale che la topologia indotta da $A^+$ è di hausdorff.
+Una varietà differenziabile $d$-dimensionale è una coppia $(M, A^+)$, dove $M$ è un insieme e $A^+$ è un atlante massimale su $M$ in $R^d$, tale che la topologia indotta da $A^+$ è di Hausdorff.
 \end{definition}
-Data una carta $\psi$ su $M$, l'inverso $\psi^{-1}$ è chiamata parametrizzazione locale di $M$.
+Data una carta $\psi$ su $M$, l'inversa $\psi^{-1}$ è chiamata parametrizzazione locale di $M$.
 \subsubsection{Vettori Tangenti}
-Riprendendo il concetto di derivata direzionale possiamo generalizzarla per un funzione $f$ definita su una varietà, sustituendo $t \mapsto (x + t\eta)$ con una curva su $M$ attraverso $x \in M$ (punto di derivazione) $(\gamma (0) = x)$ questo porta ad una derivata direzionale ben definita $\frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$. Formalmente, sia $M$ una varietà e $\gamma$ una mappa differenziabile $\gamma : R \to M | t \mapsto \gamma (t)$ detta curva in $M$, data, una funzione $f$ a valori reali definita su $M$, la funzione $f \circ \gamma : t \mapsto f(\gamma (t))$ è una funzione differenziabile da $R$ in $R$ con una ben definita deerivata.\\
-Sia $x \in M$; $\gamma (0) = x$ allora $F_{x}(M)$ è l'insieme delle funzioni reali differenziabili definite in un intorno di $x$. Il mapping $\dot{\gamma} (0)$ da $F_x(M)$ in $R$ è definito come: $\dot{\gamma} (0) f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$ con $f \in F_x(M)$; é chiamato vettore tangente alla curva $\gamma$ in $t=0$.
+Riprendendo il concetto di derivata direzionale possiamo generalizzarla per un funzione $f$ definita su una varietà, sustituendo $t \mapsto (x + t\eta)$ con una curva, $\gamma: U \to M$, con $0 \in U$ ed $\gamma (0) = x$, attraverso $x \in M$ (punto di derivazione) questo porta ad una derivata direzionale ben definita $\frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$. Formalmente, sia $M$ una varietà e $\gamma$ una mappa differenziabile $\gamma : U \to M | t \mapsto \gamma (t)$ detta curva in $M$, data, una funzione $f$ a valori reali definita su $M$, la funzione $f \circ \gamma : t \mapsto f(\gamma (t))$ è una funzione differenziabile da $\mathbb{R}$ in $\mathbb{R}$ con una ben definita derivata.\\
+Sia $x \in M$; $\gamma (0) = x$ allora indichiamo con $\mathcal{F}_{x}(M)$ l'insieme delle funzioni reali differenziabili definite in un intorno di $x$. Il mapping $\dot{\gamma} (0)$ da $\mathcal{F}_x(M)$ in $R$ è definito come: $\dot{\gamma} (0) f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$ con $f \in F_x(M)$; é chiamato vettore tangente alla curva $\gamma$ in $t=0$.
 \begin{definition}[Vettore Tangente]
-Un vettore tangente $\epsilon_x$ ad una varietà $M$ in un punto $x \in M$ è una mappa da $F_x(M)$ in $R$ tale che esiste una curva $\gamma$ a valori in $M$ con $\gamma (0) = x$ e che soddisfa,\\
-\[\epsilon_xf = \dot{\gamma (0)} f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0} \quad \forall f \in F_x(M).\]\\
-Tale curva $\gamma$ è detta realizzare il vettore tangente $\epsilon_x$
+Un vettore tangente $\varepsilon_x$ ad una varietà $M$ in un punto $x \in M$ è una mappa da $F_x(M)$ in $R$ tale che esiste una curva $\gamma$ a valori in $M$ con $\gamma (0) = x$ e che soddisfa,\\
+\[\varepsilon_xf = \dot{\gamma (0)} f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0} \quad  f \in F_x(M).\]\\
 \end{definition}
+Tale curva $\gamma$ realizza il vettore tangente $\varepsilon_x$.
 \begin{definition}[Spazio Tangente]
-Uno spazio tangente ad $M$ in $x$ denominato come $T_xM$ è l'insieme di tutti i vettori tangenti ad $M$ in $x$. Questo insieme ammette una struttura di spazio vettoriale come segue: date $\dot{\gamma}_1 (0)$ e $\dot{\gamma}_2 (0)$ in $T_xM$ e $a, b$ in $R$ allora $(a \dot{\gamma}_1 (0) + b \dot{\gamma}_2 (0)) f = a (\dot{\gamma}_1 (0) f) + b (\dot{\gamma}_2 (0) f)$
+Lo spazio tangente ad $M$ in $x$ denominato come $T_xM$ è l'insieme di tutti i vettori tangenti ad $M$ in $x$. Questo insieme ammette una struttura di spazio vettoriale come segue: date $\dot{\gamma}_1 (0)$ e $\dot{\gamma}_2 (0)$ in $T_xM$ e $a, b$ in $R$ allora,\\
+\[(a \dot{\gamma}_1 (0) + b \dot{\gamma}_2 (0)) f = a (\dot{\gamma}_1 (0) f) + b (\dot{\gamma}_2 (0) f).\]
 \end{definition}
-Lo spazio tangente $T_xM$ mette a disposizione un'approssimazione locale di spazio vettoriale della varietà. Perciò tramite le Retrazioni possiamo effettuare ottimizzazione sullo spazio vettoriale $T_xM$.
-\begin{definition}[Tangent Bundle]
+Lo spazio tangente $T_xM$ mette a disposizione un'approssimazione locale della varietà tramite uno spazio vettoriale. Perciò tramite le retrazioni definite nella sezione \ref{retraction} possiamo effettuare ottimizzazione sullo spazio vettoriale $T_xM$.
+\begin{definition}[Fibrato tangente]
 Data una varietà $M$, sia $TM$ l'insieme di tutti i vettori tangenti ad $M$.\\
 \[TM = \bigcup_{x \in M} T_xM.\]
 \end{definition}
-Sia $P:M \to N$ una mappa liscia tra due varietà $M$ ed $N$. sia $\epsilon_x$ un vettore tangente in un punto $x$ di $M$, si può far vedere che la mappa $DP(x)[\epsilon_x]$ da $F_{P(x)}(N)$ in $R$ è definita da:\\
-\[(DP(x)[\epsilon_x])f = \epsilon_x(f \circ P),\]\\
+Sia $P:M \to N$ una mappa differenziabile tra due varietà $M$ ed $N$. sia $\varepsilon_x$ un vettore tangente in un punto $x$ di $M$, si può far vedere che $DP(x)[\varepsilon_x]$ da $F_{P(x)}(N)$ in $\mathbb{R}$ è definita da:\\
+\[(DP(x)[\varepsilon_x])f = \varepsilon_x(f \circ P),\]\\
 è un vettore tangente ad $N$ in $P(x)$.\\
-La mappa $DP(X) : T_xM \to T_{P(x)}N | \epsilon_x \mapsto DP(x)[\epsilon_x]$ è una mappa lineare chiamata \emph{differenziale} di P in x.
-\subsubsection{Metriche distanze e e gradienti Riemanniani}
-I vettori tangenti ad una varietà generalizzano la nozione di derivata direzionale. Questo può essere fatto munendo lo spazio tangente $T_xM$ con un prodotto interno $\langle \cdot, \cdot \rangle_x$ bilineare, definito positivo e simmetrico. Il prodotto interno induce una norma $\parallel \epsilon_x \parallel_x = \sqrt{\langle \epsilon_x, \epsilon_x \rangle_x}$ sun $T_xM$. Una varietà il cui spazio tangente è munito di un prodotto interno prende il nome di varietà riemanniana $(M, g)$ con $g$ metrica riemanniana.\\
+La mappa $DP(X) : T_xM \to T_{P(x)}N | \varepsilon_x \mapsto DP(x)[\epsilon_x]$ è una mappa lineare chiamata differenziale di $P$ in $x$.
+\subsubsection{Metriche distanze e gradienti riemanniani}
+I vettori tangenti ad una varietà generalizzano la nozione di derivata direzionale. Questo può essere fatto munendo lo spazio tangente $T_xM$ con un prodotto interno $\langle \cdot, \cdot \rangle_x$ bilineare, definito positivo e simmetrico. Il prodotto interno induce una norma $\| \varepsilon_x \|_x = \sqrt{\langle \epsilon_x, \epsilon_x \rangle_x}$ su $T_xM$. Una varietà il cui spazio tangente è munito di un prodotto interno, che dipende in modo differenziabile da $x$, prende il nome di varietà riemanniana $(M, g)$ con $g$ metrica riemanniana.\\
 La lunghezza di una curva $\gamma:[a,b] \to M$ in una varietà riemanniana $(M, g)$ è definita da,\\
-\[L(\gamma) = \int_a^b \sqrt{g(\dot{\gamma (t)}, g(\dot{\gamma (t)}))}.\]\\
-La distanza riemanniana in una varietà riemanniana connessa $(M,g)$ è $dist: M \cdot M \to R | dist(x,y) \mapsto inf_{\gamma \in \Gamma}(L(\gamma))$, dove $\Gamma$ è l'insieme di tutte le curve in $M$ che connettono $x$ ed $y$.\\
+\[L(\gamma) = \int_a^b \sqrt{g(\dot{\gamma} (t), g(\dot{\gamma} (t)))}.\]\\
+La distanza riemanniana in una varietà riemanniana connessa $(M,g)$ è $\mathrm{dist}: M \times M \to \mathbb{R} \, | \, \mathrm{dist}(x,y) \mapsto \inf_{\gamma \in \Gamma}(L(\gamma))$, dove $\Gamma$ è l'insieme di tutte le curve in $M$ che connettono $x$ ed $y$.\\
 Sia $f$ la solita funzione liscia definita su $(M,g)$, il gradiente riemanniano di $f$ in $x$ è definito come l'elemento di $T_xM$ che soddisfa,\\
 \[\langle \nabla^{(R)} f(x), \epsilon \rangle_x = Df(x)[\epsilon].\]\\
-Sia $M$ una sottovarietà immersa di una varietà riemanniana $\hat{M}$ siccome ogni spazio tangente $T_xM$ può essere trattato come sottospazio di $T_x\hat{M}$ la metrica $\hat{g}$ di $\hat{M}$ induce una metrica $g$ su $M$, $g_x(\epsilon, c) = \hat{g}_x(\epsilon, c)$ con $\epsilon, c \in T_xM$, perciò $M$ è una sotto varietà riemanniana.
+Sia $M$ una sottovarietà immersa di una varietà riemanniana $\widehat{M}$ siccome ogni spazio tangente $T_xM$ può essere trattato come sottospazio di $T_x\widehat{M}$ la metrica $\widehat{g}$ di $\widehat{M}$ induce una metrica $g$ su $M$, $g_x(\xi, \eta) = \widehat{g}_x(\xi, \eta)$ con $\xi, \eta \in T_xM$, perciò $M$ è una sotto varietà riemanniana.
 \subsection{Topologia}
 Una topologia su un insieme $X$ è una collezione $T$ di sottoinsiemi di $X$ chiamati insiemi aperti, tali che:
 \begin{itemize}
     \item $X$ e $\emptyset$ appartengono a $T$.
     \item L'unione di elementi di qualsiasi sotto collezione di $T$ è in $T$.
-    \item L'intersezione di elementi di qualsiasi sotto collezione di $T$ è in $T$.
+    \item L'intersezione di elementi di qualsiasi sotto collezione finita di $T$ è in $T$.
 \end{itemize}
 Uno spazio topologico è una coppia $(X,T)$ dove $X$ è un insieme e $T$ è una topologia su $X$.
 \begin{definition}[Hausdorff]
-Un insieme $X$ è $T_2$ o di Hausdorff se ogni coppia di punti distinti di $X$ hanno un intorno distinto.
+Un insieme $X$ è $T_2$ o di Hausdorff se ogni coppia di punti distinti di $X$ ammettono intorni distinti.
 \end{definition}
 Se $X$ è di Hausdorff allora ogni sequenza di punti di $X$ converge ad al più un punto di $X$.
-\subsection{Definizioni Utili}
+\subsection{Miscellanea}
 \begin{definition}[Positività]
-Sia $A \in R^{n*n}$ è definita positiva se è simmetrica e se $v'Av > 0$ se $v$ è un vettore $\in R^n - {0}$, con $v = 0$ è diretto che $v'Av = 0$.
+Sia $A \in \mathbb{R}^{n \times n}$ è definita positiva se è simmetrica e se $v'Av > 0$ se $v$ è un vettore $\in \mathbb{R}^n \setminus \{0\}$.
 \end{definition}
+Si osservi che se $v = 0$ allora che $v'Av = 0$.
 \begin{definition}[Convessità]
-Una funzione $f:\Omega \to R$ con $\Omega \leq V$, $V$ (spazio vettoriale) allora è definita convessa se: $(f((\lambda)v + (1 - \lambda)w) \leq \lambda f(v) + (1 - \lambda)f(w)$, per $\lambda \in [0;1]$ e $v, w \in \Omega$.
+Una funzione $f:\Omega \to \mathbb{R}$ con $\Omega \subset V$, $V$ (spazio vettoriale) ed $\Omega$ convesso, è definita convessa se: $(f((\lambda)v + (1 - \lambda)w) \leq \lambda f(v) + (1 - \lambda)f(w)$, per $\lambda \in [0;1]$ e $v, w \in \Omega$.
 \end{definition}
 \begin{definition}[Derivate Parziali]
-Data una funzione $f:V \to R$, $V$ (spazio vettoriale), allora una derivata parziale su $x \in V$ è definita come:\\
+Data una funzione $f:V \to \mathbb{R}$, $V$ (spazio vettoriale), allora una derivata parziale su $x \in V$ è definita come:\\
 \[\frac{\partial f(x)}{\partial x_i} = \lim_{h \to 0} \frac{f(x + h e_i) - f(x)}{h};\]\\ 
 con $x_i$ componente i-esima di $x$ ed $e_i$ i-esimo vettore della base canonica.\\
-Se una funzione è differenziabile in $x$ allora tutte le derivate parziali esistono in $x$.
 \end{definition}
+Se una funzione è differenziabile in $x$ allora tutte le derivate parziali esistono in $x$.
 \begin{definition}[Punto di accumulazione]
-Diciamo che $x \in R$ è un punto di accumulazione per un insieme $E \subset R$ se comunque scelto un intorno $B(x, \epsilon)$, risulta che $B(x, \epsilon)$ contiene almeno un punto di $E$ diverso da $x$.
+Diciamo che $x \in \mathbb{R}$ è un punto di accumulazione per un insieme $E \subset \mathbb{R}$ se comunque scelto un intorno $B(x, \epsilon)$, risulta che $B(x, \varepsilon)$ contiene almeno un punto di $E$ diverso da $x$.
 \end{definition}
 \begin{definition}[Gradiente]
-Consideriamo una funzione $f$ definita su un insieme aperto $A \subset R^n$ e sia $x \in A$ se esistono in $x$ le derivate parziali rispetto ad $\{x_i\}_{i=1...n}$ allora è possibile costruire un vettore che ha per componenti le derivate perziali, perciò il gradiente è definito come.\\
-\[\nabla f = [\frac{\partial f(x)}{\partial x_1}, ..., \frac{\partial f(x)}{\partial x_n}].\]
-Inoltre per il teorema della formula del gradiente sappiamo che, dato un versore $v$ esiste la derivata direzionale $f_v$ in $x$ e che $f_v(x) = \nabla f(x) \cdot v$.
+Consideriamo una funzione $f$ definita su un insieme aperto $A \subset \mathbb{R}^n$ e sia $x \in A$ se esistono in $x$ le derivate parziali rispetto ad $\{x_i\}_{i=1, ..., n}$ allora è possibile costruire un vettore che ha per componenti le derivate parziali, perciò il gradiente è definito come.\\
+\[\nabla f(x) = \left[\frac{\partial f(x)}{\partial x_1}, ..., \frac{\partial f(x)}{\partial x_n}\right].\]
 \end{definition}
-\subsubsection{Teorema di Taylor}
-Il teorema di Taylor è un teorema che fornisce una sequenza di approssimazioni di una funzione differenziabile attorno ad un dato punto mediante i polinomi di Taylor, ovvero polinomi i cui coefficienti dipendono solo dalle derivate della funzione nel punto.
-Diamo un esempio pratico di approssimazione di Taylor del secondo ordine di una funzione a due variabili.\\
-\begin{equation*}\begin{gathered}
-f(x_0+h, y_0+k) = f(x_0, y_0) + f_x(x_0, y_0)h + f_y(x_0, y_0)k + \\ \frac{1}{2}[f_{xx}(x_0, y_0)h^2 + f_{xy}(x_0, y_0)hk + f_{yy}(x_0, y_0)k^2] + \\
-R(h, k).
-\end{gathered}\end{equation*}
-con $R(h, k) \in o(\parallel (h, k) \parallel^2)$.
+Inoltre per la formula del gradiente sappiamo che, dato un versore $v$ esiste la derivata direzionale $f_v$ in $x$ e che $f_v(x) = \nabla f(x) \cdot v$.
 \newpage
+
+\bibliographystyle{unsrt}
+\bibliography{bibliografia}
+
+\end{document}
+
 \begin{thebibliography}{9}
 \bibitem{Gradient Descent in Hyperbolic Space}
 Benjamin Wilson and Matthias Leimeister.
@@ -574,7 +578,7 @@ Maximilian Nikel and Douwe Kiela.
 
 \bibitem{Iannazzo} 
 Bruno Iannazzo and Margherita Porcelli.
-\textit{THE RIEMANNIAN BARZILAI-BORWEIN METHOD WITH NONMONOTONE LINE SEARCH AND THE MATRIX GEOMETRIC MEAN COMPUTATION}.
+\textit{The Riemannian BARZILAI-BORWEIN METHOD WITH NONMONOTONE LINE SEARCH AND THE MATRIX GEOMETRIC MEAN COMPUTATION}.
 
 \bibitem{GeoOpt} 
 GeoOpt: Python Library for Manifold Optimization,
@@ -585,5 +589,3 @@ Manopt: Python Library for Manifold Optimization,
 \\\texttt{https://www.manopt.org/}
 
 \end{thebibliography}
-
-\end{document}
