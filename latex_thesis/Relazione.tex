@@ -14,6 +14,9 @@
 \newtheorem{prop}{Proposizione}
 \newtheorem{corollary}{Corollario}
 
+\DeclareMathOperator\arccosh{arccosh}
+\DeclareMathOperator\arcsinh{arcsinh}
+
 \begin{document}
 
 \begin{titlepage} %crea l'enviroment
@@ -259,108 +262,108 @@ Sia $\{x^k\}$ una sequenza finita di iterate generata da ALS. Assumiamo che l'in
 \end{corollary}
 
 \section{Disco di poincare e Iperboloide}
-Lo spazio iperbolico può essere definito in vari modi equivalenti, noi descriveremo l'iperboloide ed il disco di poincare, ciascuno di questi è un modello dello spazio iperbolico, nessuno dei due è prevalente in letteratura.\\
+Lo spazio iperbolico può essere definito in vari modi equivalenti, noi descriveremo l'iperboloide ed il disco di Poincaré, ciascuno di questi è un modello dello spazio iperbolico, nessuno dei due è prevalente in letteratura.\\
 \begin{figure}[t] %inserisce le figure
     \centering\includegraphics[width=0.50\textwidth]{HyperboloidProjection.png}
     \caption{Rappresentazione della proiezione stereografica tra disco e iperboloide}
 \end{figure}
 \subsection{Iperboloide}
-Possiamo definire $H^n$ come il luogo dei punti di norma -1 in $R^{n:1}$, dotato dell'usuale prodotto di minkowski $(\langle u, v \rangle_{n:1} = \sum_{i=1}^{n} u_iv_i - u_{n+1}v_{n+1}; \quad u,v \in R^{n+1})$, questo luogo di punti ha in realta due componenti connesse, noi ne scegliamo una.\\
+Possiamo definire $\mathbb{H}^n$ come il luogo dei punti tali che $\langle \cdot, \cdot \rangle_{n:1} = -1$. Sia $\mathbb{R}^{n:1}$ l'insieme $\mathbb{R}^{n+1}$ dotato dell'usuale prodotto di Minkowski $(\langle u, v \rangle_{n:1} = \sum_{i=1}^{n} u_iv_i - u_{n+1}v_{n+1}; \quad u,v \in \mathbb{R}^{n+1})$, questo luogo di punti ha in realta due componenti connesse, noi ne scegliamo una.\\
 Diamo la definizione di tale modello dello spazio iperbolico.
 \begin{definition}[Iperboloide]
 Il modello dell'iperboloide è definito nel modo seguente.\\
-\[H^n = \{x \in R^{n+1} | \langle x, x \rangle_{n:1} = -1; \quad x^{n+1} > 0 \}.\]
+\[\mathbb{H}^n = \{x \in R^{n+1} | \langle x, x \rangle_{n:1} = -1; \quad x^{n+1} > 0 \}.\]
 \end{definition}
-Lo spazio tangente in un punto $p \in H^n$ è $T_pH^n = \{x \in R^{n:1} | \langle p,x \rangle_{n:1} = 0\}$.\\
-Possiamo asserire che l'iperboloide è una \textbf{varietà riemanniana}. Andiamo ora ad esplicitare gli strumenti necessari per effettuare ottimizzazione su questa varietà, le formule riportate di seguito, tra cui la derivata della funzione distanza, sono state riprese da \cite{Wilson}
+Si può dimostrare che lo spazio tangente in un punto $p \in \mathbb{H}^n$ è $T_p\mathbb{H}^n \approx \{x \in \mathbb{R}^{n:1} \, | \, \langle p,x \rangle_{n:1} = 0\}$. Il prodotto di Minkowski è definito positivo su $T_p\mathbb{H}^n$ e dunque induce una norma $\| \cdot \|_{n:1} = \sqrt{\langle \cdot, \cdot \rangle_{n:1}}$, perciò l'iperboloide è una \textbf{varietà riemanniana}.\\
+Andiamo ora ad esplicitare gli strumenti necessari per effettuare ottimizzazione su questa varietà, le formule riportate di seguito, tra cui la derivata della funzione distanza, sono state riprese da \cite{Wilson}
 \subsubsection{Metrica}
-La metrica, definita nel \textit{Tangent Bundle} dell'iperboloide, è la metrica indotta dal prodotto di Minkowski già esplicitato.
+La metrica, definita nel \textit{Fibrato Tangente} dell'iperboloide, è la metrica indotta dal prodotto di Minkowski già esplicitato.
 \subsubsection{Distanza}
-La distanza tra due punti dell'iperboloide rappresenta la lunghezza della geodedica che unisce i due punti, è definita come segue.\\
-\[d_{H^n} (u,v) = arccosh(-\langle u, v \rangle_{n:1}); \quad u,v \in H^n.\]
+La distanza tra due punti dell'iperboloide rappresenta la lunghezza della geodedica che unisce i due punti, si può dimostrare che vale.\\
+\[d_{\mathbb{H}^n} (u,v) = \arccosh (-\langle u, v \rangle_{n:1}); \quad u,v \in \mathbb{H}^n.\]
 \subsubsection{Mappa Esponenziale}
-La mappa esponenziale definita su $p \in H^n$ e $v \in T_pH^n$. E' definita come segue.\\
+La mappa esponenziale definita su $p \in \mathbb{H}^n$ applicata al vettore $v \in T_p\mathbb{H}^n$. \'E.\\
 \begin{equation*}\begin{gathered}
-Exp_p(v) = cosh(\parallel v \parallel_{n:1})p + sinh(\parallel v \parallel_{n:1}) \frac{v}{\parallel v \parallel_{n:1}}.
+Exp_p(v) = cosh(\| v \|_{n:1})p + sinh(\| v \|_{n:1}) \frac{v}{\| v \|_{n:1}}.
 \end{gathered}\end{equation*}
 
 \subsubsection{Gradiente della funzione distanza}
-La deifinize dell'iperboloide e dello spazio di minkowski nel quale è costruito ci aiuta nel calcolo del gradiente della funzione distanza.\\
-Data una funzione costo $E$ qualsiasi possiamo calcolarne il gradiente in un punto $p \in H^n$, anch'esso arbitrario, passando dapprima per il gradiente definito nell'ambiente, in tal caso lo spazio di minkowski, ricordiamo che quest'ultimo è cosi definito.\\
-\[\nabla_{p}^{R^{n:1}} E = (\frac{\partial E}{\partial x_1}|_p, ..., \frac{\partial E}{\partial x_n}|_p, -\frac{\partial E}{\partial x_{n+1}}|_p).\]\\
-Una volta calcolato il gradiente nell'ambiente procediamo a proiettarlo nello spazio tangente del punto $p \in H^n$ come segue.\\
-\[\nabla_{p}^{H^n} E = \nabla_{p}^{R^{n:1}} E + \langle p, \nabla_{p}^{R^{n:1}} E \rangle_{n:1} p.\]\\
-Relativamente al problema della media di fréchet, che andremo ad esplicitare, definiamo la seguente formula la quale rappresenta il gradiente su spazio di minkowski della funzione distanza.\\
-\[\nabla_u^{R^{n:1}} d_{H^n}(u,v) = - (\langle u,v \rangle_{n:1}^2 - 1)^{-1/2} v.\]
+La deifinize dell'iperboloide e dello spazio di Minkowski nel quale è costruito ci aiuta nel calcolo del gradiente della funzione distanza.\\
+Data una funzione costo $E:\mathbb{H}^n \to \mathbb{R}$ differenziabile, possiamo calcolarne il gradiente in un punto $p \in \mathbb{H}^n$, passando dapprima per il gradiente definito nell'ambiente, che nel nostro caso è lo spazio di Minkowski. Ricordiamo che quest'ultimo è cosi definito.\\
+\[\nabla_{p}^{\mathbb{R}^{n:1}} E = \left (\frac{\partial E}{\partial x_1}|_{x=p}, ..., \frac{\partial E}{\partial x_n}|_{x=p}, -\frac{\partial E}{\partial x_{n+1}}|_{x=p} \right).\]\\
+Una volta calcolato il gradiente nell'ambiente procediamo a proiettarlo nello spazio tangente a $\mathbb{H}^n$ nel punto $p \in \mathbb{H}^n$ come segue.\\
+\[\nabla_{p}^{\mathbb{H}^n} E = \nabla_{p}^{\mathbb{R}^{n:1}} E + \langle p, \nabla_{p}^{\mathbb{R}^{n:1}} E \rangle_{n:1} p.\]\\
+Relativamente al problema della media di Fréchet, che andremo ad esplicitare, si ha la seguente formula la quale rappresenta il gradiente su spazio di Minkowski della funzione distanza.\\
+\[\nabla_u^{\mathbb{R}^{n:1}} d_{\mathbb{H}^n}(u,v) = - (\langle u,v \rangle_{n:1}^2 - 1)^{-1/2} v.\]
 \subsection{Disco di Poincaré}
-Andiamo ora a definire l'altro modello dello spazio iperbolico definito disco di Poicaré, definito come l'insieme dei punti di norma strettamente minore di 1 in $\mathbb{R}^n$.\\
+Andiamo ora a definire l'altro modello dello spazio iperbolico definito disco di Poincaré, definito come l'insieme dei punti di norma strettamente minore di 1 in $\mathbb{R}^n$.\\
 Di seguito ne riportiamo una definizione formale.\\
 \begin{definition}[Disco di Poincaré]
-Il modello del disco di poincare è definito nel modo seguente\\
-\[ D^n = \{x \in \mathbb{R}^n | \parallel x \parallel < 1\} \]\\
+Il modello del disco di Poincaré è definito nel modo seguente\\
+\[ \mathbb{D}^n = \{x \in \mathbb{R}^n \, | \, \| x \| < 1\} \]\\
 \end{definition}
-Essendo $D^n$ un sottoinsieme di $\mathbb{R}^n$ lo spazio tangente in ogni punto di $D^n$ è $\mathbb{R}^n$. Possiamo asserire che il disco di Poincaré è una \textbf{varietà riemanniana}. Come fatto per l'iperboloide andiamo ad esplicitare i vari strumenti necessari per effettuare ottimizzazione. Le formule riportate sono state riprese da \cite{GeoOpt}, \cite{Ganea}, mentre per il calcolo del gradiente della funzione distanza abbiamo fatto riferimento a \cite{Nickel}.
+Essendo $\mathbb{D}^n$ un sottoinsieme di $\mathbb{R}^n$ lo spazio tangente in ogni punto di $\mathbb{D}^n$ è $\mathbb{R}^n$, è possibile definire il prodotto scalare $\langle \cdot, \cdot \rangle_x$, esplicitato come metrica nella sottosezione successiva, tale prodotto porta il disco di Poincaré ad essere una \textbf{varietà riemanniana}.\\
+Come fatto per l'iperboloide andiamo ad esplicitare i vari strumenti necessari per effettuare ottimizzazione. Le formule riportate sono state riprese da \cite{GeoOpt}, \cite{Ganea}, mentre per il calcolo del gradiente della funzione distanza abbiamo fatto riferimento a \cite{Nickel}.
 \subsubsection{Metrica}
-La metrica, definita nello spazio tangente del disco di poincaré $T_pD^n$ rispetto ad un punto $p \in D^n$, è la seguente.\\
-\[g^D = \lambda_p^2 g^E \mbox{; con } \lambda_p = \frac{2}{1- \parallel p \parallel^2} \mbox{ e con } g^E \mbox{ la metrica euclidea}.\]
+La metrica, definita nello spazio tangente del disco di poincaré $T_p\mathbb{D}^n$ rispetto ad un punto $p \in \mathbb{D}^n$, è la seguente.\\
+\[g^\mathbb{D} = \lambda_p^2 g^E \mbox{; con } \lambda_p = \frac{2}{1- \parallel p \parallel^2} \mbox{ e con } g^E \mbox{ la metrica euclidea}.\]
 \subsubsection{Distanza}
 La distanza tra due punti del disco di Poincaré rappresenta la lunghezza della geodedica che unisce i due punti, è definita come segue.\\
-\[d_{D^n}(u, v) = arccosh(1 + \frac{\parallel u - v\parallel^2}{(1-\parallel u \parallel^2)(1-\parallel v \parallel^2)})\]
+\[d_{\mathbb{D}^n}(u, v) = \arccosh \left(1 + \frac{\| u - v\|^2}{(1-\| u \|^2)(1-\| v \|^2)} \right)\]
 \subsubsection{Mappa Esponenziale}
-La mappa esponenziale definita su $p \in D^n$ e $v \in T_pD^n$. E' definita come segue.\\
-\begin{equation*}\begin{gathered}
-Exp_p(v) = \\ \frac{\lambda_p (cosh(\lambda_p \parallel v \parallel) + \langle p,\frac{v}{\parallel v \parallel} \rangle sinh(\lambda_p \parallel v \parallel))p}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)} + \\ \frac{\frac{1}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel) v}{1 + (\lambda_p - 1) cosh(\lambda_p \parallel v \parallel) + \lambda_p \langle p, \frac{v}{\parallel v \parallel} sinh(\lambda_p \parallel v \parallel)}
-\end{gathered}\end{equation*}
+La mappa esponenziale definita su $p \in \mathbb{D}^n$ e $v \in T_p\mathbb{D}^n$. E' definita come segue.\\
+\begin{equation*}\begin{split}
+\exp_p(v) &= \frac{\lambda_p (\cosh(\lambda_p \| v \|) + \langle p,\frac{v}{\| v \|} \rangle \sinh(\lambda_p \| v \|))p}{1 + (\lambda_p - 1) \cosh(\lambda_p \| v \|) + \lambda_p \langle p, \frac{v}{\| v \|} \sinh(\lambda_p \| v \|)} \\
+&+ \frac{\frac{1}{\| v \|} \sinh(\lambda_p \| v \|) v}{1 + (\lambda_p - 1) \cosh(\lambda_p \| v \|) + \lambda_p \langle p, \frac{v}{\| v \|} \sinh(\lambda_p \| v \|)}
+\end{split}\end{equation*}
 \subsubsection{Gradiente della funzione distanza}
-Dati $u,v \in D^n$ la formula del gradiente riemanniano della funzione distanza è dato da.\\
+Dati $u,v \in \mathbb{D}^n$ la formula del gradiente riemanniano della funzione distanza è dato da.\\
 \begin{equation*}\begin{gathered}
-\nabla_u^{E} d(u,v) = \frac{4}{b \sqrt{c^2 - 1}} (\frac{(\parallel v \parallel^2 - 2\langle u,v \rangle + 1)v}{a^2} - \frac{v}{a}) \\ \mbox{ con } a = 1 - \parallel u \parallel^2 \mbox{ , } b = 1 - \parallel v \parallel^2 \mbox{ , } c = 1 + \frac{2}{ab} \parallel u - v \parallel^2
+\nabla_u^{E} d(u,v) = \frac{4}{b \sqrt{c^2 - 1}} \left(\frac{(\| v \|^2 - 2\langle u,v \rangle + 1)v}{a^2} - \frac{v}{a}\right) \\ \mbox{ con } a = 1 - \| u \|^2 \mbox{ , } \quad b = 1 - \| v \|^2 \mbox{ , } \quad c = 1 + \frac{2}{ab} \| u - v \|^2
 \end{gathered}\end{equation*}
-Sappiamo che per per ricavare il gradiente riemanniano dal gradiente euclideo è sufficiente riscalare $\nabla^E$ per l'inverso della metrica riemanniana, perciò,\\ \[\nabla_u^{D^n} d(u,v) = \frac{\nabla_u^{E} d(u,v)}{\lambda_u^2}.\]
+Sappiamo che per per ricavare il gradiente riemanniano dal gradiente euclideo è sufficiente riscalare $\nabla^E$ per l'inverso della metrica riemanniana, perciò,\\ \[\nabla_u^{\mathbb{D}^n} d(u,v) = \frac{\nabla_u^{E} d(u,v)}{\lambda_u^2}.\]
 \subsection{Iperboloide come modello conforme} \label{centroide}
-Come inizialmente accennato le due varietà trattate fin'ora sono due modelli conformi dello spazio iperbolico ovvero, esiste un diffeomorfismo invertibile conforme (mantiene gli angoli ma non le lunghezze) che porta da una varietà all'altra. Il diffeomorfismo in questione è la proieizone stereografica $\rho$ definita come segue.\\\\
-\[\rho : H^n \to D^n\]
-\[\rho(x) = \frac{1}{x_{n+1} + 1}(x_1, ..., x_n) \mbox{ ; con } x \in H^n\]
-\[\rho^{-1} : D^n \to H^n\]
-\[\rho^{-1}(y) = \frac{2}{1 - r}(y_1, ..., \frac{1+r}{2}) \mbox{ ; con } r = \parallel y \parallel^2 \mbox{ e } y \in D^n\]\\
-A questo punto facciamo vedere che vale la seguente uguaglianza, ci sarà utile nella sezione successiva.\\
-\[d_{D^n}(a, b) = d_{H^n}(\rho^{-1}(a), \rho^{-1}(b))\]\\
-Daremo due risultati, dimostreremo che l'uguaglianza è valida, dando dapprima una dimostrazione per $n = 2$, e poi la generalizzeremo per $n$ qualsiasi.\\\\
-Caso $n=2$, siano $a, b \in D^2$.\\
-\[a = (a_1, a_2)\]
-\[b = (b_1, b_2)\]
+Come inizialmente accennato le due varietà trattate finora sono due modelli conformi dello spazio iperbolico ovvero, esiste un diffeomorfismo invertibile conforme (mantiene gli angoli ma non le lunghezze) che porta da una varietà all'altra. Il diffeomorfismo in questione è la proieizone stereografica $\rho$ definita come segue.\\\\
+\[\rho : \mathbb{H}^n \to \mathbb{D}^n \, | \, x \to \frac{1}{x_{n+1} + 1}(x_1, ..., x_n),\]
+\[\rho^{-1} : \mathbb{D}^n \to \mathbb{H}^n \, | \, y \to \frac{2}{1 - r}(y_1, ..., \frac{1+r}{2}) \mbox{ ; con } r = \| y \|^2, \]\\
+A questo punto facciamo vedere che vale la seguente uguaglianza, che sarà utile nella sezione successiva.\\
+\[d_{\mathbb{D}^n}(a, b) = d_{\mathbb{H}^n}(\rho^{-1}(a), \rho^{-1}(b))\]\\
+Dimostreremo che l'uguaglianza è valida, dando dapprima una dimostrazione per $n = 2$, e poi la generalizzeremo per $n$ qualsiasi.\\\\
+Caso $n=2$, siano $a, b \in \mathbb{D}^2$.\\
+\[a = (a_1, a_2),\]
+\[b = (b_1, b_2),\]
+Applicando l'inversa della proiezione stereografica si ottiene,
 \[\rho^{-1}(a) = \frac{2}{1-r_a}(a_1, a_2, \frac{1 + r_a}{2})\]
 \[\rho^{-1}(b) = \frac{2}{1-r_b}(b_1, b_2, \frac{1 + r_b}{2})\]
 con $r_a = (a_1^2 + a_2^2)$ e $r_b = (b_1^2 + b_2^2)$\\\\
-\begin{equation*}\begin{gathered}
-d_{H^n}(\rho^{-1}(a), \rho^{-1}(b)) = \\
-arccosh(-\langle (\frac{2a_1}{1-r_a}, \frac{2a_1}{1-r_a}, \frac{1+r_a}{1-r_a}), (\frac{2b_1}{1-r_b}, \frac{2b_1}{1-r_b}, \frac{1+r_b}{1-r_b}) \rangle_{2:1}) =\\
-arccosh(- (\frac{4a_1b_1}{(1-r_a)(1-r_b)} + \frac{4a_2b_2}{(1-r_a)(1-r_b)} - \frac{(1+r_a)(1+r_b)}{(1-r_a)(1-r_b)}) =\\
-arccosh(\frac{(1+r_a)(1+r_b) - 4a_1b_1 - 4a_2b_2}{(1-r_a)(1-r_b)}) =\\
-arccosh(\frac{1 + r_a +r_b + r_ar_b - 4a_1b_1 - 4a_2b_2}{1 - r_a - r_b + r_ar_b}) = \\
-arccosh(\frac{1 -r_a -r_b + 2r_a + 2r_b + r_ar_b - 4a_1b_1 - 4a_2b_2}{1 - r_a - r_b + r_ar_b}) = \\
-arccosh(1 + \frac{2r_a + 2r_b - 4a_1b_1 - 4a_2b_2}{(1-r_a)(1-r_b)}) =\\
-arccosh(1 + 2 \frac{r_a + r_b - 2a_1b_1 - 2a_2b_2}{(1-r_a)(1-r_b)}) = \\
-arccosh(1 + 2\frac{\parallel a - b \parallel^2}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)}) =\\
-d_{D^n}(a, b).
-\end{gathered}\end{equation*}
+A questo punto con semplici passaggi facciamo vedere che vale la seguente.
+\begin{equation*}\begin{split}
+d_{\mathbb{H}^2}(\rho^{-1}(a), \rho^{-1}(b)) &= \arccosh(-\langle (\frac{2a_1}{1-r_a}, \frac{2a_1}{1-r_a}, \frac{1+r_a}{1-r_a}), (\frac{2b_1}{1-r_b}, \frac{2b_1}{1-r_b}, \frac{1+r_b}{1-r_b}) \rangle_{2:1})\\
+&=\arccosh(- (\frac{4a_1b_1}{(1-r_a)(1-r_b)} + \frac{4a_2b_2}{(1-r_a)(1-r_b)} - \frac{(1+r_a)(1+r_b)}{(1-r_a)(1-r_b)})\\
+&=\arccosh(\frac{(1+r_a)(1+r_b) - 4a_1b_1 - 4a_2b_2}{(1-r_a)(1-r_b)})\\
+&=\arccosh(\frac{1 + r_a +r_b + r_ar_b - 4a_1b_1 - 4a_2b_2}{1 - r_a - r_b + r_ar_b})\\
+&=\arccosh(\frac{1 -r_a -r_b + 2r_a + 2r_b + r_ar_b - 4a_1b_1 - 4a_2b_2}{1 - r_a - r_b + r_ar_b})\\
+&=\arccosh(1 + \frac{2r_a + 2r_b - 4a_1b_1 - 4a_2b_2}{(1-r_a)(1-r_b)})\\
+&=\arccosh(1 + 2 \frac{r_a + r_b - 2a_1b_1 - 2a_2b_2}{(1-r_a)(1-r_b)})\\
+&=\arccosh(1 + 2\frac{\| a - b \|^2}{(1 - \| a \|^2)(1 - \| b \|^2)})\\
+&=d_{\mathbb{D}^2}(a, b).
+\end{split}\end{equation*}
 \\\\
-Facciamo vedere ora che l'uguaglianza vale anche nel caso in cui $n$ è generico, siano $a, b \in D^n$. Procediamo facendo vedere che i due termini dell'uguaglianza rappresentano la stessa quantità.\\
+Facciamo vedere ora che l'uguaglianza vale anche nel caso in cui $n$ è generico, siano $a, b \in \mathbb{D}^n$. Procediamo facendo vedere che i due termini dell'uguaglianza rappresentano la stessa quantità.\\
 \begin{equation*}\begin{gathered}
-d_{D}(a,b) = arccosh(1 + 2\frac{\parallel a + b \parallel^2}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)})
+d_{\mathbb{D}^n}(a,b) = \arccosh(1 + 2\frac{\| a + b \|^2}{(1 - \| a \|^2)(1 - \| b \|^2)})
 \end{gathered}\end{equation*}
 \begin{equation*}\begin{gathered}
-d_{H}(\rho^{-1}(a),\rho^{-1}(b)) = arccosh(- \langle \rho^{-1}(a),\rho^{-1}(b) \rangle_{n:1})
+d_{\mathbb{H}^n}(\rho^{-1}(a),\rho^{-1}(b)) = \arccosh(- \langle \rho^{-1}(a),\rho^{-1}(b) \rangle_{n:1})
 \end{gathered}\end{equation*}
-Facciamo vedere ora, che gli argomenti della funzione arccosh, nelle due equazioni riportate, rappresentano in realtà lo stesso valore.
-\begin{equation*}\begin{gathered}
-- \langle \rho^{-1}(a),\rho^{-1}(b) \rangle_{n:1} = \\
-- \langle \frac{2}{1 - \parallel a \parallel^2} \begin{bmatrix} a \\ \frac{1 + \parallel a \parallel^2}{2} \end{bmatrix}, \frac{2}{1 - \parallel b \parallel^2} \begin{bmatrix} b \\ \frac{1 + \parallel b \parallel^2}{2} \end{bmatrix} \rangle_{n:1} = \\
-\frac{4}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)} \left( a'b - \frac{(1 + \parallel a \parallel^2)(1 + \parallel b \parallel^2)}{4} \right) = \\
-\frac{-4a'b + 1 + \parallel a \parallel^2 + \parallel b \parallel^2 + \parallel a \parallel^2 \parallel b \parallel^2}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)} = \\
-\frac{-4a'b + 1 + 2\parallel a \parallel^2 + 2\parallel b \parallel^2 - \parallel a \parallel^2 - \parallel b \parallel^2 + \parallel a \parallel^2 \parallel b \parallel^2}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)} = \\
-1 + 2 \frac{\parallel a - b \parallel^2}{(1 - \parallel a \parallel^2)(1 - \parallel b \parallel^2)}
-\end{gathered}\end{equation*}
+Facciamo vedere ora, che gli argomenti della funzione $\arccosh$, nelle due equazioni riportate, rappresentano in realtà lo stesso valore.
+\begin{equation*}\begin{split}
+- \langle \rho^{-1}(a),\rho^{-1}(b) \rangle_{n:1} &= - \langle \frac{2}{1 - \| a \|^2} \begin{bmatrix} a \\ \frac{1 + \| a \|^2}{2} \end{bmatrix}, \frac{2}{1 - \| b \|^2} \begin{bmatrix} b \\ \frac{1 + \| b \|^2}{2} \end{bmatrix} \rangle_{n:1}\\
+&=\frac{4}{(1 - \| a \|^2)(1 - \| b \|^2)} \left( a'b - \frac{(1 + \| a \|^2)(1 + \| b \|^2)}{4} \right)\\
+&=\frac{-4a'b + 1 + \| a \|^2 + \| b \|^2 + \| a \|^2 \| b \|^2}{(1 - \| a \|^2)(1 - \| b \|^2)}\\
+&=\frac{-4a'b + 1 + 2\| a \|^2 + 2\| b \|^2 - \| a \|^2 - \| b \|^2 + \| a \|^2 \| b \|^2}{(1 - \| a \|^2)(1 - \| b \|^2)}\\
+&=1 + 2 \frac{\| a - b \|^2}{(1 - \| a \|^2)(1 - \| b \|^2)}
+\end{split}\end{equation*}
 
 \subsection{Media di Fréchet e problema del centroide}
 In tale sezione formalizzeremo il concetto di \textbf{media di Fréchet}, daremo inoltre un importante congettura. Partiamo dapprima dalla seguente definizione.
@@ -372,8 +375,8 @@ La media di Fréchet è l'argomento $\Theta$ che minimizza tale funzione.
 Il problema di trovare la media di Fréchet (centroide) di $p$-punti consiste nel trovare il punto che minimizza la funzione \textbf{somma delle distanze al quadrato} definita a partire dai punti in questione, il cui minimo esiste ed è unico. Tale problema può essere risolto direttamente in uno spazio euclideo il minimo è dato dalla media aritmetica dei $p$-punti. Mentre in uno spazio iperbolico, come nel nostro caso, la soluzione non è diretta e perciò si applicano le metodologie di ottimizzazione su varietà differenziabili trattate nella sezione \ref{riemanniangd}.\\
 Per effettuare ottimizzazione abbiamo bisogno di calcolare il gradiente della funzione somma delle distanze al quadrato, avendo definito nella sezione precedente il gradiente della funzioe distanza su disco e su iperboloide, possiamo calcolare il gradiente della funzione come segue,\\
 \[\nabla f(\Theta) = \frac{2}{p} \sum_{i=1}^p d(\Theta, x^{(i)}) \cdot \nabla d(\Theta, x^{(i)}).\]\\
-Diamo ora una congettura che possiamo affermare essere corretta in funzione dell'uguaglianza $d_{D^n}(a, b) = d_{H^n}(\rho^{-1}(a), \rho^{-1}(b))$ che abbiamo verificato nella sezione precedente.\\
-Dati $a^{(i)}, \Theta \in D^n$; con $i = 1...p$ dall'uguaglianza precedente è facile notare che $\frac{1}{p}\sum_{i=1}^p d_{D^n}^2(\Theta, a^{(i)}) = \frac{1}{p}\sum_{i=1}^p d_{H^n}^2(\rho^{-1}(\Theta), \rho^{-1}(a^{(i)}))$, perciò essendo $\rho$ un diffeomorfismo se $\exists \Theta \in D^n$ per cui $\frac{1}{p}\sum_{i=1}^p d_{D^n}^2(\Theta, a^{(i)})$ è minima allora esiste $\exists \Psi \in H^n$ per cui è minima $\frac{1}{p}\sum_{i=1}^p d_{H^n}^2(\Psi, \rho^{-1}(a^{(i)}))$. Essendo inoltre $f(x) = \hat{f} = f(\rho^{-1}(x))$ allora cercare il minimo di $f$ equivale a cercare il minimo di $\hat{f} \circ \rho^{-1}$.\\
+Diamo ora una congettura che possiamo affermare essere corretta in funzione dell'uguaglianza $d_{\mathbb{D}^n}(a, b) = d_{\mathbb{H}^n}(\rho^{-1}(a), \rho^{-1}(b))$ che abbiamo verificato nella sezione precedente.\\
+Dati $a^{(i)}, \Theta \in \mathbb{D}^n$; con $i = 1...p$ dall'uguaglianza precedente è facile notare che $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{D}^n}^2(\Theta, a^{(i)}) = \frac{1}{p}\sum_{i=1}^p d_{\mathbb{H}^n}^2(\rho^{-1}(\Theta), \rho^{-1}(a^{(i)}))$, perciò essendo $\rho$ un diffeomorfismo se $\exists \Theta \in \mathbb{D}^n$ per cui $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{D}^n}^2(\Theta, a^{(i)})$ è minima allora esiste $\exists \Psi \in \mathbb{H}^n$ per cui è minima $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{H}^n}^2(\Psi, \rho^{-1}(a^{(i)}))$. Essendo inoltre $f(x) = \hat{f} = f(\rho^{-1}(x))$ allora cercare il minimo di $f$ equivale a cercare il minimo di $\hat{f} \circ \rho^{-1}$.\\
 In funzione di tale congettura possiamo trasportare il problema definito su disco di Poincaré nella varieta Iperboloide e viceversa.
 \section{Metodi utilizzati con pseudocodice ed esperimenti}
 In questa sezione andremo a definire lo pseudocodice degli algoritmi di ottimizzazione che abbiamo utilizzato per confrontare il calcolo del minimo della funzione per il calcolo della media di Fréchet sui modelli dello spazio iperbolico descritti nella sezione precedente, ovvero disco di Poincare ed iperboloide, sfrutteremo il fatto che questi due modelli sono tra di loro conformi, ovvero che esiste una mappa conforme che li lega.
@@ -449,29 +452,29 @@ Una volta ottenuto il dataset, prima di poter effettivamente confrontare gli alg
 Per quanto riguarda la scelta di $\alpha$ ottimo per l'algoritmo a passo fisso abbiamo notato sperimentalmente che le sequenze di convergenza, definite per l'implementazione su disco e su iperboloide, hanno un andamento quasi identico ed anche il medesimo punto di minimo che indica il parametro ottimo.\\
 \begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{fixed_step_parameter_poincare.png}
-    \caption{Sequenza relativa alla convergenza del'algoritmo a passo fisso implementato su disco. Punto di minimo $0.28$, valore di convergeza minimo $4.8$.}
+    \caption{Sequenza relativa alla convergenza del'algoritmo a passo fisso implementato su disco. Punto di minimo $0.27$, valore di convergeza minimo $7.35$.}
 \end{figure}
 \begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{fixed_step_parameter_hyperboloid.png}
-    \caption{Sequenza relativa alla convergenza del'algoritmo a passo fisso implementato su iperboloide. Punto di minimo $0.28$, valore di convergeza minimo $4.8$.}
+    \caption{Sequenza relativa alla convergenza del'algoritmo a passo fisso implementato su iperboloide. Punto di minimo $0.27$, valore di convergeza minimo $7.35$.}
 \end{figure}
 Analogamente, per quanto riguarda le sequenze definite dalla scelta di $\lambda$ per l'algoritmo di Armijo, si è notato un'andamento molto simile nelle due sequenze, anche in questo caso il punto di minimo coincide.\\
 \begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{armijo_parameter_poincare.png}
-    \caption{Sequenza relativa alla convergenza del'algoritmo di Armijo implementato su disco. Punto di minimo $0.25$ , valore di convergeza minimo $5.2$.}
+    \caption{Sequenza relativa alla convergenza del'algoritmo di Armijo implementato su disco. Punto di minimo $0.26$ , valore di convergeza minimo $7.9$.}
 \end{figure}
 \begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{armijo_parameter_hyperboloid.png}
-    \caption{Sequenza relativa alla convergenza del'algoritmo di Armijo implementato su iperboloide. Punto di minimo $0.25$ , valore di convergeza minimo $5.2$.}
+    \caption{Sequenza relativa alla convergenza del'algoritmo di Armijo implementato su iperboloide. Punto di minimo $0.26$ , valore di convergeza minimo $7.9$.}
 \end{figure}
 A questo punto, avendo scelto i parametri che permettono ai nostri algoritmi di performare al meglio, possiamo procedere con il confronto.\\ Riprendendo il dataset totale, per ogni algoritmo lo abbiamo eseguito su ogni istanza del dataset, sia per l'implementazione su disco che per quella su iperboloide, creando un punto  ($a$, $b$) in $R^2$ le cui coordinate sono $a$, il numero di passi per convergere al punto limite per l'implementazione su disco, $b$ invece, il numero di passi per convergere al punto limite per l'implementazione su iperboloide, creando cosi una nuvola di punti. Tramite tale nuvola possiamo verificare se le metodologie sono effettivamente equivalenti, in ogni grafico vengono inoltre costruite due rette di regressione su una versione ridotta della nuvola di punti, toglieremo quei punti che hanno una molteplicità bassa (e.g. sotto $\frac{1}{40}$ della cardinalità totale del dataset), la prima retta di regressione viene calcolata tramite il metodo dei minimi quadrati, la seconda invece viene calcolata tramite un algoritmo meno sensibile ai valori anomali, la regressione di $Huber$. Noteremo quindi che, se le rette di regressione tendono ad avere un coefficiente angolare "vicino" ad $1$ le due varietà possono essere ritenute equivalenti.  Riportiamo di seguito i grafici dei nostri esperimenti, verrà riportato, per ogni grafico, un valore medio di convergenza per il disco e per l'iperboloide, tale valore rappresenterà un ulteriore indice di confronto.\\
 \begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{fixed_step_size.png}
-    \caption{Nuvola di punti relativa all'algoritmo a passo fisso, notiamo che i punti generati tendono a giacere sulla bisettrice, ciò indica un equvalenza tra le due implementazioni. Valore medio di convergenza sul disco $10.59$, valore medio di convergenza su iperboloide $12.49$.}
+    \caption{Nuvola di punti relativa all'algoritmo a passo fisso, notiamo che i punti generati tendono a giacere sulla bisettrice, ciò indica un'equvalenza tra le due implementazioni. Valore medio di convergenza sul disco $10.5$, valore medio di convergenza su iperboloide $11.2$.}
 \end{figure}
 \begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{armijo.png}
-    \caption{Nuvola di punti relativa all'algoritmo di Armijo, notiamo che i punti generati tendono a giacere sulla bisettrice, ciò indica un equvalenza tra le due implementazioni. Valore medio di convergenza sul disco $10.7$, valore medio di convergenza su iperboloide $11.11$.}
+    \caption{Nuvola di punti relativa all'algoritmo di Armijo, notiamo che i punti generati tendono a giacere sulla bisettrice, ciò indica un equvalenza tra le due implementazioni. Valore medio di convergenza sul disco $10.4$, valore medio di convergenza su iperboloide $11.2$.}
 \end{figure}
 \begin{figure}[H] %inserisce le figure
     \centering\includegraphics[width=1\textwidth]{barzilai_borwein.png}
