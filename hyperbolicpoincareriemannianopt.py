@@ -278,7 +278,7 @@ class Hyperboloid(Manifold):
         Y = self._pack(Y)
         return self._squeeze(self.exp(X, self.log(X, Y), 1/2))
 
-"""# Derivative of the The Fréchet Mean"""
+"""# Derivative of the cost function"""
 
 # --- Poincare Gradiend
 def poincare_dist_grad(x, y):
@@ -822,19 +822,19 @@ def create_bunch_test_set(manifold, card_bunch=50, card_x=4):
 
   return bunch_test_set
 
-dim = 2
-PoincareManifold = PoincareBall(dim, 1)
-HyperboloidManifold = Hyperboloid(dim, 1)
-bunch = create_bunch_test_set(PoincareManifold, card_bunch=20, card_x=4)
-save_bunch_test_set(bunch)
-
-#dim, bunch = load_bunch_from_file()
+#dim = 2
 #PoincareManifold = PoincareBall(dim, 1)
 #HyperboloidManifold = Hyperboloid(dim, 1)
+#bunch = create_bunch_test_set(PoincareManifold, card_bunch=20, card_x=4)
+#save_bunch_test_set(bunch)
+
+dim, bunch = load_bunch_from_file()
+PoincareManifold = PoincareBall(dim, 1)
+HyperboloidManifold = Hyperboloid(dim, 1)
 
 """# Test Algorithms"""
 
-def time_to_converge(seq, limit, iter_test, epsilon=10e-4):
+def time_to_converge(seq, limit, iter_test, epsilon=1e-4):
   differences = []
   for s in seq:
     diff = s - limit
@@ -851,9 +851,9 @@ def test_algorithm(algotithm_poincare, algorithm_hyperboloid, bunch_test_set, it
   
   for (x_0, x_set, limit) in bunch_test_set:
     seq, _, _ = algotithm_poincare(x_0, x_set, iter_test)
-    a.append(time_to_converge(seq, limit, iter_test, 10e-6))
+    a.append(time_to_converge(seq, limit, iter_test, 1e-5))
     seq, _, _ = algorithm_hyperboloid(x_0, x_set, iter_test)
-    b.append(time_to_converge(seq, limit, iter_test, 10e-6))
+    b.append(time_to_converge(seq, limit, iter_test, 1e-5))
     
 
   mean_conv_a = sum(a)/len(bunch_test_set)
