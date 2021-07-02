@@ -825,7 +825,7 @@ def create_bunch_test_set(manifold, card_bunch=50, card_x=4):
 #dim = 2
 #PoincareManifold = PoincareBall(dim, 1)
 #HyperboloidManifold = Hyperboloid(dim, 1)
-#bunch = create_bunch_test_set(PoincareManifold, card_bunch=20, card_x=4)
+#bunch = create_bunch_test_set(PoincareManifold, card_bunch=200, card_x=4)
 #save_bunch_test_set(bunch)
 
 dim, bunch = load_bunch_from_file()
@@ -854,7 +854,6 @@ def test_algorithm(algotithm_poincare, algorithm_hyperboloid, bunch_test_set, it
     a.append(time_to_converge(seq, limit, iter_test, 1e-5))
     seq, _, _ = algorithm_hyperboloid(x_0, x_set, iter_test)
     b.append(time_to_converge(seq, limit, iter_test, 1e-5))
-    
 
   mean_conv_a = sum(a)/len(bunch_test_set)
   mean_conv_b = sum(b)/len(bunch_test_set)
@@ -925,29 +924,29 @@ def test_one_parameter_optimization(algorithm_poincare, algorithm_hyperbolid, bu
 x_0_test, x_set_test, limit_test = bunch[0]
 print("limit:", limit_test)
 
-psi_seq, f_seq, g_seq = optimisation_fl_poincare(x_0_test, x_set_test, 0.1, 100)
-print("Limit sequence poincare: ", psi_seq[-1])
-plot_seq(x_set_test, psi_seq, f_seq, g_seq, limit_test, dim)
+psi_seq_test, f_seq_test, g_seq_test = optimisation_fl_poincare(x_0_test, x_set_test, 0.1, 100)
+print("Limit sequence poincare: ", psi_seq_test[-1])
+plot_seq(x_set_test, psi_seq_test, f_seq_test, g_seq_test, limit_test, dim)
 
-psi_seq, f_seq, g_seq = optimisation_fl_hyperboloid(x_0_test, x_set_test, 0.26, 100)
-print("Limit sequence iperboloide: ", psi_seq[-1])
-plot_seq(x_set_test, psi_seq, f_seq, g_seq, limit_test, dim)
+psi_seq_test, f_seq_test, g_seq_test = optimisation_fl_hyperboloid(x_0_test, x_set_test, 0.26, 100)
+print("Limit sequence iperboloide: ", psi_seq_test[-1])
+plot_seq(x_set_test, psi_seq_test, f_seq_test, g_seq_test, limit_test, dim)
 
-psi_seq, f_seq, g_seq = armijo_poincare(x_0_test, x_set_test, 0.2, 0.001, 0.25, 100)
-print("Limit sequence poincare: ", psi_seq[-1])
-plot_seq(x_set_test, psi_seq, f_seq, g_seq, limit_test, dim)
+psi_seq_test, f_seq_test, g_seq_test = armijo_poincare(x_0_test, x_set_test, 0.2, 0.001, 0.25, 100)
+print("Limit sequence poincare: ", psi_seq_test[-1])
+plot_seq(x_set_test, psi_seq_test, f_seq_test, g_seq_test, limit_test, dim)
 
-psi_seq, f_seq, g_seq = armijo_hyperboloid(x_0_test, x_set_test, 0.2, 0.0001, 0.25, 100)
-print("Limit sequence iperboloide: ", psi_seq[-1])
-plot_seq(x_set_test, psi_seq, f_seq, g_seq, limit_test, dim)
+psi_seq_test, f_seq_test, g_seq_test = armijo_hyperboloid(x_0_test, x_set_test, 0.2, 0.0001, 0.25, 100)
+print("Limit sequence iperboloide: ", psi_seq_test[-1])
+plot_seq(x_set_test, psi_seq_test, f_seq_test, g_seq_test, limit_test, dim)
 
-psi_seq, f_seq, g_seq = RBB_poincare(x_0_test, x_set_test, 0.0001, 0.9, 100)
-print("Limit sequence poincare: ", psi_seq[-1])
-plot_seq(x_set_test, psi_seq, f_seq, g_seq, limit_test, dim)
+psi_seq_test, f_seq_test, g_seq_test = RBB_poincare(x_0_test, x_set_test, 0.0001, 0.9, 100)
+print("Limit sequence poincare: ", psi_seq_test[-1])
+plot_seq(x_set_test, psi_seq_test, f_seq_test, g_seq_test, limit_test, dim)
 
-psi_seq, f_seq, g_seq = RBB_hyperboloid(x_0_test, x_set_test, 0.0001, 0.9, 100)
-print("Limit sequence iperboloide: ", psi_seq[-1])
-plot_seq(x_set_test, psi_seq, f_seq, g_seq, limit_test, dim)
+psi_seq_test, f_seq_test, g_seq_test = RBB_hyperboloid(x_0_test, x_set_test, 0.0001, 0.9, 100)
+print("Limit sequence iperboloide: ", psi_seq_test[-1])
+plot_seq(x_set_test, psi_seq_test, f_seq_test, g_seq_test, limit_test, dim)
 
 sequence_fixed_lenght_poincare, sequence_fixed_lenght_hyper = test_one_parameter_optimization(
     optimisation_fl_poincare,
