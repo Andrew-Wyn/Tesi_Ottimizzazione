@@ -1,6 +1,6 @@
 \documentclass[a4paper, 12pt]{article}
 \usepackage[osf]{libertinus} %font generale del documento
-\pagestyle{plain} %nessxun heading o foot particolare
+\pagestyle{plain} %nessun heading o foot particolare
 \usepackage[fontsize=13pt]{scrextend} %dimensione font 
 \usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry} %impaginazione e margini documento
 \usepackage{graphicx, wrapfig} %gestione immagini e grafiche
@@ -149,7 +149,7 @@ Allora, $x^\ast$ è un minimo locale di $f$. In particolare esistono $\gamma > 0
 \end{prop}
 \subsection{Discesa del gradiente in $\mathbb{R}^n$}
 Andiamo ora a definire nel dettaglio le principali metodologie computazionali di ottimizzazione non lineare su $\mathbb{R}^n$. Tali metodologie sarannno trattate con un occhio alle possibili applicazioni.\\
-Consideriamo il problema di trovare il minimo non vincolato di una funzione $f:\mathbb{R}^n \to R$. Nella maggior parte di casi non è possibile trovare una soluzione analitica, perciò l'approccio adottato è quello di applicare un algoritmo iterativo chiamato \textit{iterative descent} che opera come segue: prendiamo un vettore iniziale $x^0$ e successivamente generiamo una sequenza $x^1, x^2, ...$ tale che $f$ decresce ad ogni iterazione $f(x^{k+1}) < f(x^k)$ e sperabilmente converga un punto di minimo.\\
+Consideriamo il problema di trovare il minimo non vincolato di una funzione $f:\mathbb{R}^n \to \mathbb{R}$. Nella maggior parte di casi non è possibile trovare una soluzione analitica, perciò l'approccio adottato è quello di applicare un algoritmo iterativo chiamato \textit{iterative descent} che opera come segue: prendiamo un vettore iniziale $x^0$ e successivamente generiamo una sequenza $x^1, x^2, ...$ tale che $f$ decresce ad ogni iterazione $f(x^{k+1}) < f(x^k)$ e sperabilmente converga un punto di minimo.\\
 I principali algoritmi di discesa sono metodi del gradiente poichè sono basati sul gradiente della funzione $f$.
 \subsubsection{Selezionare la direzione di discesa}
 Sia $v \in \mathbb{R}^n \setminus 0$, $v^\perp$ è un iperpiano, contenente i punti tali che $v'd = 0$, divide lo spazio in due componenti connesse:
@@ -174,7 +174,6 @@ A seconda della scelta di $D^k$ abbiamo differenti metodi applicabili.\\\\
     \item \textbf{Steepest Descent}: $D^k = I, \quad k = 0, 1, ...$.
     \item \textbf{Metodi di Newton}: $D^k = (\nabla^2 f(x^k))^{-1}, \quad k = 0, 1, ...$, $\nabla^2 f(x^k)$ deve essere definita positiva, proprietà sempre verificata se $f$ è convessa.
     \item \textbf{Steepest Descent Riscalata}: $D^k$ matrice diagonale.
-    \item \textbf{Metodi di Schamansky}: $D^k = (\nabla^2 f(x^0))^{-1}$.
     \item \textbf{Metodi di quasi Newton}: $D^k = H(x^k) \approx \nabla^2 f(x^k)$.
 \end{itemize}
 Nonostante i metodi di Newton convergono molto velocemente non sono utilizzati nella pratica, dal momento in cui il calcolo della matrice hessiana è computazionalmente oneroso. \\
@@ -193,8 +192,8 @@ Definito un scalare $s > 0$, $\alpha^k$ è scelto in modo tale che minimizza il 
 Le due metodologie appena presentate sono solitamente implementate con l'aiuto delle tecniche risolutive dell'ottimizzazione in una variabile che è un problema certamente più facile da risolvere in modo analitico.\\\\
 \textbf{Metodo di Armijo}:\\
 Scegliere $\alpha^k$ in modo che garantisca una decrescita sufficiente necessaria per la convergenza del metodo sotto opportune ipotesi. Il metodo di armijo è stato definito come segue. Siano fissati $\lambda, \sigma$ e $\gamma$ con $0 < \sigma < 1$, e $0 < \gamma < 1$ e sia $\alpha^k = \sigma^{m_k} \lambda$, dove $m_k$ è il primo intero non negativo per cui vale\\
-\[f(x^k) - f(x^k + \sigma^m \lambda d^k) \geq -\gamma \sigma^m \lambda \nabla f(^k)'d^k.\]\\
-Solitamente si scelgono i valori come segue, $\gamma \in [10^{-5}, 10^{-1}]$, il fattore di riduzione $\sigma \in [1/10, 1/2]$, possiamo scegliere $s = 1$ e moltiplicare la direzione $d^k$ per uno scalare.\\
+\[f(x^k) - f(x^k + \sigma^m \lambda d^k) \geq -\gamma \sigma^m \lambda \nabla f(x^k)'d^k.\]\\
+Solitamente si scelgono i valori come segue, $\gamma \in [10^{-5}, 10^{-1}]$, il fattore di riduzione $\sigma \in [1/10, 1/2]$, possiamo scegliere $\lambda = 1$ e moltiplicare la direzione $d^k$ per uno scalare.\\
 Per questa metodologia diamo anche il seguente teorema che rappresenta un risultato importante.
 \begin{definition}
 Una successione di direzioni $\{d^k\}_k$ è detta limitata se vale la seguente,\\ \[\parallel d^k \parallel < M \mbox{ per ogni } k \mbox{ con } M \in \mathbb{R}^+.\]
@@ -241,15 +240,15 @@ Informalmente, dati due vettori $x, y \in M$ e due vettori tangenti ad $x$, chia
 Un caso speciale di trasporto vettoriale è il \textit{trasporto parallelo} che può essere interpretato come un trasporto vettoriale la cui retrazione associata è la mappa esponenziale.
 \subsubsection{Metodi \emph{line-search}} \label{riemannian_linesearch}
 I metodi di ricerca in linea (definiti \emph{line-search}) su varietà si basano sulla formula di aggiornamento\\
-$x^{k+1} = R_{x^k}(t^k \eta^k)$,\\
-dove $\eta^k$ è in $T_xM$ e $t^k$ è uno scalare. Una volta scelta la retrazione $R$ ci rimane da decidere la direzione $\eta^k$ e la lunghezza del passo $t^k$. Per ottenere la convergenza del metodo delle restrizioni sulla scelta di questi due parametri devono essere fatte.\\
+\[x^{k+1} = R_{x^k}(t^k \eta^k),\]\\
+dove $\eta^k$ è in $T_{x^k}M$ e $t^k$ è uno scalare. Una volta scelta la retrazione $R$ ci rimane da decidere la direzione $\eta^k$ e la lunghezza del passo $t^k$. Per ottenere la convergenza del metodo delle restrizioni sulla scelta di questi due parametri devono essere fatte.\\
 \begin{definition}[sequenza gradient related su varietà]
 Data una funzione di costo $f$ su una varietà riemanniana $M$, una sequenza $\{\eta^k \}$, $\eta^k \in T_xM$ è \textbf{gradient related} se per ogni sotto-sequenza $\{x^k\}_{k \in K}$ di $\{x^k\}$ che converge ad un punto non stazionario di $f$, la corrispondente sotto-sequenza $\{\eta^k\}_{k \in K}$ è limitata e soddisfa\\
-$\limsup\limits_{k \to \infty, k \in K} \langle$grad $f(x^k), \eta^k \rangle < 0$
+\[\limsup\limits_{k \to \infty, k \in K} \langle \mbox{grad } f(x^k), \eta^k \rangle < 0.\]
 \end{definition}
 \begin{definition}[Punto di Armijo su varietà]
 Data una funzione $f$ su una varietà riemanniana $M$ dotata di una retrazione $R$, un punto $x \in M$, un vettore tangente $\eta \in T_xM$, e degli scalari $\bar{\alpha} > 0, \beta, \sigma \in (0, 1)$, un \textbf{punto di Armijo su varietà} è $\eta^A = t^{A}\eta = \beta^{m}\bar{\alpha}\eta$, dove $m$ è il più piccolo intero non negativo tale che\\
-$f(x) - f(R_x(\beta^{m}\bar{\alpha}\eta)) \geq -\sigma \langle$grad $f(x), \beta^m\bar{\alpha}\eta \rangle_x$.\\
+\[f(x) - f(R_x(\beta^{m}\bar{\alpha}\eta)) \geq -\sigma \langle x{grad } f(x), \beta^m\bar{\alpha}\eta \rangle_x.\]\\
 Il valore reale $t^A$ è il \textbf{Passo di Armijo}.
 \end{definition}
 Andiamo ora a definire un algoritmo generico per la discesa di gradiente su varietà (\textbf{Accelerated Line Search}).\\
@@ -284,7 +283,8 @@ Sia $\{x^k\}$ una sequenza infinita di iterate generate da ALS. Allora ogni punt
 \end{theorem}
 Inoltre assumendo compattezza della varietà $M$ possiamo enunciare il seguente.
 \begin{corollary}
-Sia $\{x^k\}$ una sequenza finita di iterate generata da ALS. Assumiamo che l'insieme di livello $L = \{x \in M : f(x) \leq f(x^0)\}$ è compatto allora\\ $\lim_{k \to \infty} \parallel $grad $f(x^k) \parallel = 0$.
+Sia $\{x^k\}$ una sequenza finita di iterate generata da ALS. Assumiamo che l'insieme di livello $L = \{x \in M : f(x) \leq f(x^0)\}$ è compatto allora\\
+\[\lim_{k \to \infty} \parallel \mbox{grad } f(x^k) \parallel = 0.\]
 \end{corollary}
 
 \section{Disco di Poincaré e Iperboloide}
@@ -403,8 +403,8 @@ Il problema di trovare la media di Fréchet (centroide) di $p$-punti consiste ne
 Per effettuare ottimizzazione abbiamo bisogno di calcolare il gradiente della funzione somma delle distanze al quadrato, avendo definito nella sezione precedente il gradiente della funzione distanza su disco e su iperboloide, possiamo calcolare il gradiente della funzione come segue,\\
 \[\nabla f(\Theta) = \frac{2}{p} \sum_{i=1}^p d(\Theta, x^{(i)}) \cdot \nabla d(\Theta, x^{(i)}).\]\\
 Diamo ora un importante risultato, la cui correttezza è dimostrata in funzione dell'uguaglianza $d_{\mathbb{D}^n}(a, b) = d_{\mathbb{H}^n}(\rho^{-1}(a), \rho^{-1}(b))$ che abbiamo verificato nella sezione precedente.\\
-Dati $a^{(i)}, \Theta \in \mathbb{D}^n$; con $i = 1...p$ dall'uguaglianza precedente è facile notare che $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{D}^n}^2(\Theta, a^{(i)}) = \frac{1}{p}\sum_{i=1}^p d_{\mathbb{H}^n}^2(\rho^{-1}(\Theta), \rho^{-1}(a^{(i)}))$, perciò essendo $\rho$ un diffeomorfismo se $\exists \Theta \in \mathbb{D}^n$ per cui $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{D}^n}^2(\Theta, a^{(i)})$ è minima allora esiste $\exists \Psi \in \mathbb{H}^n$ per cui è minima $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{H}^n}^2(\Psi, \rho^{-1}(a^{(i)}))$. Essendo inoltre $f(x) = \hat{f} = f(\rho^{-1}(x))$ allora cercare il minimo di $f$ equivale a cercare il minimo di $\hat{f} \circ \rho^{-1}$.\\
-In funzione di tale congettura possiamo trasportare il problema definito su disco di Poincaré nella varieta iperboloide e viceversa.
+Dati $a^{(i)}, \Theta \in \mathbb{D}^n$; con $i = 1...p$ dall'uguaglianza precedente è facile notare che $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{D}^n}^2(\Theta, a^{(i)}) = \frac{1}{p}\sum_{i=1}^p d_{\mathbb{H}^n}^2(\rho^{-1}(\Theta), \rho^{-1}(a^{(i)}))$, perciò essendo $\rho$ un diffeomorfismo se $\exists \Theta \in \mathbb{D}^n$ per cui $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{D}^n}^2(\Theta, a^{(i)})$ è minima allora esiste $\exists \Psi \in \mathbb{H}^n$ per cui è minima $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{H}^n}^2(\Psi, \rho^{-1}(a^{(i)}))$. Essendo inoltre $f(x) = \hat{f}(\rho^{-1}(x))$ allora cercare il minimo di $f$ equivale a cercare il minimo di $\hat{f} \circ \rho^{-1}$.\\
+In funzione di tale dimostrazione possiamo trasportare il problema definito su disco di Poincaré nella varieta iperboloide e viceversa.
 \section{Esperimenti numerici e implementazioni}
 In questa sezione andremo a definire lo pseudocodice degli algoritmi di ottimizzazione che abbiamo utilizzato  nei nostri esperimenti.\\
 Confronteremo tali strumenti per il calcolo della media di Fréchet sui modelli dello spazio iperbolico descritti nella sezione precedente, ovvero disco di Poincaré ed iperboloide, sfruttando il fatto che questi due modelli sono tra di loro conformi, ovvero che esiste una mappa conforme che li lega.\\
@@ -542,8 +542,8 @@ Riportiamo di seguito i grafici dei nostri esperimenti, verrà riportato per ogn
 Durante le nostre sperimentazioni ci siamo resi conto che il grafico relativo all'algoritmo di Barzilai-Borwein tende ad avere i coefficienti delle rette di regressione "molto vicini" ad $1$, ma non tutti i punti della nuvola tendono a giacere sulla bisettrice.\\
 Igrafici relativi all'algoritmo di Armijo e l'algoritmo a passo fisso presentano una retta di regressione quasi equivalente alla bisettrice, e graficamente è facile vedere come tutti i punti, a meno di casi anomali, giacciono sulla bisettrice. Relativamente ai valori medi di convergenza, abbiamo valori abbastanza simili per tutti e tre gli algoritmi e possiamo notare una differenza di al più un passo e mezzo nella convergenza media.\\
 Possiamo asserire che le implementazioni su disco e su iperboloide, degli algoritmi ottimizzazzione per il calcolo della media di Fréchet sono pressoché equivalenti.\\
-I risultati di tali sperimentazioni ci portano a congetturare che dato un problema di ottimizzazione su una varietà ,è possibile trasferire il problema da tale varietà ad una varietà conforme sempre tenendo presente che deve essere preservata l'esistenza di una soluzione ottima per la funzione da costo.\\
-Concludendo, un altro risultato delle nostre sperimentazioni è stato far vedere come l'algoritmo di Barzilai-Borwain si comporta meglio rispetto agli algoritmi a passo fisso e di ricerca lineare anche facendo riferimento al valore di convergenza medio delle implementazioni sulle due varietà riportate nelle descrizioni dei grafici.
+I risultati di tali sperimentazioni ci portano a congetturare che dato un problema di ottimizzazione su una varietà ,è possibile trasferire il problema da tale varietà ad una varietà conforme sempre tenendo presente che deve essere preservata l'esistenza di una soluzione ottima per la funzione costo.\\
+Concludendo, un altro risultato delle nostre sperimentazioni è stato far vedere come l'algoritmo di Barzilai-Borwein si comporta meglio rispetto agli algoritmi a passo fisso e di ricerca lineare anche facendo riferimento al valore di convergenza medio delle implementazioni sulle due varietà riportate nelle descrizioni dei grafici.
 Riportiamo il link alla repository Github contenente i codici degli esperimenti: \textit{https://github.com/Andrew-Wyn/Tesi\_Ottimizzazione}.
 \section{Appendice}
 Richiamiamo qui alcuni concetti teorici necessari per la piena comprensione del presente elaborato.
