@@ -180,7 +180,7 @@ Nonostante i metodi di Newton convergono molto velocemente non sono utilizzati n
 Sono stati introdotti perciò i metodi di quasi Newton, nel qual caso la matrice $D^k$ è scelta in modo tale che la direzione $d^k = -D^k\nabla f(x^k)$ tenda ad approssimare la direzione del metodo di Newton e $D_k$ approssima la matrice hessiana. L'idea fondamentale riguardo questa metodologia è che tramite due iterate successive $k$, $k+1$ ed i valori $x^k$, $x^{k+1}$, $\nabla f(x^k)$, $\nabla f(x^{k+1})$ noi possiamo avere accesso a delle informazioni riguardo la matrice hessiana, in particolare abbiamo che\\
 \[\nabla f(x^{k+1}) - \nabla f(x^k) \approx H(x^{k+1})(x^{k+1} - x^k).\]\\
 Definiti $p^k = x^{k+1} - x^k$ e $q^k = \nabla f(x^{k+1}) - \nabla f(x^k)$ allora $D^{k+1}$ deve soddisfare l'uguaglianza $D^{k+1} p^k = q^k$, questo prende il nome di equazione delle secanti.
-\subsubsection{Selezione del passo}
+\subsubsection{Selezione del passo} \label{stepsel}
 Ci sono numerose metodologie per la scelta del passo $a^k$ nei metodi del gradiente, ne elenchiamo alcune.\\\\
 \textbf{Ricerca lineare esatta}:\\
 scegliamo $\alpha^k$ tale che minimizza la funzione costo $f$ lungo la direzione $d^k$, perciò,\\
@@ -270,7 +270,7 @@ Tale algoritmo rappresenta una generalità di metodologie di ottimizzazione deli
 \caption{Accelerated Line Search (ALS)}
 \end{algorithm}
 \end{center}
-Dallo pseudocodice appena esplicitato è chiaro che tale algoritmo puo essere visto come una generalizzazione della scelta del passo di Armijo descritto nella sotto-sezione 2.2, difatti scegliere $x^{k+1} = R_{x^k}(t^{k^A}\eta^k)$ soddisfa \eqref{ctr-als}. Inoltre la condizione rilassata \eqref{ctr-als} ci permette un ampio spazio di manovra nella scelta di $x^{k+1}$ garantendo la convergenza ad un punto stazionario (come enunceremo formalmente) e ciò puo portare alla definizione di algoritmi altamente efficienti.
+Dallo pseudocodice appena esplicitato è chiaro che tale algoritmo puo essere visto come una generalizzazione della scelta del passo di Armijo descritto nella sezione \ref{stepsel}, difatti scegliere $x^{k+1} = R_{x^k}(t^{k^A}\eta^k)$ soddisfa \eqref{ctr-als}. Inoltre la condizione rilassata \eqref{ctr-als} ci permette un ampio spazio di manovra nella scelta di $x^{k+1}$ garantendo la convergenza ad un punto stazionario (come enunceremo formalmente) e ciò puo portare alla definizione di algoritmi altamente efficienti.
 
 \subsubsection{Convergenza}
 Il concetto di convergenza puo essere ridefinito e generalizzato su varietà. Una sequenza infinita $\{x^k\}_{k=0,1,...}$ di punti su una varietà $M$ è detta essere convergente se esiste una carta $(U, \psi)$ di $M$, un punto $x^\ast \in M$ e $K > 0$ tali che $x^k$ è in $U$ per ogni $k \geq K$ e tale che la sequenza $\{\psi(x^k)\}_{x=K, K+1, ...}$ converge a $\psi(x^\ast)$, in tal caso applichiamo il concetto di convergenza di $\mathbb{R}^n$, avendo $\psi$ come codominio uno spazio euclideo.\\
@@ -315,7 +315,7 @@ Exp_p(v) = cosh(\| v \|_{n:1})p + sinh(\| v \|_{n:1}) \frac{v}{\| v \|_{n:1}}.
 \end{gathered}\end{equation*}
 
 \subsubsection{Gradiente della funzione distanza}
-La deifinize dell'iperboloide e dello spazio di Minkowski nel quale è costruito ci aiuta nel calcolo del gradiente della funzione distanza.\\
+La definizione dell'iperboloide e dello spazio di Minkowski nel quale è costruito ci aiuta nel calcolo del gradiente della funzione distanza.\\
 Data una funzione costo $E:\mathbb{H}^n \to \mathbb{R}$ differenziabile, possiamo calcolarne il gradiente in un punto $p \in \mathbb{H}^n$, passando dapprima per il gradiente definito nell'ambiente, che nel nostro caso è lo spazio di Minkowski. Ricordiamo che quest'ultimo è cosi definito.\\
 \[\nabla_{p}^{\mathbb{R}^{n:1}} E = \left (\frac{\partial E}{\partial x_1}|_{x=p}, ..., \frac{\partial E}{\partial x_n}|_{x=p}, -\frac{\partial E}{\partial x_{n+1}}|_{x=p} \right).\]\\
 Una volta calcolato il gradiente nell'ambiente procediamo a proiettarlo nello spazio tangente a $\mathbb{H}^n$ nel punto $p \in \mathbb{H}^n$ come segue.\\
@@ -347,7 +347,7 @@ La mappa esponenziale definita su $p \in \mathbb{D}^n$ e $v \in T_p\mathbb{D}^n$
 \subsubsection{Gradiente della funzione distanza}
 Dati $u,v \in \mathbb{D}^n$ la formula del gradiente riemanniano della funzione distanza è dato da.\\
 \begin{equation*}\begin{gathered}
-\nabla_u^{E} d(u,v) = \frac{4}{b \sqrt{c^2 - 1}} \left(\frac{(\| v \|^2 - 2\langle u,v \rangle + 1)v}{a^2} - \frac{v}{a}\right) \\ \mbox{ con } a = 1 - \| u \|^2 \mbox{ , } \quad b = 1 - \| v \|^2 \mbox{ , } \quad c = 1 + \frac{2}{ab} \| u - v \|^2
+\nabla_u^{E} d(u,v) = \frac{4}{b \sqrt{c^2 - 1}} \left(\frac{(\| v \|^2 - 2\langle u,v \rangle + 1)u}{a^2} - \frac{v}{a}\right) \\ \mbox{ con } a = 1 - \| u \|^2 \mbox{ , } \quad b = 1 - \| v \|^2 \mbox{ , } \quad c = 1 + \frac{2}{ab} \| u - v \|^2
 \end{gathered}\end{equation*}
 Sappiamo che per per ricavare il gradiente riemanniano dal gradiente euclideo è sufficiente riscalare $\nabla^E$ per l'inverso della metrica riemanniana, perciò,\\ \[\nabla_u^{\mathbb{D}^n} d(u,v) = \frac{\nabla_u^{E} d(u,v)}{\lambda_u^2}.\]
 \subsection{Iperboloide come modello conforme} \label{centroide}
@@ -399,7 +399,7 @@ In tale sezione formalizzeremo il concetto di \textbf{media di Fréchet} di $p$ 
 Dati $x^{(1)}, ..., x^{(p)} \in M$, la media di Fréchet di $x^{(1)}, ..., x^{(p)}$ è l'argomento di minimo della funzione,\\
 \[f(\Theta) = \frac{1}{p}\sum_{i=1}^p d^2(\Theta, x^{(i)}).\]\\
 \end{definition}
-Il problema di trovare la media di Fréchet (centroide) di $p$-punti consiste nel trovare il punto che minimizza la funzione \textbf{somma delle distanze al quadrato} definita a partire dai punti in questione, il cui minimo esiste ed è unico nella varietà disco di Poincaé. Tale problema può essere risolto direttamente in uno spazio euclideo, nel quale il minimo è dato dalla media aritmetica dei $p$-punti. Mentre nel disco di Poincaré non è nota una soluzione esplicita e perciò la soluzione viene approssimata applicando le metodologie di ottimizzazione su varietà differenziabili trattate nella sezione \ref{riemanniangd}.\\
+Il problema di trovare la media di Fréchet (centroide) di $p$-punti consiste nel trovare il punto che minimizza la funzione \textbf{somma delle distanze al quadrato} definita a partire dai punti in questione, il cui minimo esiste ed è unico nella varietà disco di Poincaré. Tale problema può essere risolto direttamente in uno spazio euclideo, nel quale il minimo è dato dalla media aritmetica dei $p$-punti. Mentre nel disco di Poincaré non è nota una soluzione esplicita e perciò la soluzione viene approssimata applicando le metodologie di ottimizzazione su varietà differenziabili trattate nella sezione \ref{riemanniangd}.\\
 Per effettuare ottimizzazione abbiamo bisogno di calcolare il gradiente della funzione somma delle distanze al quadrato, avendo definito nella sezione precedente il gradiente della funzione distanza su disco e su iperboloide, possiamo calcolare il gradiente della funzione come segue,\\
 \[\nabla f(\Theta) = \frac{2}{p} \sum_{i=1}^p d(\Theta, x^{(i)}) \cdot \nabla d(\Theta, x^{(i)}).\]\\
 Diamo ora un importante risultato, la cui correttezza è dimostrata in funzione dell'uguaglianza $d_{\mathbb{D}^n}(a, b) = d_{\mathbb{H}^n}(\rho^{-1}(a), \rho^{-1}(b))$ che abbiamo verificato nella sezione precedente.\\
@@ -444,7 +444,7 @@ L'algoritmo di Armijo è anche esso un algoritmo del primo ordine, la direzione 
         \Return
     }
     Trovare il più piccolo $h = 0, 1, ...$, tale per cui
-    \[f(R_{x_k}(\sigma^h\lambda d_k)) \leq f(x_k) + \gamma \sigma^h \lambda \langle g_k, d_k \rangle_{x_k};\]\\
+    \[f(R_{x_k}(-\sigma^h\lambda g_k)) \leq f(x_k) - \gamma \sigma^h \lambda \langle g_k, g_k \rangle_{x_k};\]\\
     $x_{k+1} \leftarrow R_{x_k}(-\sigma^h \lambda g_k)$;\\
 }
 \caption{Algoritmo con metodo di Armijo}
