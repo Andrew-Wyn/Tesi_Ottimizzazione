@@ -191,7 +191,7 @@ Definito un scalare $s > 0$, $\alpha^k$ è scelto in modo tale che minimizza il 
 \[f(x^k + \alpha^k d^k) = \min_{\alpha \in [0, s]} f(x^k + \alpha d^k).\]\\
 Le due metodologie appena presentate sono solitamente implementate con l'aiuto delle tecniche risolutive dell'ottimizzazione in una variabile che è un problema certamente più facile da risolvere in modo analitico.\\\\
 \textbf{Metodo di Armijo}:\\
-Scegliere $\alpha^k$ in modo che garantisca una decrescita sufficiente necessaria per la convergenza del metodo sotto opportune ipotesi. Il metodo di armijo è stato definito come segue. Siano fissati $\lambda, \sigma$ e $\gamma$ con $0 < \sigma < 1$, e $0 < \gamma < 1$ e sia $\alpha^k = \sigma^{m_k} \lambda$, dove $m_k$ è il primo intero non negativo per cui vale\\
+Scegliere $\alpha^k$ in modo che garantisca una decrescita sufficiente necessaria per la convergenza del metodo sotto opportune ipotesi. Il metodo di armijo è stato definito come segue. Siano fissati $\lambda, \sigma$ e $\gamma$ con $0 < \sigma < 1$, $0 < \gamma < 1$ e $\lambda > 0$, sia $\alpha^k = \sigma^{m_k} \lambda$, dove $m_k$ è il primo intero non negativo per cui vale\\
 \[f(x^k) - f(x^k + \sigma^m \lambda d^k) \geq -\gamma \sigma^m \lambda \nabla f(x^k)'d^k.\]\\
 Solitamente si scelgono i valori come segue, $\gamma \in [10^{-5}, 10^{-1}]$, il fattore di riduzione $\sigma \in [1/10, 1/2]$, possiamo scegliere $\lambda = 1$ e moltiplicare la direzione $d^k$ per uno scalare.\\
 Per questa metodologia diamo anche il seguente teorema che rappresenta un risultato importante.
@@ -256,7 +256,7 @@ Tale algoritmo rappresenta una generalità di metodologie di ottimizzazione deli
 \begin{center}
 \begin{algorithm}[H]
 \SetAlgoLined
-\KwIn{Varietà $M$; funzione costo $f$ differenziabile definita su $M$; retraction $R$; scalari $\bar{\alpha} > 0$, $c, \beta, \sigma \in (0,1)$; punto iniziale $x^0 \in M$}
+\KwIn{Varietà $M$; funzione costo $f$ differenziabile definita su $M$; retrazione $R$; scalari $\bar{\alpha} > 0$, $c, \beta, \sigma \in (0,1)$; punto iniziale $x^0 \in M$}
 \KwOut{Sequenza $\{x^k\}$}
 \For{$k=0, 1, 2, ...$}{
     Prendere $\eta^k \in T_xM$ tale per cui la sequenza $\{\eta^i\}_{i=0,1,...}$ sia \emph{gradient related}.\\
@@ -403,7 +403,7 @@ Il problema di trovare la media di Fréchet (centroide) di $p$-punti consiste ne
 Per effettuare ottimizzazione abbiamo bisogno di calcolare il gradiente della funzione somma delle distanze al quadrato, avendo definito nella sezione precedente il gradiente della funzione distanza su disco e su iperboloide, possiamo calcolare il gradiente della funzione come segue,\\
 \[\nabla f(\Theta) = \frac{2}{p} \sum_{i=1}^p d(\Theta, x^{(i)}) \cdot \nabla d(\Theta, x^{(i)}).\]\\
 Diamo ora un importante risultato, la cui correttezza è dimostrata in funzione dell'uguaglianza $d_{\mathbb{D}^n}(a, b) = d_{\mathbb{H}^n}(\rho^{-1}(a), \rho^{-1}(b))$ che abbiamo verificato nella sezione precedente.\\
-Dati $a^{(i)}, \Theta \in \mathbb{D}^n$; con $i = 1...p$ dall'uguaglianza precedente è facile notare che $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{D}^n}^2(\Theta, a^{(i)}) = \frac{1}{p}\sum_{i=1}^p d_{\mathbb{H}^n}^2(\rho^{-1}(\Theta), \rho^{-1}(a^{(i)}))$, perciò essendo $\rho$ un diffeomorfismo se $\exists \Theta \in \mathbb{D}^n$ per cui $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{D}^n}^2(\Theta, a^{(i)})$ è minima allora esiste $\exists \Psi \in \mathbb{H}^n$ per cui è minima $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{H}^n}^2(\Psi, \rho^{-1}(a^{(i)}))$. Essendo inoltre $f(x) = \hat{f}(\rho^{-1}(x))$ allora cercare il minimo di $f$ equivale a cercare il minimo di $\hat{f} \circ \rho^{-1}$.\\
+Dati $a^{(i)}, \Theta \in \mathbb{D}^n$; con $i = 1...p$ dall'uguaglianza precedente è facile notare che $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{D}^n}^2(\Theta, a^{(i)}) = \frac{1}{p}\sum_{i=1}^p d_{\mathbb{H}^n}^2(\rho^{-1}(\Theta), \rho^{-1}(a^{(i)}))$, perciò essendo $\rho$ un diffeomorfismo se esiste $\Theta \in \mathbb{D}^n$ per cui $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{D}^n}^2(\Theta, a^{(i)})$ è minima allora esiste $\Psi \in \mathbb{H}^n$ per cui è minima $\frac{1}{p}\sum_{i=1}^p d_{\mathbb{H}^n}^2(\Psi, \rho^{-1}(a^{(i)}))$. Essendo inoltre $f(x) = \hat{f}(\rho^{-1}(x))$ allora cercare il minimo di $f$ equivale a cercare il minimo di $\hat{f} \circ \rho^{-1}$.\\
 In funzione di tale dimostrazione possiamo trasportare il problema definito su disco di Poincaré nella varieta iperboloide e viceversa.
 \section{Esperimenti numerici e implementazioni}
 In questa sezione andremo a definire lo pseudocodice degli algoritmi di ottimizzazione che abbiamo utilizzato  nei nostri esperimenti.\\
@@ -454,7 +454,7 @@ L'algoritmo di Armijo è anche esso un algoritmo del primo ordine, la direzione 
 L'algoritmo di Barzilai-Borwein è un metodo quasi Newton e si basa sulla soluzione, per $k \geq 1$, di un problema dei minimi quadrati, che ci permette di avere ricavare informazioni sulla matrice hessiana, quindi del secondo ordine. Tale algoritmo è stato implementato in \cite{Iannazzo}. Andiamo ora a descrive l'algoritmo dapprima nella sua versione euclidea in modo tale da avere ben chiare le motivazioni teoriche, dopo di che descriveremo la versione riemanniana.\\
 L'algoritmo si basa sulla risoluzione del seguente problema di minimo,\\
 \[\min_{t} \parallel s_kt - y_k \parallel_2,\]\\
-con $s_k = x_{k+1} - x^k$ ed $y_k = \nabla f(x_{k+1}) - \nabla^{(R)} f(x_k)$, il quale, assumendo che $x_{k+1} \neq x_k$ ha un'unica soluzione $t = \frac{s_k'y_k}{s_k's_k}$. Perciò quando $s_k'y_k > 0$ il passo viene scelto come.\\
+con $s_k = x_{k+1} - x_k$ ed $y_k = \nabla^{(R)} f(x_{k+1}) - \nabla^{(R)} f(x_k)$, il quale, assumendo che $x_{k+1} \neq x_k$ ha un'unica soluzione $t = \frac{s_k'y_k}{s_k's_k}$. Perciò quando $s_k'y_k > 0$ il passo viene scelto come.\\
 \[a_{k+1}^{BB} = \frac{s_k's_k}{s_k'y_k}.\]\\
 Per tradurre lalgoritmo dalla sua definizione su spazio euclideo in una versione compatibile con ottimizzazione su varietà differenziabili dobbiamo andare a ridefinire $s_k$ ed $y_k$. Al passo $k+1$. L'hessiana è una mappa bilineare da $T_{x_{k+1}}M$ a $T_{x_{k+1}}M$, e siccome $g_{k+1}$ e $g_{k}$ (con $g_k = \nabla^{(R)} f(x_k)$) appartengono a due differenti spazi tangenti, considereremo il vettore $-\alpha_kg_k \in T_{x_k}M$ e lo trasporteremo in $T_{x_{k+1}}M$, quindi,\\
 \[s_k = \mathcal{T}_{x_k \to x_{k+1}}(-\alpha_kg_k),\]\\
