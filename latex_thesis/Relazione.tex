@@ -99,7 +99,7 @@ Notiamo che $\mathbb{R}^n$ è un caso particolare di varietà differenziabile.\\
 Cercheremo inoltre di trovare quei punti che garantiscono l'ottimalità di una funzione, ovvero punti di massimo e di minimo, che descriveremo a breve.\\
 Sia $f: \mathbb{R} ^n \to \mathbb{R}$ non vincolata.
 Un vettore $x^\ast$ è un minimo locale non vincolato per la funzione $f$ se, informalmente, $f$ assume un valore in $x^\ast$ non più grande dei valori che assume in un intorno di $x^\ast$ stesso. Più formalmente $x^\ast$ è minimo locale per $f$ se esiste $\varepsilon > 0$ tale che,\\
-\[f(x^\ast) \leq f, \mbox{ per ogni } x \mbox{ con } \parallel x - x^\ast \parallel < \varepsilon,\]\\
+\[f(x^\ast) \leq f, \mbox{ per ogni } x \mbox{ con } \| x - x^\ast \| < \varepsilon,\]\\
 $\| x \|$ rappresenta la norma euclidea del vettore $x$.\\
 Un vettore $x^\ast$ è un minimo globale non vincolato rispetto ad $f$ se la funzione assume un valore in $x^\ast$ non più grande dei valori che assume in ogni altro vettore nel proprio dominio, più formalmente $x^\ast$ è tale che\\
 \[f(x^\ast) \leq f, \mbox{ per ogni } x \in \mathbb{R}^n.\]\\
@@ -145,7 +145,7 @@ Ciò implica che in $x^\ast$ la variazione di $f$ al secondo ordine data da un p
 \begin{prop}[Condizioni di ottimalità sufficienti del secondo ordine] Sia $f:S \subset \mathbb{R}^n \to R$ derivabile due volte con continuità. Si supponga che esista $x^\ast \in S$ che soddisfi le condizioni\\
 \[\nabla f(x^\ast) = 0 \quad \mbox{e} \quad \nabla^2 f(x^\ast) \mbox{è una matrice definita positiva.}\]\\
 Allora, $x^\ast$ è un minimo locale di $f$. In particolare esistono $\gamma > 0$ e $\varepsilon > 0$ tali che\\
-\[ f(x) \geq f(x^\ast) + \frac{\gamma}{2} \parallel x - x^\ast \parallel^2, \quad \mbox{per ogni} x \quad \mbox{con} \parallel x - x^\ast \parallel < \varepsilon  \]
+\[ f(x) \geq f(x^\ast) + \frac{\gamma}{2} \| x - x^\ast \|^2, \quad \mbox{per ogni } x \quad \mbox{con } \| x - x^\ast \| < \varepsilon  \]
 \end{prop}
 \subsection{Discesa del gradiente in $\mathbb{R}^n$}
 Andiamo ora a definire nel dettaglio le principali metodologie computazionali di ottimizzazione non lineare su $\mathbb{R}^n$. Tali metodologie sarannno trattate con un occhio alle possibili applicazioni.\\
@@ -196,15 +196,15 @@ Scegliere $\alpha^k$ in modo che garantisca una decrescita sufficiente necessari
 Solitamente si scelgono i valori come segue, $\gamma \in [10^{-5}, 10^{-1}]$, il fattore di riduzione $\sigma \in [1/10, 1/2]$, possiamo scegliere $\lambda = 1$ e moltiplicare la direzione $d^k$ per uno scalare.\\
 Per questa metodologia diamo anche il seguente teorema che rappresenta un risultato importante.
 \begin{definition}
-Una successione di direzioni $\{d^k\}_k$ è detta limitata se vale la seguente,\\ \[\parallel d^k \parallel < M \mbox{ per ogni } k \mbox{ con } M \in \mathbb{R}^+.\]
+Una successione di direzioni $\{d^k\}$ è detta limitata se vale la seguente,\\ \[\| d^k \| < M \mbox{ per ogni } k \mbox{ con } M \in \mathbb{R}^+.\]
 \end{definition}
 \begin{definition}
-Una successione di direzioni $\{x^k\}_k, \quad \{d^k\}_k$ è detta \textbf{gradient related} se per ogni sotto-successione di $\{x^k\}_k$ che converge ad un punto non stazionario $\{d^k\}_k$ è limitata ed inoltre vale,\\
-\[\limsup\limits_{k \in K} \nabla f(x)'d^k < 0.\]
+Una successione di direzioni $\{d^k\}$ è detta \textbf{gradient related} se per ogni sotto-successione di $\{x^k\}_{k \in K}$ che converge ad un punto non stazionario $\{d^k\}_{k \in K}$ è limitata ed inoltre vale,\\
+\[\limsup\limits_{k \to \infty, k \in K} \nabla f(x)'d^k < 0.\]
 \end{definition}
 Ora diamo il principale risultato che garantisce la convergenza globale per metodi di discesa che utilizzano la tecnica di Armijo.
 \begin{theorem}
-Sia $\{x^k\}_k$ una sequenza infinita (non definitivamente uguale al suo limite) generata dal metodo $x^{k+1} = x^k + \alpha^k d^k$, dove $\alpha^k$ è generato con la regola di armijo e $d^k$ è \textbf{gradient related}. Allora ogni punto limite è stazionario.
+Sia $\{x^k\}$ una sequenza infinita (non definitivamente uguale al suo limite) generata dal metodo $x^{k+1} = x^k + \alpha^k d^k$, dove $\alpha^k$ è generato con la regola di armijo e $d^k$ è \textbf{gradient related}. Allora ogni punto limite è stazionario.
 \end{theorem}
 \textbf{Metodo a passo costante}:\\
 Si definisce un passo costante $s > 0$ e si fissa $\alpha^k = s, \quad k = 0,1, ...$.\\
@@ -232,8 +232,8 @@ Una retrazione in una varietà $M$ è una mappa liscia $R$ che ha come dominio l
 Ci riferiamo alla condizione $DR_x(0_x) = id_{T_xM}$ come condizione di \emph{rigidità locale}. Equivalentemente per ogni vettore tangente $\xi$ in $T_xM$, la curva $\gamma_{\xi}:t \mapsto R_x(t\xi)$ soddisfa $\gamma_{\xi}(0)' = \xi$.\\
 Oltre a trasformare elementi di $T_xM$ in elementi di $M$, un secondo importate scopo della retrazione $R_x$ è quello di trasformare una funzione costo ($f:M \to R$) definita in un intorno di $x \in M$ in una funzione costo definita sullo spazio vettoriale $T_xM$. Nello specifico, data una funzione reale $f$ su una varietà $M$ su cui è definita una retrazione $R$, abbiamo che $\hat{f} = f \circ R$ denota il $\emph{pullback}$ di $f$ attraverso $R$. Per $x \in M$, abbiamo che\\
 \[\hat{f_x} = f \circ R_x\]\\
-denota la restrizione di $\hat{f}$ su $T_xM$. Si noti che $\hat{f_x}$ è una funzione reale su uno spazio vettoriale. Dalla condizione di rigidità locale abbiamo che $D\hat{f_x}(0_x) = Df(x)$. Se $M$ è dotato di una metrica Riemanniana abbiamo\\
-\[ \mbox{grad} \hat{f_x}(0_x) = \mbox{grad} f(x).\]\\
+denota la restrizione di $\hat{f}$ su $T_xM$. Si noti che $\hat{f_x}$ è una funzione reale su uno spazio vettoriale. Dalla condizione di rigidità locale abbiamo che $D\hat{f_x}(0_x) = Df(x)$. Se $M$ è dotato di una metrica riemanniana abbiamo\\
+\[ \nabla^{(R)} \hat{f_x}(0_x) = \nabla^{(R)} f(x).\]\\
 Un caso particolare di retrazione è la \textbf{mappa esponenziale} definita su $p \in M$ e $v \in T_pM$ che ha proprietà di retrazione e rappresenta la curva geodedica calcolata nel punto $1$ originaria in $p$ con derivata in $0$ pari a $v$.\\
 In alcuni casi può essere necessario dover effettuare operazioni tra vettori appartenenti a spazi tangente diffenti come ad esempio nel caso dei metodi di ottimizzazzione quasi Newton.\\ Nell'ottimizzazione basata su retrazioni, lo strumento standard per trasportare vettori appartenenti ad uno spazio tangente in un altro spazio tangente, è il \textit{trasporto vettoriale}.\\
 Informalmente, dati due vettori $x, y \in M$ e due vettori tangenti ad $x$, chiamati $v_x, w_x \in T_xM$, un trasporto vettoriale $\mathcal{T}$ associato ad una retrazione $R$ è una mappa differenziabile che genera un vettore appartenente ad $T_{R_x(w_x)}M$ e per semplicità utilizzeremo la notazione $\mathcal{T}_{x \to y}(v)$.\\
@@ -244,11 +244,11 @@ I metodi di ricerca in linea (definiti \emph{line-search}) su varietà si basano
 dove $\eta^k$ è in $T_{x^k}M$ e $t^k$ è uno scalare. Una volta scelta la retrazione $R$ ci rimane da decidere la direzione $\eta^k$ e la lunghezza del passo $t^k$. Per ottenere la convergenza del metodo delle restrizioni sulla scelta di questi due parametri devono essere fatte.\\
 \begin{definition}[sequenza gradient related su varietà]
 Data una funzione di costo $f$ su una varietà riemanniana $M$, una sequenza $\{\eta^k \}$, $\eta^k \in T_xM$ è \textbf{gradient related} se per ogni sotto-sequenza $\{x^k\}_{k \in K}$ di $\{x^k\}$ che converge ad un punto non stazionario di $f$, la corrispondente sotto-sequenza $\{\eta^k\}_{k \in K}$ è limitata e soddisfa\\
-\[\limsup\limits_{k \to \infty, k \in K} \langle \mbox{grad } f(x^k), \eta^k \rangle < 0.\]
+\[\limsup\limits_{k \to \infty, k \in K} \langle \nabla^{(R)} f(x^k), \eta^k \rangle_{x^k} < 0.\]
 \end{definition}
 \begin{definition}[Punto di Armijo su varietà]
 Data una funzione $f$ su una varietà riemanniana $M$ dotata di una retrazione $R$, un punto $x \in M$, un vettore tangente $\eta \in T_xM$, e degli scalari $\bar{\alpha} > 0, \beta, \sigma \in (0, 1)$, un \textbf{punto di Armijo su varietà} è $\eta^A = t^{A}\eta = \beta^{m}\bar{\alpha}\eta$, dove $m$ è il più piccolo intero non negativo tale che\\
-\[f(x) - f(R_x(\beta^{m}\bar{\alpha}\eta)) \geq -\sigma \langle x{grad } f(x), \beta^m\bar{\alpha}\eta \rangle_x.\]\\
+\[f(x) - f(R_x(\beta^{m}\bar{\alpha}\eta)) \geq -\sigma \langle \nabla^{(R)} f(x), \beta^m\bar{\alpha}\eta \rangle_x.\]\\
 Il valore reale $t^A$ è il \textbf{Passo di Armijo}.
 \end{definition}
 Andiamo ora a definire un algoritmo generico per la discesa di gradiente su varietà (\textbf{Accelerated Line Search}).\\
@@ -277,14 +277,14 @@ Il concetto di convergenza puo essere ridefinito e generalizzato su varietà. Un
 Il punto $\psi^{-1}(\lim_{k \to \infty} \psi(x^k))$ è chiamato il \emph{limite} della sequenza $\{x^k\}_{k=0,1,...}$.\\
 Tutte le sequenze convergenti di una varietà di \emph{Hausdorff} hanno uno ed un solo punto limite.\\
 Diamo ora un importante risultato rispetto alla convergenza dell'algoritmo \emph{ALS}.\\
-Tale enunciato deriva direttamente dal risultato di convergenza definito nella sezione 2.2 rispetto al passo di Armijo in $\mathbb{R}^n$, in tal caso viene data una generalizzazione di quest'ultimo essendo, come già detto, ALS una generalizzazione del passo di Armijo e lavorando non più su $\mathbb{R}^n$ ma su varietà differenziabili.
+Tale enunciato deriva direttamente dal risultato di convergenza definito nella sezione \ref{stepsel} rispetto al passo di Armijo in $\mathbb{R}^n$, in tal caso viene data una generalizzazione di quest'ultimo essendo, come già detto, ALS una generalizzazione del passo di Armijo e lavorando non più su $\mathbb{R}^n$ ma su varietà differenziabili.
 \begin{theorem}
 Sia $\{x^k\}$ una sequenza infinita di iterate generate da ALS. Allora ogni punto di accumulazione  di $\{x^k\}$ è un punto stazionario della funzione costo $f$
 \end{theorem}
 Inoltre assumendo compattezza della varietà $M$ possiamo enunciare il seguente.
 \begin{corollary}
 Sia $\{x^k\}$ una sequenza finita di iterate generata da ALS. Assumiamo che l'insieme di livello $L = \{x \in M : f(x) \leq f(x^0)\}$ è compatto allora\\
-\[\lim_{k \to \infty} \parallel \mbox{grad } f(x^k) \parallel = 0.\]
+\[\lim_{k \to \infty} \| \nabla^{(R)} f(x^k) \| = 0.\]
 \end{corollary}
 
 \section{Disco di Poincaré e Iperboloide}
@@ -334,7 +334,7 @@ Essendo $\mathbb{D}^n$ un sottoinsieme di $\mathbb{R}^n$ lo spazio tangente in o
 Come fatto per l'iperboloide andiamo ad esplicitare i vari strumenti necessari per effettuare ottimizzazione. Le formule riportate sono state riprese da \cite{GeoOpt}, \cite{Ganea}, mentre per il calcolo del gradiente della funzione distanza abbiamo fatto riferimento a \cite{Nickel}.
 \subsubsection{Metrica}
 La metrica, definita nello spazio tangente del disco di poincaré $T_p\mathbb{D}^n$ rispetto ad un punto $p \in \mathbb{D}^n$, è la seguente.\\
-\[g^\mathbb{D} = \lambda_p^2 g^E \mbox{; con } \lambda_p = \frac{2}{1- \parallel p \parallel^2} \mbox{ e con } g^E \mbox{ la metrica euclidea}.\]
+\[g^\mathbb{D} = \lambda_p^2 g^E \mbox{; con } \lambda_p = \frac{2}{1- \| p \|^2} \mbox{ e con } g^E \mbox{ la metrica euclidea}.\]
 \subsubsection{Distanza}
 La distanza tra due punti del disco di Poincaré rappresenta la lunghezza della geodedica che unisce i due punti, è definita come segue.\\
 \[d_{\mathbb{D}^n}(u, v) = \arccosh \left(1 + \frac{\| u - v\|^2}{(1-\| u \|^2)(1-\| v \|^2)} \right)\]
@@ -347,9 +347,9 @@ La mappa esponenziale definita su $p \in \mathbb{D}^n$ e $v \in T_p\mathbb{D}^n$
 \subsubsection{Gradiente della funzione distanza}
 Dati $u,v \in \mathbb{D}^n$ la formula del gradiente riemanniano della funzione distanza è dato da.\\
 \begin{equation*}\begin{gathered}
-\nabla_u^{E} d(u,v) = \frac{4}{b \sqrt{c^2 - 1}} \left(\frac{(\| v \|^2 - 2\langle u,v \rangle + 1)u}{a^2} - \frac{v}{a}\right) \\ \mbox{ con } a = 1 - \| u \|^2 \mbox{ , } \quad b = 1 - \| v \|^2 \mbox{ , } \quad c = 1 + \frac{2}{ab} \| u - v \|^2
+\nabla_u^{E} d_{\mathbb{D}^n}(u,v) = \frac{4}{b \sqrt{c^2 - 1}} \left(\frac{(\| v \|^2 - 2\langle u,v \rangle + 1)u}{a^2} - \frac{v}{a}\right) \\ \mbox{ con } a = 1 - \| u \|^2 \mbox{ , } \quad b = 1 - \| v \|^2 \mbox{ , } \quad c = 1 + \frac{2}{ab} \| u - v \|^2
 \end{gathered}\end{equation*}
-Sappiamo che per per ricavare il gradiente riemanniano dal gradiente euclideo è sufficiente riscalare $\nabla^E$ per l'inverso della metrica riemanniana, perciò,\\ \[\nabla_u^{\mathbb{D}^n} d(u,v) = \frac{\nabla_u^{E} d(u,v)}{\lambda_u^2}.\]
+Sappiamo che per per ricavare il gradiente riemanniano dal gradiente euclideo è sufficiente riscalare $\nabla^E$ per l'inverso della metrica riemanniana, perciò,\\ \[\nabla_u^{\mathbb{D}^n} d_{\mathbb{D}^n}(u,v) = \frac{\nabla_u^{E} d_{\mathbb{D}^n}(u,v)}{\lambda_u^2}.\]
 \subsection{Iperboloide come modello conforme} \label{centroide}
 Come inizialmente accennato le due varietà trattate finora sono due modelli conformi dello spazio iperbolico ovvero, esiste un diffeomorfismo invertibile conforme (mantiene gli angoli ma non le lunghezze) che porta da una varietà all'altra. Il diffeomorfismo in questione è la proieizone stereografica $\rho$ definita come segue.\\\\
 \[\rho : \mathbb{H}^n \to \mathbb{D}^n \, | \, x \to \frac{1}{x_{n+1} + 1}(x_1, ..., x_n),\]
@@ -379,7 +379,7 @@ d_{\mathbb{H}^2}(\rho^{-1}(a), \rho^{-1}(b)) &= \arccosh(-\langle (\frac{2a_1}{1
 \\\\
 Facciamo vedere ora che l'uguaglianza vale anche nel caso in cui $n$ è generico, siano $a, b \in \mathbb{D}^n$. Procediamo facendo vedere che i due termini dell'uguaglianza rappresentano la stessa quantità.\\
 \begin{equation*}\begin{gathered}
-d_{\mathbb{D}^n}(a,b) = \arccosh(1 + 2\frac{\| a + b \|^2}{(1 - \| a \|^2)(1 - \| b \|^2)})
+d_{\mathbb{D}^n}(a,b) = \arccosh(1 + 2\frac{\| a - b \|^2}{(1 - \| a \|^2)(1 - \| b \|^2)})
 \end{gathered}\end{equation*}
 \begin{equation*}\begin{gathered}
 d_{\mathbb{H}^n}(\rho^{-1}(a),\rho^{-1}(b)) = \arccosh(- \langle \rho^{-1}(a),\rho^{-1}(b) \rangle_{n:1})
@@ -432,7 +432,7 @@ L'algoritmo a Passo fisso è un algoritmo del primo ordine molto elementare, la 
 \end{algorithm}
 \end{center}
 \subsubsection{Armijo}
-L'algoritmo di Armijo è anche esso un algoritmo del primo ordine, la direzione scelta è l'opposta della direzione del gradiente, per la selezione del passo si basa sul calcolo del punto di Armijo riemanniano, descritto nella sezione \ref{riemannian_linesearch}, per poter essere eseguito necessita, anche esso, del gradiente riemanniano della funzione da minimizzare, di una retrazione e di tre parametri $\gamma \in (0,1)$ , $\beta \in (0,1)$ e $\lambda > 0$. Solitamente il parametro $\lambda$ deve essere calcolato ad ogni iterazione, necessario per effettuare il giusto rescaling di $d_k$, per semplicità di sperimentazione abbiamo deciso di assumere tale parametro fisso. L'implementazione riemanniana di tale algoritmo fa riferimento alle formule in \cite{Iannazzo}.\\
+L'algoritmo di Armijo è anche esso un algoritmo del primo ordine, la direzione scelta è l'opposta della direzione del gradiente, per la selezione del passo si basa sul calcolo del punto di Armijo riemanniano, descritto nella sezione \ref{riemannian_linesearch}, per poter essere eseguito necessita, anche esso, del gradiente riemanniano della funzione da minimizzare, di una retrazione e di tre parametri $\gamma \in (0,1)$ , $\sigma \in (0,1)$ e $\lambda > 0$. Solitamente il parametro $\lambda$ deve essere calcolato ad ogni iterazione, necessario per effettuare il giusto rescaling di $d_k$, per semplicità di sperimentazione abbiamo deciso di assumere tale parametro fisso. L'implementazione riemanniana di tale algoritmo fa riferimento alle formule in \cite{Iannazzo}.\\
 \begin{center}
 \begin{algorithm}[H]
 \SetAlgoLined
@@ -453,7 +453,7 @@ L'algoritmo di Armijo è anche esso un algoritmo del primo ordine, la direzione 
 \subsubsection{Metodo di Barzilai-Borwein}
 L'algoritmo di Barzilai-Borwein è un metodo quasi Newton e si basa sulla soluzione, per $k \geq 1$, di un problema dei minimi quadrati, che ci permette di avere ricavare informazioni sulla matrice hessiana, quindi del secondo ordine. Tale algoritmo è stato implementato in \cite{Iannazzo}. Andiamo ora a descrive l'algoritmo dapprima nella sua versione euclidea in modo tale da avere ben chiare le motivazioni teoriche, dopo di che descriveremo la versione riemanniana.\\
 L'algoritmo si basa sulla risoluzione del seguente problema di minimo,\\
-\[\min_{t} \parallel s_kt - y_k \parallel_2,\]\\
+\[\min_{t} \| s_kt - y_k \|,\]\\
 con $s_k = x_{k+1} - x_k$ ed $y_k = \nabla^{(R)} f(x_{k+1}) - \nabla^{(R)} f(x_k)$, il quale, assumendo che $x_{k+1} \neq x_k$ ha un'unica soluzione $t = \frac{s_k'y_k}{s_k's_k}$. Perciò quando $s_k'y_k > 0$ il passo viene scelto come.\\
 \[a_{k+1}^{BB} = \frac{s_k's_k}{s_k'y_k}.\]\\
 Per tradurre lalgoritmo dalla sua definizione su spazio euclideo in una versione compatibile con ottimizzazione su varietà differenziabili dobbiamo andare a ridefinire $s_k$ ed $y_k$. Al passo $k+1$. L'hessiana è una mappa bilineare da $T_{x_{k+1}}M$ a $T_{x_{k+1}}M$, e siccome $g_{k+1}$ e $g_{k}$ (con $g_k = \nabla^{(R)} f(x_k)$) appartengono a due differenti spazi tangenti, considereremo il vettore $-\alpha_kg_k \in T_{x_k}M$ e lo trasporteremo in $T_{x_{k+1}}M$, quindi,\\
@@ -563,7 +563,7 @@ Riprendendo il concetto di derivata direzionale possiamo generalizzarla per un f
 Sia $x \in M$; $\gamma (0) = x$ allora indichiamo con $\mathcal{F}_{x}(M)$ l'insieme delle funzioni reali differenziabili definite in un intorno di $x$. Il mapping $\dot{\gamma} (0)$ da $\mathcal{F}_x(M)$ in $\mathbb{R}$ è definito come: $\dot{\gamma} (0) f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$ con $f \in F_x(M)$; é chiamato vettore tangente alla curva $\gamma$ in $t=0$.
 \begin{definition}[Vettore Tangente]
 Un vettore tangente $\varepsilon_x$ ad una varietà $M$ in un punto $x \in M$ è una mappa da $F_x(M)$ in $R$ tale che esiste una curva $\gamma$ a valori in $M$ con $\gamma (0) = x$ e che soddisfa,\\
-\[\varepsilon_xf = \dot{\gamma (0)} f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0} \quad  f \in F_x(M).\]\\
+\[\varepsilon_xf = \dot{\gamma} (0) f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0} \quad  f \in F_x(M).\]\\
 \end{definition}
 Tale curva $\gamma$ realizza il vettore tangente $\varepsilon_x$.
 \begin{definition}[Spazio Tangente]
@@ -620,7 +620,7 @@ Diciamo che $x \in \mathbb{R}$ è un punto di accumulazione per un insieme $E \s
 Consideriamo una funzione $f$ definita su un insieme aperto $A \subset \mathbb{R}^n$ e sia $x \in A$ se esistono in $x$ le derivate parziali rispetto ad $\{x_i\}_{i=1, ..., n}$ allora è possibile costruire un vettore che ha per componenti le derivate parziali, perciò il gradiente è definito come.\\
 \[\nabla f(x) = \left[\frac{\partial f(x)}{\partial x_1}, ..., \frac{\partial f(x)}{\partial x_n}\right].\]
 \end{definition}
-Inoltre per la formula del gradiente sappiamo che, dato un versore $v$ esiste la derivata direzionale $f_v$ in $x$ e che $f_v(x) = \nabla f(x) \cdot v$.
+Inoltre per la formula del gradiente sappiamo che, dato un versore $v$ esiste la derivata direzionale $f_v$ in $x$ e che $f_v(x) = \nabla f(x)' v$.
 \newpage
 
 \bibliographystyle{unsrt}
