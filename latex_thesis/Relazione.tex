@@ -83,7 +83,7 @@ Un altro problema è l'analisi delle componenti indipendenti (Indipendent Compon
 L'applicazione su cui si basa la tesi è il calcolo del centroide di $p$-punti in una varietà riemanniana che può essere posto come un problema di ottimizzazione sulla varietà stessa, infatti è il minimo della funzione somma delle distanze al quadrato dai punti dati.\\
 Questo problema ammette un unico minimo e questo accade in particolare per il disco di Poincaré che è una famosa varietà riemanniana ed è il più famoso modello di geometria non euclidea con curvatura negativa.\\
 Verrà confrontata la risoluzione di tale problema con il corrispettivo problema trasferito nella varietà conforme iperboloide.\\
-Confronteremo vari algoritmi di ottimizzazione su varietà per calcolare il centroide di p-punti e per questo faremo uso di metodi di discesa del gradiente.\\
+Confronteremo vari algoritmi di ottimizzazione su varietà per calcolare il centroide di $p$-punti e per questo faremo uso di metodi di discesa del gradiente.\\
 \'E importante notare che tali metodi non possono essere implementati in modo naturale come avviene nel caso euclideo, è quindi necessaria una codifica del problema e sono necessari particolari strumenti, che verranno trattati ed esplicitati nella presente e questo poichè, contrariamente al caso euclideo, il gradiente non appartiene allo stesso spazio su cui è definita la funzione da minimizzare ma in uno spazio tangente alla varietà che è uno spazio ben diverso, perciò la normale somma del gradiente non garantirebbe il corretto funzionamento dei metodi che descriveremo, tra i quali sono presenti l'algoritmo a passo fisso, ricerca lineare ed altri più performanti.\\
 Tale sperimentazione prende spunto dall'articolo \cite{Wilson}, il nostro contributo consiste nel considerare una più ampia gamma di algoritmi tra cui il metodo di Barzilai Borwain riemanniano recentemente introdotto in \cite{Iannazzo} dove viene mostrata la sua efficienza nel calcolo del centroide nella varietà delle matrici definite positive. I nostri esperimenti mostrano che, anche nel caso del disco di Poincaré e dell'iperboloide, questo algoritmo è estremamente più efficiente dei metodi classici del gradiente con ricerca lineare o passo fisso.\\
 Capiremo inoltre se tali modelli conformi sono equivalenti, non solo da un punto di vista geometrico ma anche sotto un aspetto computazionale tale per cui effettuare ottimizzazione.\\
@@ -108,7 +108,7 @@ Se la funzione di costo $f$ è differenziabile, possiamo utilizzare il gradiente
 Ci aspettiamo perciò che se $x^\ast$ è un minimo non vincolato allora la variazione della funzione al primo ordine per una piccola variazione $\Delta x$ è non negativa,\\
 \[\nabla f ( x^\ast )' \Delta x \geq 0.\]\\
 Perciò valendo sia per $\Delta x$ positivi che negativi abbiamo la seguente condizione necessaria,\\
-\[\nabla f ( x^\ast )' = 0. \]\\
+\[\nabla f ( x^\ast ) = 0. \]\\
 Ci aspettiamo inoltre che anche la variazione della funzione al secondo ordine per una piccola variazione di $\Delta x$ è non negativa,\\
 \[\nabla f ( x^\ast )' \Delta x + (1/2) \Delta x' \nabla ^2 f (x^\ast) \Delta x\geq 0,\]\\
 dato che la precedente osservazione ha imposto $\nabla f (x^\ast)' \Delta x = 0$ otteniamo che\\
@@ -229,14 +229,14 @@ Una retrazione in una varietà $M$ è una mappa liscia $R$ che ha come dominio l
   dove $id_{T_xM}$ denota la mappa identità su $T_xM$.
 \end{itemize}
 \end{definition}
-Ci riferiamo alla condizione $DR_x(0_x) = id_{T_xM}$ come condizione di \emph{rigidità locale}. Equivalentemente per ogni vettore tangente $\xi$ in $T_xM$, la curva $\gamma_{\xi}:t \mapsto R_x(t\xi)$ soddisfa $\gamma_{\xi}(0)' = \xi$.\\
+Ci riferiamo alla condizione $DR_x(0_x) = id_{T_xM}$ come condizione di \emph{rigidità locale}. Equivalentemente per ogni vettore tangente $\xi$ in $T_xM$, la curva $\gamma_{\xi}:t \mapsto R_x(t\xi)$ soddisfa $\dot{\gamma}_{\xi}(0) = \xi$.\\
 Oltre a trasformare elementi di $T_xM$ in elementi di $M$, un secondo importate scopo della retrazione $R_x$ è quello di trasformare una funzione costo ($f:M \to R$) definita in un intorno di $x \in M$ in una funzione costo definita sullo spazio vettoriale $T_xM$. Nello specifico, data una funzione reale $f$ su una varietà $M$ su cui è definita una retrazione $R$, abbiamo che $\hat{f} = f \circ R$ denota il $\emph{pullback}$ di $f$ attraverso $R$. Per $x \in M$, abbiamo che\\
 \[\hat{f_x} = f \circ R_x\]\\
 denota la restrizione di $\hat{f}$ su $T_xM$. Si noti che $\hat{f_x}$ è una funzione reale su uno spazio vettoriale. Dalla condizione di rigidità locale abbiamo che $D\hat{f_x}(0_x) = Df(x)$. Se $M$ è dotato di una metrica riemanniana abbiamo\\
 \[ \nabla^{(R)} \hat{f_x}(0_x) = \nabla^{(R)} f(x).\]\\
 Un caso particolare di retrazione è la \textbf{mappa esponenziale} definita su $p \in M$ e $v \in T_pM$ che ha proprietà di retrazione e rappresenta la curva geodedica calcolata nel punto $1$ originaria in $p$ con derivata in $0$ pari a $v$.\\
 In alcuni casi può essere necessario dover effettuare operazioni tra vettori appartenenti a spazi tangente diffenti come ad esempio nel caso dei metodi di ottimizzazzione quasi Newton.\\ Nell'ottimizzazione basata su retrazioni, lo strumento standard per trasportare vettori appartenenti ad uno spazio tangente in un altro spazio tangente, è il \textit{trasporto vettoriale}.\\
-Informalmente, dati due vettori $x, y \in M$ e due vettori tangenti ad $x$, chiamati $v_x, w_x \in T_xM$, un trasporto vettoriale $\mathcal{T}$ associato ad una retrazione $R$ è una mappa differenziabile che genera un vettore appartenente ad $T_{R_x(w_x)}M$ e per semplicità utilizzeremo la notazione $\mathcal{T}_{x \to y}(v)$.\\
+Informalmente, dat due vettori tangenti ad $x$, chiamati $v_x, w_x \in T_xM$, un trasporto vettoriale $\mathcal{T}$ associato ad una retrazione $R$ è una mappa differenziabile che genera un vettore appartenente ad $T_{R_x(w_x)}M$ e per semplicità utilizzeremo la notazione $\mathcal{T}_{x \to R_x(w_x)}(v_x)$.\\
 Un caso speciale di trasporto vettoriale è il \textit{trasporto parallelo} che può essere interpretato come un trasporto vettoriale la cui retrazione associata è la mappa esponenziale.
 \subsubsection{Metodi \emph{line-search}} \label{riemannian_linesearch}
 I metodi di ricerca in linea (definiti \emph{line-search}) su varietà si basano sulla formula di aggiornamento\\
@@ -299,7 +299,7 @@ Possiamo definire $\mathbb{H}^n$ come il luogo dei punti tali che $\langle \cdot
 Diamo la definizione di tale modello dello spazio iperbolico.
 \begin{definition}[Iperboloide]
 Il modello dell'iperboloide è definito nel modo seguente.\\
-\[\mathbb{H}^n = \{x \in \mathbb{R}^{n+1} | \langle x, x \rangle_{n:1} = -1; \quad x^{n+1} > 0 \}.\]
+\[\mathbb{H}^n = \{x \in \mathbb{R}^{n+1} | \langle x, x \rangle_{n:1} = -1; \quad x_{n+1} > 0 \}.\]
 \end{definition}
 Si può dimostrare che lo spazio tangente in un punto $p \in \mathbb{H}^n$ è $T_p\mathbb{H}^n \approx \{x \in \mathbb{R}^{n:1} \, | \, \langle p,x \rangle_{n:1} = 0\}$. Il prodotto di Minkowski è definito positivo su $T_p\mathbb{H}^n$ e dunque induce una norma $\| \cdot \|_{n:1} = \sqrt{\langle \cdot, \cdot \rangle_{n:1}}$, perciò l'iperboloide è una \textbf{varietà riemanniana}.\\
 Andiamo ora ad esplicitare gli strumenti necessari per effettuare ottimizzazione su questa varietà, le formule riportate di seguito, tra cui la derivata della funzione distanza, sono state riprese da \cite{Wilson}
@@ -311,7 +311,7 @@ La distanza tra due punti dell'iperboloide rappresenta la lunghezza della geoded
 \subsubsection{Mappa Esponenziale}
 La mappa esponenziale definita su $p \in \mathbb{H}^n$ applicata al vettore $v \in T_p\mathbb{H}^n$. \'E.\\
 \begin{equation*}\begin{gathered}
-Exp_p(v) = cosh(\| v \|_{n:1})p + sinh(\| v \|_{n:1}) \frac{v}{\| v \|_{n:1}}.
+Exp_p(v) = \cosh(\| v \|_{n:1})p + \sinh(\| v \|_{n:1}) \frac{v}{\| v \|_{n:1}}.
 \end{gathered}\end{equation*}
 
 \subsubsection{Gradiente della funzione distanza}
@@ -337,7 +337,7 @@ La metrica, definita nello spazio tangente del disco di poincaré $T_p\mathbb{D}
 \[g^\mathbb{D} = \lambda_p^2 g^E \mbox{; con } \lambda_p = \frac{2}{1- \| p \|^2} \mbox{ e con } g^E \mbox{ la metrica euclidea}.\]
 \subsubsection{Distanza}
 La distanza tra due punti del disco di Poincaré rappresenta la lunghezza della geodedica che unisce i due punti, è definita come segue.\\
-\[d_{\mathbb{D}^n}(u, v) = \arccosh \left(1 + \frac{\| u - v\|^2}{(1-\| u \|^2)(1-\| v \|^2)} \right)\]
+\[d_{\mathbb{D}^n}(u, v) = \arccosh \left(1 + 2\frac{\| u - v\|^2}{(1-\| u \|^2)(1-\| v \|^2)} \right)\]
 \subsubsection{Mappa Esponenziale}
 La mappa esponenziale definita su $p \in \mathbb{D}^n$ e $v \in T_p\mathbb{D}^n$. E' definita come segue.\\
 \begin{equation*}\begin{split}
@@ -353,7 +353,7 @@ Sappiamo che per per ricavare il gradiente riemanniano dal gradiente euclideo è
 \subsection{Iperboloide come modello conforme} \label{centroide}
 Come inizialmente accennato le due varietà trattate finora sono due modelli conformi dello spazio iperbolico ovvero, esiste un diffeomorfismo invertibile conforme (mantiene gli angoli ma non le lunghezze) che porta da una varietà all'altra. Il diffeomorfismo in questione è la proieizone stereografica $\rho$ definita come segue.\\\\
 \[\rho : \mathbb{H}^n \to \mathbb{D}^n \, | \, x \to \frac{1}{x_{n+1} + 1}(x_1, ..., x_n),\]
-\[\rho^{-1} : \mathbb{D}^n \to \mathbb{H}^n \, | \, y \to \frac{2}{1 - r}(y_1, ..., \frac{1+r}{2}) \mbox{ ; con } r = \| y \|^2, \]\\
+\[\rho^{-1} : \mathbb{D}^n \to \mathbb{H}^n \, | \, y \to \frac{2}{1 - r}(y_1, ..., y_n, \frac{1+r}{2}) \mbox{ ; con } r = \| y \|^2, \]\\
 A questo punto facciamo vedere che vale la seguente uguaglianza, che sarà utile nella sezione successiva.\\
 \[d_{\mathbb{D}^n}(a, b) = d_{\mathbb{H}^n}(\rho^{-1}(a), \rho^{-1}(b))\]\\
 Dimostreremo che l'uguaglianza è valida, dando dapprima una dimostrazione per $n = 2$, e poi la generalizzeremo per $n$ qualsiasi.\\\\
@@ -387,7 +387,7 @@ d_{\mathbb{H}^n}(\rho^{-1}(a),\rho^{-1}(b)) = \arccosh(- \langle \rho^{-1}(a),\r
 Facciamo vedere ora, che gli argomenti della funzione $\arccosh$, nelle due equazioni riportate, rappresentano in realtà lo stesso valore.
 \begin{equation*}\begin{split}
 - \langle \rho^{-1}(a),\rho^{-1}(b) \rangle_{n:1} &= - \langle \frac{2}{1 - \| a \|^2} \begin{bmatrix} a \\ \frac{1 + \| a \|^2}{2} \end{bmatrix}, \frac{2}{1 - \| b \|^2} \begin{bmatrix} b \\ \frac{1 + \| b \|^2}{2} \end{bmatrix} \rangle_{n:1}\\
-&=\frac{4}{(1 - \| a \|^2)(1 - \| b \|^2)} \left( a'b - \frac{(1 + \| a \|^2)(1 + \| b \|^2)}{4} \right)\\
+&=-\frac{4}{(1 - \| a \|^2)(1 - \| b \|^2)} \left( a'b - \frac{(1 + \| a \|^2)(1 + \| b \|^2)}{4} \right)\\
 &=\frac{-4a'b + 1 + \| a \|^2 + \| b \|^2 + \| a \|^2 \| b \|^2}{(1 - \| a \|^2)(1 - \| b \|^2)}\\
 &=\frac{-4a'b + 1 + 2\| a \|^2 + 2\| b \|^2 - \| a \|^2 - \| b \|^2 + \| a \|^2 \| b \|^2}{(1 - \| a \|^2)(1 - \| b \|^2)}\\
 &=1 + 2 \frac{\| a - b \|^2}{(1 - \| a \|^2)(1 - \| b \|^2)}
@@ -521,7 +521,7 @@ Analogamente, per quanto riguarda le sequenze definite dalla scelta di $\lambda$
 \end{figure}
 A questo punto, avendo scelto i parametri che permettono ai nostri algoritmi di performare al meglio, possiamo procedere con il confronto.\\
 Riprendiamo ora il dataset totale.\\
-Abbiamo eseguito tutti gli algoritmi su ogni istanza del dataset sia per l'implementazione su disco che per quella su iperboloide, creando un punto  ($a$, $b$) in $R^2$ per ogni istanza, le cui coordinate sono $a$, il numero di passi per convergere al punto limite per l'implementazione su disco e $b$ invece il numero di passi per convergere al punto limite per l'implementazione su iperboloide, creando cosi una nuvola di punti.\\
+Abbiamo eseguito tutti gli algoritmi su ogni istanza del dataset sia per l'implementazione su disco che per quella su iperboloide, creando un punto  ($a$, $b$) in $\mathbb{R}^2$ per ogni istanza, le cui coordinate sono $a$, il numero di passi per convergere al punto limite per l'implementazione su disco e $b$ invece il numero di passi per convergere al punto limite per l'implementazione su iperboloide, creando cosi una nuvola di punti.\\
 Tramite tale nuvola possiamo verificare se le metodologie sono effettivamente equivalenti.\\
 In ogni grafico vengono costruite due rette di regressione su una versione ridotta della nuvola di punti.\\
 Toglieremo quei punti che hanno una molteplicità bassa (e.g. sotto $\frac{1}{40}$ della cardinalità totale del dataset), la prima retta di regressione viene calcolata tramite il metodo dei minimi quadrati, la seconda invece viene calcolata tramite un algoritmo meno sensibile ai valori anomali, la regressione di $Huber$ \footnote{https://en.wikipedia.org/wiki/Huber\_loss}. Noteremo quindi che se le rette di regressione tendono ad avere un coefficiente angolare ``vicino'' ad $1$ i risultati ottenuti utilizzando le due varietà possono essere ritenuti equivalenti.\\
@@ -548,26 +548,26 @@ Riportiamo il link alla repository Github contenente i codici degli esperimenti:
 \section{Appendice}
 Richiamiamo qui alcuni concetti teorici necessari per la piena comprensione del presente elaborato.
 \subsection{Varietà}
-Sia $M$ un insieme. Una bigezione $\psi$ differenziabile di un sottoinsime $U$ di $M$ in un sottoinsieme aperto di $\mathbb{R}^d$ è chiamata mappa $d$-dimensionale dell'insieme $U$ che definisce una \textit{carta} $(U, \psi)$. Data una carta $(U, \psi)$ e $x \in U$ gli elementi di $\psi(x) \in \mathbb{R}^d$ sono le coordinate di $x$ nella carta $(U, \psi)$. Un \textit{Atlante} $(A)$ di $M$ in $R^d$ è un insieme di carte $(U_a, \psi_a)$ dell'insieme $M$, dove $a$ varia in un insieme di indici $\mathcal{A}$, tali che:
+Sia $M$ un insieme. Una bigezione $\psi$ differenziabile di un sottoinsime $U$ di $M$ in un sottoinsieme aperto di $\mathbb{R}^d$ è chiamata mappa $d$-dimensionale dell'insieme $U$ che definisce una \textit{carta} $(U, \psi)$. Data una carta $(U, \psi)$ e $x \in U$ gli elementi di $\psi(x) \in \mathbb{R}^d$ sono le coordinate di $x$ nella carta $(U, \psi)$. Un \textit{Atlante} $(A)$ di $M$ in $\mathbb{R}^d$ è un insieme di carte $(U_a, \psi_a)$ dell'insieme $M$, dove $a$ varia in un insieme di indici $\mathcal{A}$, tali che:
 \begin{itemize}
     \item $\bigcup_a U_a = M$, per $a \in \mathcal{A}$.
-    \item Per ogni coppia $\alpha, \beta \in \mathcal{A}$ con $U_{\alpha} \cap U_{\beta} \neq \emptyset$ gli insiemi $\psi_{\alpha}(U_{\alpha} \cap U_{\beta})$ e $\psi_{\beta}(U_{\alpha} \cap U_{\beta})$ sono sottoinsiemi aperti di $R^d$ ed il cambio di coordinate $\psi_{\alpha} \circ \psi_{\beta}^{-1}:$ $\mathbb{R}^d \to \mathbb{R}^d$ è differenziabile.
+    \item Per ogni coppia $\alpha, \beta \in \mathcal{A}$ con $U_{\alpha} \cap U_{\beta} \neq \emptyset$ gli insiemi $\psi_{\alpha}(U_{\alpha} \cap U_{\beta})$ e $\psi_{\beta}(U_{\alpha} \cap U_{\beta})$ sono sottoinsiemi aperti di $\mathbb{R}^d$ ed il cambio di coordinate $\psi_{\alpha} \circ \psi_{\beta}^{-1}:$ $\mathbb{R}^d \to \mathbb{R}^d$ è differenziabile.
 \end{itemize}
 Dato un'atlante $A$, sia $A^+$ l'insieme delle carte $(U, \psi)$ tali che $A \bigcup \{(U, \psi)\}$ è ancora un'atlante. $A^+$ è un'atlante massimale generato da $A$. Un'atlante massimale dell'insieme $M$ è chiamato struttura differenziabile su $M$.
 \begin{definition}
-Una varietà differenziabile $d$-dimensionale è una coppia $(M, A^+)$, dove $M$ è un insieme e $A^+$ è un atlante massimale su $M$ in $R^d$, tale che la topologia indotta da $A^+$ è di Hausdorff.
+Una varietà differenziabile $d$-dimensionale è una coppia $(M, A^+)$, dove $M$ è un insieme e $A^+$ è un atlante massimale su $M$ in $\mathbb{R}^d$, tale che la topologia indotta da $A^+$ è di Hausdorff.
 \end{definition}
 Data una carta $\psi$ su $M$, l'inversa $\psi^{-1}$ è chiamata parametrizzazione locale di $M$.
 \subsubsection{Vettori Tangenti}
-Riprendendo il concetto di derivata direzionale possiamo generalizzarla per un funzione $f$ definita su una varietà, sustituendo $t \mapsto (x + t\eta)$ con una curva, $\gamma: U \to M$, con $0 \in U$ ed $\gamma (0) = x$, attraverso $x \in M$ (punto di derivazione) questo porta ad una derivata direzionale ben definita $\frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$. Formalmente, sia $M$ una varietà e $\gamma$ una mappa differenziabile $\gamma : U \to M | t \mapsto \gamma (t)$ detta curva in $M$, data, una funzione $f$ a valori reali definita su $M$, la funzione $f \circ \gamma : t \mapsto f(\gamma (t))$ è una funzione differenziabile da $\mathbb{R}$ in $\mathbb{R}$ con una ben definita derivata.\\
-Sia $x \in M$; $\gamma (0) = x$ allora indichiamo con $\mathcal{F}_{x}(M)$ l'insieme delle funzioni reali differenziabili definite in un intorno di $x$. Il mapping $\dot{\gamma} (0)$ da $\mathcal{F}_x(M)$ in $\mathbb{R}$ è definito come: $\dot{\gamma} (0) f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$ con $f \in F_x(M)$; é chiamato vettore tangente alla curva $\gamma$ in $t=0$.
+Riprendendo il concetto di derivata direzionale possiamo generalizzarla per un funzione $f$ definita su una varietà, sustituendo $t \mapsto (x + t\eta)$ con una curva, $\gamma: U \to M$, con $0 \in U$ ed $\gamma (0) = x$, attraverso $x \in M$ (punto di derivazione) questo porta ad una derivata direzionale ben definita $\frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$. Formalmente, sia $M$ una varietà e $\gamma$ una mappa differenziabile $\gamma : U \to M \, | \, t \mapsto \gamma (t)$ detta curva in $M$, data, una funzione $f$ a valori reali definita su $M$, la funzione $f \circ \gamma : t \mapsto f(\gamma (t))$ è una funzione differenziabile da $\mathbb{R}$ in $\mathbb{R}$ con una ben definita derivata.\\
+Sia $x \in M$; $\gamma (0) = x$ allora indichiamo con $\mathcal{F}_{x}(M)$ l'insieme delle funzioni reali differenziabili definite in un intorno di $x$. Il mapping $\dot{\gamma} (0)$ da $\mathcal{F}_x(M)$ in $\mathbb{R}$ è definito come: $\dot{\gamma} (0) f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0}$ con $f \in \mathcal{F}_x(M)$; é chiamato vettore tangente alla curva $\gamma$ in $t=0$.
 \begin{definition}[Vettore Tangente]
-Un vettore tangente $\varepsilon_x$ ad una varietà $M$ in un punto $x \in M$ è una mappa da $F_x(M)$ in $R$ tale che esiste una curva $\gamma$ a valori in $M$ con $\gamma (0) = x$ e che soddisfa,\\
-\[\varepsilon_xf = \dot{\gamma} (0) f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0} \quad  f \in F_x(M).\]\\
+Un vettore tangente $\varepsilon_x$ ad una varietà $M$ in un punto $x \in M$ è una mappa da $\mathcal{F}_x(M)$ in $\mathbb{R}$ tale che esiste una curva $\gamma$ a valori in $M$ con $\gamma (0) = x$ e che soddisfa,\\
+\[\varepsilon_xf = \dot{\gamma} (0) f = \frac{\partial f(\gamma (t))}{\partial t} \vert_{t=0} \quad  f \in \mathcal{F}_x(M).\]\\
 \end{definition}
 Tale curva $\gamma$ realizza il vettore tangente $\varepsilon_x$.
 \begin{definition}[Spazio Tangente]
-Lo spazio tangente ad $M$ in $x$ denominato come $T_xM$ è l'insieme di tutti i vettori tangenti ad $M$ in $x$. Questo insieme ammette una struttura di spazio vettoriale come segue: date $\dot{\gamma}_1 (0)$ e $\dot{\gamma}_2 (0)$ in $T_xM$ e $a, b$ in $R$ allora,\\
+Lo spazio tangente ad $M$ in $x$ denominato come $T_xM$ è l'insieme di tutti i vettori tangenti ad $M$ in $x$. Questo insieme ammette una struttura di spazio vettoriale come segue: date $\dot{\gamma}_1 (0)$ e $\dot{\gamma}_2 (0)$ in $T_xM$ e $a, b$ in $\mathbb{R}$ allora,\\
 \[(a \dot{\gamma}_1 (0) + b \dot{\gamma}_2 (0)) f = a (\dot{\gamma}_1 (0) f) + b (\dot{\gamma}_2 (0) f).\]
 \end{definition}
 Lo spazio tangente $T_xM$ mette a disposizione un'approssimazione locale della varietà tramite uno spazio vettoriale. Perciò tramite le retrazioni definite nella sezione \ref{retraction} possiamo effettuare ottimizzazione sullo spazio vettoriale $T_xM$.
@@ -578,11 +578,11 @@ Data una varietà $M$, sia $TM$ l'insieme di tutti i vettori tangenti ad $M$.\\
 Sia $P:M \to N$ una mappa differenziabile tra due varietà $M$ ed $N$. sia $\varepsilon_x$ un vettore tangente in un punto $x$ di $M$, si può far vedere che $DP(x)[\varepsilon_x]$ da $F_{P(x)}(N)$ in $\mathbb{R}$ è definita da:\\
 \[(DP(x)[\varepsilon_x])f = \varepsilon_x(f \circ P),\]\\
 è un vettore tangente ad $N$ in $P(x)$.\\
-La mappa $DP(X) : T_xM \to T_{P(x)}N | \varepsilon_x \mapsto DP(x)[\varepsilon_x]$ è una mappa lineare chiamata differenziale di $P$ in $x$.
+La mappa $DP(x) : T_xM \to T_{P(x)}N \, | \, \varepsilon_x \mapsto DP(x)[\varepsilon_x]$ è una mappa lineare chiamata differenziale di $P$ in $x$.
 \subsubsection{Metriche distanze e gradienti riemanniani}
 I vettori tangenti ad una varietà generalizzano la nozione di derivata direzionale. Questo può essere fatto munendo lo spazio tangente $T_xM$ con un prodotto interno $\langle \cdot, \cdot \rangle_x$ bilineare, definito positivo e simmetrico. Il prodotto interno induce una norma $\| \varepsilon_x \|_x = \sqrt{\langle \varepsilon_x, \varepsilon_x \rangle_x}$ su $T_xM$. Una varietà il cui spazio tangente è munito di un prodotto interno, che dipende in modo differenziabile da $x$, prende il nome di varietà riemanniana $(M, g)$ con $g$ metrica riemanniana.\\
 La lunghezza di una curva $\gamma:[a,b] \to M$ in una varietà riemanniana $(M, g)$ è definita da,\\
-\[L(\gamma) = \int_a^b \sqrt{g(\dot{\gamma} (t), g(\dot{\gamma} (t)))}.\]\\
+\[L(\gamma) = \int_a^b \sqrt{g(\dot{\gamma} (t), \dot{\gamma} (t))}.\]\\
 La distanza riemanniana in una varietà riemanniana connessa $(M,g)$ è $\mathrm{dist}: M \times M \to \mathbb{R} \, | \, \mathrm{dist}(x,y) \mapsto \inf_{\gamma \in \Gamma}(L(\gamma))$, dove $\Gamma$ è l'insieme di tutte le curve in $M$ che connettono $x$ ed $y$.\\
 Sia $f$ la solita funzione liscia definita su $(M,g)$, il gradiente riemanniano di $f$ in $x$ è definito come l'elemento di $T_xM$ che soddisfa,\\
 \[\langle \nabla^{(R)} f(x), \varepsilon \rangle_x = Df(x)[\varepsilon].\]\\
@@ -605,7 +605,7 @@ Sia $A \in \mathbb{R}^{n \times n}$ è definita positiva se è simmetrica e se $
 \end{definition}
 Si osservi che se $v = 0$ allora che $v'Av = 0$.
 \begin{definition}[Convessità]
-Una funzione $f:\Omega \to \mathbb{R}$ con $\Omega \subset V$, $V$ (spazio vettoriale) ed $\Omega$ convesso, è definita convessa se: $(f((\lambda)v + (1 - \lambda)w) \leq \lambda f(v) + (1 - \lambda)f(w)$, per $\lambda \in [0;1]$ e $v, w \in \Omega$.
+Una funzione $f:\Omega \to \mathbb{R}$ con $\Omega \subset V$, $V$ (spazio vettoriale) ed $\Omega$ convesso, è definita convessa se:\\ \[(f((\lambda)v + (1 - \lambda)w) \leq \lambda f(v) + (1 - \lambda)f(w) \mbox{, per } \lambda \in [0;1] \mbox{ e } v, w \in \Omega.\]
 \end{definition}
 \begin{definition}[Derivate Parziali]
 Data una funzione $f:V \to \mathbb{R}$, $V$ (spazio vettoriale), allora una derivata parziale su $x \in V$ è definita come:\\
