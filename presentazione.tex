@@ -1,0 +1,316 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Welcome to Overleaf --- just edit your LaTeX on the left,
+% and we'll compile it for you on the right. If you open the
+% 'Share' menu, you can invite other users to edit at the same
+% time. See www.overleaf.com/learn for more info. Enjoy!
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{beamer}
+\usepackage{graphicx}
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+
+
+%Information to be included in the title page:
+\title{Metodi di ottimizzazione su varietà differenziabili per la media di Fréchet su disco di Poincaré}
+\author{\texorpdfstring{Candidato: Luca Moroni\\Relatore: Bruno Iannazzo}{Candidato}}
+\institute{Tesi Informatica}
+\date{Anno Accademico 2020/2021}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Introduzione}
+Tratteremo metodi di ottimizzazione su varietà, ovvero tecniche di ottimizzazione di funzioni non lineari definite su spazi topologici chiamati varietà differenziabili, i quali rappresentano una generalizzazione dello spazio euclideo.
+\end{frame}
+
+\begin{frame}
+\frametitle{Introduzione}
+Parleremo nello specifico delle tecniche di ottimizzazione utilizzate per trovare il centroide di p punti in una varietà differenziabile chiamata \textbf{disco di Poincaré}.\\~\
+\begin{center}
+    \includegraphics[height=3.5cm]{escher_disk.png} 
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Ottimizzazione euclidea}
+Data $f : \mathbb{R}^n \to \mathbb{R}$, con $f$ due volte differenziabile, cercheremo di trovare un punto di minimo di $f$.
+Condizioni necessarie per dire se x è un punto di minimo:\\~\
+
+\begin{itemize}
+\item $\nabla f(x) = 0$
+\item $\nabla^2 f(x)$ definita positiva
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Ottimizzazione euclidea}
+I metodi di ottimizzazione trattati sono del tipo iterative descent.\\~\
+
+\begin{itemize}
+    \item Partire da un vettore iniziale $x^0$
+    \item Creare una sequenza $(x^1, x^2,  ...)$, tale per cui $f(x^{k+1}) < f(x^k)$, la quale sperabilmente converga ad un punto di minimo
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Ottimizzazione euclidea}
+I metodi iterative descent hanno bisogno di:
+\begin{itemize}
+    \item \textbf{direzione di discesa}: dato $g = \nabla f(x)$ allora ogni vettore direzione d tale che $g'd < 0$ è una direzione di discesa
+    \item \textbf{selezione del passo} $\alpha$
+\end{itemize}
+I metodi di ottimizzazione iterativi sono così generalizzati:
+\[x^{k+1} = x^k - \alpha^k D^k \nabla f(x^k).\]
+con $D^k$ matrice definita positiva.
+\end{frame}
+
+\begin{frame}
+\frametitle{Metodo a passo fisso}
+Metodo a passo fisso: fissato $\alpha \in (0, 1]$ la formula di iterazione è la seguente:
+\[x^{k+1} = x^k - \alpha \nabla f(x^k)\]
+Non è garantita per ogni $\alpha$ la convergenza del metodo.
+\end{frame}
+
+\begin{frame}
+\frametitle{Metodo di Armijo}
+Tale metodo seleziona $\alpha^k$ garantendo una decrescita necessaria per la convergenza globale del metodo sotto opportune ipotesi, siano fissati $s$, $\gamma$ e  $\sigma$,  con $0 < \gamma < 1$, $0 < \sigma < 1$ e $s > 0$, allora $\alpha^k =\sigma^ms$, dove $m$ è il naturale più piccolo per cui vale:
+\[f(x^k) - f(x^k + \sigma^m \lambda d^k) \geq -\gamma \sigma^m \lambda \nabla f(x^k)'d^k.\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Metodi quasi Newton}
+I metodi quasi newton sono una famiglia di metodi i quali agiscono nella scelta della matrice $D^k$ tale che approssima la matrice hessiana.\\~\
+
+Definiti:
+\begin{itemize}
+    \item $p^k = x^{k+1} - x^k$
+    \item $q^k = \nabla f(x^{k+1}) - \nabla f(x^k)$
+\end{itemize}
+Allora $D^{k+1}$  deve soddisfare $D^{k+1}p^k= q^k$ la quale prende il nome di \textbf{equazione delle secanti}.
+\end{frame}
+
+\begin{frame}
+\frametitle{Ottimizzazione su varietà}
+La funzione da ottimizzare è $f : M \to \mathbb{R}$.
+Dove $M$ è una varietà differenziabile.\\~\
+
+Una \textbf{retrazione} $R_x$ su $x$ in $M$ è una mappa che va da $T_xM$ in $M$, con una condizione di rigidità locale che preserva il gradiente in $x$.\\~\
+
+$T_xM$ rappresentante lo spazio tangente ad $x$ di $M$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Ottimizzazione su varietà}
+Un caso particolare di retrazione è la \textbf{mappa esponenziale}.\\
+Definita su $x$ in $M$ e $v$ in $T_xM$ ha proprietà di retrazione e rappresenta la curva \textbf{geodedica} calcolata nel punto $1$ originaria in $x$ con derivata in $0$ pari a $v$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Ottimizzazione su varietà}
+I metodi iterativi trattati nel caso euclideo hanno una controparte per il caso generale su varietà, la cui formulazione generale è,\\
+\[x^{k+1} = R_{x^k}(t^k \eta^k).\]
+Dove  appartiene $\eta^k$ appartiente a $T_{x^k}M$ e $t^k$ è uno scalare.\\
+I metodi sono analoghi al caso euclideo.\\~\
+\begin{center}
+    \includegraphics[height=3.5cm]{manifold_opt.png} 
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Disco di Poincaré}
+Il disco di Poincarè è un dei modelli più famosi per la descrizione dello spazio iperbolico.\\
+\[ \mathbb{D}^n = \{x \in \mathbb{R}^n \, | \, \| x \| < 1\}. \]
+Il disco di Poincaré è una \textbf{varietà riemanniana}.\\
+Lo spazio tangente è rappresentato da $\mathbb{R}^n$ in ogni punto.\\
+La \textbf{metrica} nello spazio tangente rispetto a $p$ nel disco:
+\[ g^\mathbb{D} = \lambda_p^2 g^E \mbox{; con } \lambda_p = \frac{2}{1- \| p \|^2} \mbox{ e con } g^E \mbox{ la metrica euclidea}. \]
+Sono ben note le formule necessarie per effettuare ottimizzazione ovvero, la \textbf{distanza} e la \textbf{mappa esponenziale}.
+\end{frame}
+
+\begin{frame}
+\frametitle{Iperboloide}
+\'E un altro modello per la rappresentazione dello spazio iperbolico.
+\[\mathbb{H}^n = \{x \in \mathbb{R}^{n+1} | \langle x, x \rangle_{n:1} = -1; \quad x_{n+1} > 0 \}.\]
+L’iperboloide è una \textbf{varietà riemanniana}.\\
+Lo spazio tangente è rappresentato da,
+\[T_p\mathbb{H}^n \cong \{x \in \mathbb{R}^{n:1} \, | \, \langle p,x \rangle_{n:1} = 0\}.\]
+La \textbf{metrica} è definita dal \textbf{prodotto di Minkowski}.
+\[\langle u, v \rangle_{n:1} = \sum_{i=1}^{n} u_iv_i - u_{n+1}v_{n+1}; \quad u,v \in \mathbb{R}^{n+1}.\]
+Sono ben note la \textbf{distanza} e la \textbf{mappa esponenziale}.
+\end{frame}
+
+\begin{frame}
+\frametitle{Modelli conformi}
+Le due varietà appena definite sono legate da un \textbf{diffeomorfismo conforme} (mantiene gli angoli ma non le distanze), la mappa stereografica $\rho$, definita come segue.
+\[\rho : \mathbb{H}^n \to \mathbb{D}^n \, | \, x \to \frac{1}{x_{n+1} + 1}(x_1, ..., x_n),\]
+\[\rho^{-1} : \mathbb{D}^n \to \mathbb{H}^n \, | \, y \to \frac{2}{1 - r}(y_1, ..., y_n, \frac{1+r}{2}) \mbox{ ; con } r = \| y \|^2.\]\\
+\begin{center}
+    \includegraphics[height=3.5cm]{HyperboloidProjection.png} 
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Modelli conformi}
+In funzione della mappa conforme che lega le due varietà presentate vale $d_{\mathbb{D}^n}(a, b) = d_{\mathbb{H}^n}(\rho^{-1}(a), \rho^{-1}(b))$, per $a$ a $b$ appartenenti al disco.\\~\
+
+Con:
+\[ d_{\mathbb{D}^n}(a,b) = arccosh(1 + 2\frac{\| a - b \|^2}{(1 - \| a \|^2)(1 - \| b \|^2)}),\]
+\[ d_{\mathbb{H}^n}(\rho^{-1}(a),\rho^{-1}(b)) = arccosh(- \langle \rho^{-1}(a),\rho^{-1}(b) \rangle_{n:1}).\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Media di Fréchet e problema del centroide}
+Dati $p$ punti in una varietà la media di Fréchet di p punti è l’argomento che minimizza la funzione \textbf{somma delle distanze al quadrato}.
+\[f(\Theta) = \frac{1}{p}\sum_{i=1}^p d^2(\Theta, x^{(i)}).\]
+Definendo la funzione $f$ su disco se esiste un valore di minimo allora esiste un valore di minimo anche per la medesima funzione $\hat{f}$ definita su iperboloide.
+\end{frame}
+
+\begin{frame}
+\frametitle{Media di Fréchet e problema del centroide}
+Essendo inoltre $f (x) = \hat{f} (\rho^{-1}(x))$ allora cercare il minimo di $f$ equivale a cercare il minimo di  $\hat{f} \circ \rho^{-1}$.\\~\
+
+Possiamo perciò trasportare il problema del calcolo della media di Fréchet definito su disco di Poincaré nella varietà iperboloide e viceversa.
+\end{frame}
+
+\begin{frame}
+\frametitle{Algoritmi}
+Gli esperimenti che descriveremo si basano sull’utilizzo di tre differenti algoritmi, implementati nella versione riemanniana sia su disco che su iperboloide.\\~\
+
+Gli algoritmi implementati sono:
+\begin{itemize}
+    \item Algoritmo a \textbf{passo fisso}
+    \item Algoritmo che si basa sul metodo di \textbf{Armijo}
+    \item Algoritmo di \textbf{Barzilai-Borwein}: metodo \textbf{quasi Newton}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Esperimenti}
+Capiremo se le due varietà sono equivalenti, non solo da un punto di vista geometrico ma anche da un punto di vista computazionale.\\~\
+
+Abbiamo creato un dataset contenente varie (duecento) istanze del problema della media di Fréchet su disco di Poincaré, per ogni istanza ne abbiamo calcolato il limite.
+\end{frame}
+
+\begin{frame}
+\frametitle{Esperimenti}
+Abbiamo utilizzato un sottoinsieme del dataset per definire i parametri “liberi” degli algoritmi.\\~\
+
+\begin{itemize}
+    \item $\alpha$: dell’algoritmo a passo fisso
+    \item $s$: per l’algoritmo di Armijo
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Esperimenti}
+Abbiamo applicato gli algoritmi con un parametro incrementale su ogni istanza del sotto-dataset.\\~\
+
+Per ogni esecuzione abbiamo calcolato il numero di passi per la convergenza, generando per ogni istanza una sequenza ed alla fine ne abbiamo calcolato una media.\\~\
+
+Abbiamo selezionato i parametri che minimizzano le sequenze medie sia per l’implementazione su disco che su iperboloide.
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Scelta del parametro passo fisso}
+\begin{figure}[ht]
+    \begin{minipage}[b]{0.45\linewidth}
+        \centering
+        Disco di Poincaré\par\medskip
+        \includegraphics[width=\textwidth]{fixed_step_parameter_poincare.png}
+        \caption{Punto di minimo: 0.27, valore di convergenza minimo: 7.35.}
+    \end{minipage}
+    \hspace{0.5cm}
+    \begin{minipage}[b]{0.45\linewidth}
+        \centering
+        Iperboloide\par\medskip
+        \includegraphics[width=\textwidth]{fixed_step_parameter_hyperboloid.png}
+        \caption{Punto di minimo: 0.27, valore di convergenza minimo: 7.35.}
+    \end{minipage}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Scelta del parametro metodo di Armijo}
+\begin{figure}[ht]
+    \begin{minipage}[b]{0.45\linewidth}
+        \centering
+        Disco di Poincaré\par\medskip
+        \includegraphics[width=\textwidth]{armijo_parameter_poincare.png}
+        \caption{Punto di minimo: 0.26, valore di convergenza minimo: 7.9.}
+    \end{minipage}
+    \hspace{0.5cm}
+    \begin{minipage}[b]{0.45\linewidth}
+        \centering
+        Iperboloide\par\medskip
+        \includegraphics[width=\textwidth]{armijo_parameter_hyperboloid.png}
+        \caption{Punto di minimo: 0.26, valore di convergenza minimo: 7.9.}
+    \end{minipage}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Esperimenti}
+Per ogni algoritmo lo abbiamo eseguito su ogni istanza del dataset totale creando una serie di punti $(a, b) \in \mathbb{R}^2$.\\
+\begin{itemize}
+    \item $a$: numero di passi per la convergenza su disco
+    \item $b$: il numero di passi per la convergenza su iperboloide
+\end{itemize}
+Dalla nuvola di punti si sono eliminati quei punti con una molteplicità bassa.\\
+Si sono calcolate due rette di regressione, la prima tramite il metodo dei \textbf{minimi quadrati}, la seconda tramite l’algoritmo di \textbf{Huber}.
+\end{frame}
+
+\begin{frame}
+\frametitle{Esperimenti}
+\begin{figure}[H]
+    \includegraphics[height=7cm]{fixed_step_size.png}
+    \caption{Nuvola di punti relativa all’algoritmo a passo fisso.}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Esperimenti}
+\begin{figure}[H]
+    \includegraphics[height=7cm]{armijo.png}
+    \caption{Nuvola di punti relativa all’algoritmo di Armijo.}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Esperimenti}
+\begin{figure}[H]
+    \includegraphics[height=7cm]{barzilai_borwein.png}
+    \caption{Nuvola di punti relativa all’algoritmo di Barzilai-Borwein.}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Esperimenti}
+Confronto passi di convergenza medi per gli algoritmi implementati.\\~\
+\begin{center}
+\begin{tabular}{l*{6}{c}r}
+                    & Passo fisso & Armijo & B.B. \\
+\hline
+Disco di Poincaré   & 10.5 & 10.4 & 6.13 \\
+Iperboloide         & 11.2 & 11.2 & 6.8 \\
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusioni}
+Dai risultati è possibile notare come l’algoritmo di Barzilai-Borwein si comporta meglio rispetto agli algoritmi a passo fisso e di ricerca lineare (Armijo).\\~\
+
+Possiamo congetturare che, è possibile trasferire un problema tra due varietà  conformi, deve comunque essere preservata l’esistenza di una soluzione ottima per la funzione costo.
+\end{frame}
+
+\begin{frame}
+\begin{center}
+FINE.\\~\
+Grazie per l'attenzione.
+\end{center}
+\end{frame}
+\end{document}
